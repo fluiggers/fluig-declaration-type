@@ -1156,6 +1156,4 @@ declare namespace docAPI {
      * @returns Nomes dos arquivos que foram disponibilizados na área de upload
      */
     declare function copyDocumentToUploadArea(documentId: number, version: number): string[];
-
-    declare function createDocument(document: DocumentDto, )
 }
