@@ -1,18 +1,243 @@
-/**
- * List é obtida no Fluig com: new java.util.ArrayList();
- */
-class List {
-    get(indice: number): object;
-    add(valor: object): void;
+
+declare namespace com.fluig.sdk.api.alert {
+    class AlertActionVO {}
+    class AlertConfigVO {}
+    class AlertEventVO {}
+    class AlertModuleVO {}
+    class AlertObjectVO {}
+    class AlertSenderVO {}
+    class AlertUserVO {}
+    class AlertVO {}
 }
 
-/**
- * HashMap é obtido no Fluig com: new java.util.HashMap();
- */
-class HashMap {
-    get(campo: string): string;
-    put(campo: string, valor: string): void;
+declare namespace com.fluig.sdk.api.authorizeclient {
+    class AuthorizeClientSdkServiceVO {}
 }
+
+declare namespace com.fluig.sdk.api.document {
+    class AllocatedDocumentVO {}
+    class DocumentApprovementHistoryVO {}
+    class DocumentApproverVO {}
+    class DocumentPermissionVO {}
+    class DocumentRestrictionVO {}
+    class DocumentSecurityConfigVO {}
+    class DocumentSecurityVO {}
+    class DocumentTaskVO {}
+    class DocumentVO {}
+    class FolderVO {}
+    class RelatedDocumentVO {}
+    class SolvedPermissionVO {}
+}
+
+declare namespace com.fluig.sdk.api.ecm {
+    class CollaborationAppVO {};
+    class CollaborationVO {};
+}
+
+declare namespace com.fluig.sdk.api.enums {
+    class AssumeProcessTaskStatus {}
+}
+
+declare namespace com.fluig.sdk.api.group {
+    class GroupVO {}
+}
+
+declare namespace com.fluig.sdk.api.holiday {
+    class HolidayVO {}
+}
+
+declare namespace com.fluig.sdk.api.job {
+    class JobVO {}
+}
+
+declare namespace com.fluig.sdk.api.job.JobVO {
+    class IntervalType {}
+}
+
+declare namespace com.fluig.sdk.api.local {
+    class LocalUserVO {}
+    class LocalVO {}
+}
+
+declare namespace com.fluig.sdk.api.oauth {
+    class OAuthSdkVO {}
+}
+
+declare namespace com.fluig.sdk.api.permission {
+    class PermissionAssetVO {}
+    class PermissionVO {}
+}
+
+declare namespace com.fluig.sdk.api.search {
+    class DefaultSearchRequest {}
+    class DefaultSearchResponse{}
+}
+
+declare namespace com.fluig.sdk.api.social {
+    class ArticleCoverVO {}
+    class ArticleVO {}
+    class CommentVO {}
+    class CommunityVO {}
+    class CropVO {}
+    class MediaVO {}
+    class PostVO {}
+    class SociableVO {}
+    class SocialBreadcrumbItemVO {}
+    class SocialBreadcrumbVO {}
+    class SocialVO {}
+}
+
+declare namespace com.fluig.sdk.api.task {
+    class ResumedTasksVO {}
+    class TaskKindEnum {}
+    class TaskStatusEnum {}
+}
+
+declare namespace com.fluig.sdk.api.workflow {
+    class AssumeProcessTaskResultVO {}
+    class AssumeProcessTaskVO {}
+    class AssumeProcessTasksResultVO {}
+    class AssumeProcessTasksVO {}
+    class AttachmentVO {}
+    class CancelInstanceResultVO {}
+    class CancelInstanceVO {}
+    class CancelInstancesResultVO {}
+    class CancelInstancesVO {}
+    class CardIndexAttachmentVO {}
+    class CardIndexVO {}
+    class CardItemVO {}
+    class ProcessAttachmentVO {}
+    class ProcessDefinitionVO {}
+    class ProcessDefinitionVersionVO {}
+    class ProcessInstanceInfoVO {}
+    class ProcessObservationVO {}
+    class ProcessStateVO {}
+    class ProcessTaskInfoVO {}
+    class ProcessTaskVO {}
+    class ProcessVersionVO {}
+    class RequestProcessTaskVO {}
+    class RequestSLAVO {}
+    class RequestTaskSLAVO {}
+    class ResumeProcessTaskVO {}
+    class ResumeRequestsSLAVO {}
+    class WorkflowVO {}
+}
+
+declare namespace com.fluig.sdk.filter {
+    class FilterFieldVO {}
+    class FilterGroupResultVO {}
+    class FilterGroupVO {}
+    class FilterOrderVO {}
+    class FilterResultVO {}
+    class FilterVO {}
+}
+
+declare namespace com.fluig.sdk.identity {
+    class UserAuthTokenSessionVO {}
+}
+
+declare namespace com.fluig.sdk.page {
+    class PageMobileApiVO {}
+    class PageWidgetMobileApiVO {}
+    class PublicApiPageVO {}
+}
+
+declare namespace com.fluig.sdk.service {
+    class AlertService {}
+    class ArticleService {}
+    class AuthorizeClientSdkService {}
+    class CardIndexService {}
+    class CardService {}
+    class CollaborationSDKService {}
+    class CommentService {}
+    class CommunityService {}
+    class ContentFilesService {}
+    class DocumentService {}
+    class DocumentationProxyServiceService {}
+    class FavoritesService {}
+    class FilterAPIService {}
+    class FolderDocumentService {}
+    class GlobalParameterService {}
+    class GroupService {}
+    class HolidayAPIService {}
+    class I18NService {}
+    class IdentityService {}
+    class JobService {}
+    class LocalAPIService {}
+    class PageService {}
+    class PageWidgetService {}
+    class PostService {}
+    class SearchService {}
+
+    class SecurityService {
+        /**
+         * Verifica se o usuário logado possui determinada permissão no recurso informado
+         */
+        hasPermission(resource: string, permission: string): boolean;
+
+        /**
+         * Lista os recursos da categoria
+         */
+        listResourcesByCategory(category: string, filter: string, offset: number, limit: number): java.util.ArrayList<com.fluig.sdk.api.permission.PermissionAssetVO>
+
+        /**
+         * Lista as permissões do recurso informado
+         */
+        getPermissionsByResourceCode(resourceCode: string): java.util.ArrayList<com.fluig.sdk.api.permission.PermissionVO>
+
+        /**
+         * Crias as permissões para o recurso
+         */
+        createPermissions(resourceCode: string, permissions: java.util.ArrayList<com.fluig.sdk.api.permission.PermissionVO>): void;
+
+        /**
+         * Remove as permissões do recurso
+         */
+        deletePermissions(resourceCode: string, permissions: java.util.ArrayList<com.fluig.sdk.api.permission.PermissionVO>): void;
+    }
+
+    class SocialBreadcrumbService {}
+    class SocialSDKService {}
+    class TagsCloudService {}
+    class TasksService {}
+    class TenantService {}
+    class UserService {}
+    class WidgetService {}
+    class WorkflowAPIService {}
+}
+
+declare namespace com.fluig.sdk.tenant {
+    class AdminUserVO {}
+    class TenantVO {}
+}
+
+declare namespace com.fluig.sdk.user {
+    class ColleagueVO {}
+    class UserPasswordVO {}
+    class UserVO {}
+}
+
+declare namespace java.util {
+
+    class List<T> {
+        get(indice: number): T;
+        add(valor: T): void;
+        size(): number;
+    }
+
+    class ArrayList<T> {
+        get(indice: number): T;
+        add(valor: T): void;
+        size(): number;
+    }
+
+    class HashMap<T> {
+        get(campo: string): T;
+        put(campo: string, valor: T): void;
+        size(): number;
+    }
+}
+
 
 /**
  * Entidade Aprovador
@@ -51,102 +276,7 @@ class ApproverDto {
 }
 
 /**
- * Permite a passagem de parâmetros entre os eventos do Workflow
- */
-declare namespace globalVars {
-
-    /**
-     * Insere um valor nos parâmetros gerais
-     */
-    declare function put(name: string, value: object): void;
-
-    /**
-     * Pega um valor dos parâmetros gerais
-     */
-    declare function get(name: string): object
-};
-
-
-/**
- * Envia mensagens ao Log do ECM Server
- */
-declare namespace log {
-
-    /**
-     * Log com "criticidade" INFO
-     */
-    declare function info(message: string): void;
-
-    /**
-     * Log com "criticidade" WARNING
-     */
-    declare function warn(message: string): void;
-
-    /**
-     * Log com "criticidade" ERROR
-     */
-    declare function error(message: string): void;
-
-    /**
-     * Log com "criticidade" FATAL
-     */
-    declare function fatal(message: string): void;
-};
-
-
-/**
- * Funções para o envio de e-mail
- */
-declare namespace notifier {
-
-    /**
-     * Envia um e-mail personalizado
-     *
-     * Usar em eventos do Processo.
-     *
-     * @example
-     * var parametros = new java.util.HashMap();
-     * parametros.put("subject", "ASSUNTO");
-     * parametros.put("NOME_USUARIO", "João");
-     * parametros.put("CODIGO_USUARIO", "01");
-     *
-     * var usuarios = new java.util.ArrayList();
-     * usuarios.add("adm");
-     *
-     * notifier.notify("adm", "mail1", parametros, usuarios, "text/html");
-     *
-     * @param from Matrícula do usuário que está enviando o e-mail
-     * @param template Código do template de e-mail
-     * @param parameters Map com os parâmetros do e-mail
-     * @param to List com os destinatários do e-mail
-     * @param mimeType Tipo do conteúdo do e-mail. Pode ser text/html ou text/plain
-     *
-     */
-    declare function notify(from: string, template: string, parameters: object, to: object, mimeType: string): void;
-};
-
-
-/**
- * Funções para o uso dos serviços (Progress)
- *
- * Usar em qualquer evento.
- */
-declare namespace ServiceManager {
-
-    /**
-     * Obtém o serviço especificado
-     *
-     * Normalmente utilizado para pegar o serviceHelper do serviço.
-     *
-     * @example
-     * var service = ServiceManager.getService("ems2_v10");
-     * var serviceHelper = service.getBean();
-     */
-    declare function getService(serviceId: string): object;
-};
-
-/**
- * Entidade Documento
+ * Entidade Documento para usar nos Eventos
  */
 class DocumentDto {
 
@@ -399,21 +529,6 @@ class DocumentDto {
 };
 
 /**
- * Lista de DocumentDto
- */
-class ListDocumentDto {
-    /**
-     * Quantidade de elementos
-     */
-    size(): number;
-
-    /**
-     * Pega elemento no índice indicado
-     */
-    get(index: number): DocumentDto;
-}
-
-/**
  * Entidade Segurança do Documento
  */
 class DocumentSecurityConfigDto {
@@ -474,6 +589,102 @@ class DocumentSecurityConfigDto {
      * Verifica se ele utiliza a segurança desta versão nas demais
      */
     getSecurityVersion(): boolean;
+};
+
+
+/**
+ * Permite a passagem de parâmetros entre os eventos do Workflow
+ */
+declare namespace globalVars {
+
+    /**
+     * Insere um valor nos parâmetros gerais
+     */
+    declare function put(name: string, value: object): void;
+
+    /**
+     * Pega um valor dos parâmetros gerais
+     */
+    declare function get(name: string): object
+};
+
+
+/**
+ * Envia mensagens ao Log do ECM Server
+ */
+declare namespace log {
+
+    /**
+     * Log com "criticidade" INFO
+     */
+    declare function info(message: string): void;
+
+    /**
+     * Log com "criticidade" WARNING
+     */
+    declare function warn(message: string): void;
+
+    /**
+     * Log com "criticidade" ERROR
+     */
+    declare function error(message: string): void;
+
+    /**
+     * Log com "criticidade" FATAL
+     */
+    declare function fatal(message: string): void;
+};
+
+
+/**
+ * Funções para o envio de e-mail
+ */
+declare namespace notifier {
+
+    /**
+     * Envia um e-mail personalizado
+     *
+     * Usar em eventos do Processo.
+     *
+     * @example
+     * var parametros = new java.util.HashMap();
+     * parametros.put("subject", "ASSUNTO");
+     * parametros.put("NOME_USUARIO", "João");
+     * parametros.put("CODIGO_USUARIO", "01");
+     *
+     * var usuarios = new java.util.ArrayList();
+     * usuarios.add("adm");
+     *
+     * notifier.notify("adm", "mail1", parametros, usuarios, "text/html");
+     *
+     * @param fromId Matrícula do usuário que está enviando o e-mail
+     * @param templateId Código do template de e-mail
+     * @param parameters java.util.HashMap<string> com os parâmetros do e-mail
+     * @param to java.util.ArrayList<string> com os destinatários do e-mail
+     * @param mimeType Tipo do conteúdo do e-mail. Pode ser text/html ou text/plain
+     *
+     */
+    declare function notify(fromId: string, templateId: string, parameters: java.util.HashMap<string>, to: java.util.ArrayList<string>, mimeType: string): void;
+};
+
+
+/**
+ * Funções para o uso dos serviços (Progress)
+ *
+ * Usar em qualquer evento.
+ */
+declare namespace ServiceManager {
+
+    /**
+     * Obtém o serviço especificado
+     *
+     * Normalmente utilizado para pegar o serviceHelper do serviço.
+     *
+     * @example
+     * var service = ServiceManager.getService("ems2_v10");
+     * var serviceHelper = service.getBean();
+     */
+    declare function getService(serviceId: string): object;
 };
 
 /**
@@ -601,7 +812,7 @@ declare namespace hAPI {
      * colaboradores.add("adm");
      * hAPI.setAutomaticDecision(2, colaboradores, "Decisão Automática");
      */
-    declare function setAutomaticDecision(numAtividade: number, responsaveis: string[], comentario: string): void;
+    declare function setAutomaticDecision(numAtividade: number, responsaveis: java.util.ArrayList<string>, comentario: string): void;
 
     /**
      * Pega todas as threads em execução de um processo
@@ -610,7 +821,7 @@ declare namespace hAPI {
      * var threads = hAPI.getActiveStates();
      * log.info(threads.get(0));
      */
-    declare function getActiveStates(): List;
+    declare function getActiveStates(): java.util.ArrayList<object>;
 
     /**
      * Altera o prazo de uma atividade do processo
@@ -643,7 +854,7 @@ declare namespace hAPI {
      * @param comentario
      * @param numThread ID da Thread. Normalmente 0
      */
-    declare function transferTask(usuarios: string[], comentario: string, numThread?: number = 0): void;
+    declare function transferTask(usuarios: java.util.ArrayList<string>, comentario: string, numThread?: number = 0): void;
 
     /**
      * Define uma observação para a atividade atual do processo.
@@ -698,7 +909,7 @@ declare namespace hAPI {
      * @param modoGestor indica se a tarefa sera inicializada com o modo gestor do Fluig ativo.
      * @returns HashMap com informações referentes ao processo criado
      */
-    declare function startProcess(idProcesso: string, atividadeDestino: number, usuarios: string[], comentario?: string, completaTarefa?: boolean, valoresForm?: HashMap, modoGestor?: boolean): HashMap;
+    declare function startProcess(idProcesso: string, atividadeDestino: number, usuarios: java.util.ArrayList<string>, comentario?: string, completaTarefa?: boolean, valoresForm?: java.util.HashMap<string>, modoGestor?: boolean): java.util.HashMap<string>;
 
     /**
      * Calcula um prazo
@@ -767,7 +978,24 @@ declare namespace hAPI {
      *
      * Somente anexos do tipo GED e Workflow são retornados.
      */
-    declare function listAttachments(): ListDocumentDto;
+    declare function listAttachments(): java.util.List<DocumentDto>;
+
+    /**
+     * Permite publicar anexo workflow da solicitação no GED
+     *
+     * É obrigatório informar a pasta destino através do método setParentDocumentId
+     */
+    declare function publishWorkflowAttachment(documentDto: DocumentDto): void;
+
+    /**
+     * Permite anexar documentos do GED à solicitação workflow
+     */
+    declare function attachDocument(documentDto: DocumentDto): void;
+
+    /**
+     *
+     */
+    declare function getAvailableStatesDetail(companyId: number, userId: string, proccessId: number, proccessInstanceId: number, threadSequenceId: number = 0);
 };
 
 /**
@@ -1156,6 +1384,4 @@ declare namespace docAPI {
      * @returns Nomes dos arquivos que foram disponibilizados na área de upload
      */
     declare function copyDocumentToUploadArea(documentId: number, version: number): string[];
-
-    declare function createDocument(document: DocumentDto, )
 }
