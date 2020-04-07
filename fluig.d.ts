@@ -707,54 +707,147 @@ declare function getValue(nomePropriedade: string): string;
  *
  * Usar em eventos do formulário (que recebem form como parâmetro).
  */
-declare namespace Form {
+class FormController {
+
+    /**
+     * Retorna o ID da empresa
+     */
+    getCompanyId(): number;
+
+    /**
+     * Retorna o ID do documento (registro de formulário)
+     */
+    getDocumentId(): number;
+
+    /**
+     * Retorna a versão do documento (registro do formulário)
+     */
+    getVersion(): number;
+
+    /**
+     * Retorna o ID do formulário
+     */
+    getCardIndex(): number
 
     /**
      * Habilita/Desabilita a edição de um campo do formulário
      */
-    declare function setEnabled(nomeCampo: string, habilita: boolean): void;
+    setEnabled(nomeCampo: string, habilita: boolean, protegido: boolean): void;
 
     /**
      * Verifica se o campo do formulário está habilitado para edição
      */
-    declare function getEnabled(nomeCampo: string): boolean;
+    getEnabled(nomeCampo: string): boolean;
 
     /**
      * Atribui valor a um campo do formulário
      */
-    declare function setValue(nomeCampo: string, valor: string): string;
+    setValue(nomeCampo: string, valor: string): string;
 
     /**
      * Pega o valor de um campo do formulário
      */
-    declare function getValue(nomeCampo: string): string;
+    getValue(nomeCampo: string): string;
+
+    /**
+     * Deixa o campo invisível buscando pelo nome do campo
+     */
+    setVisible(nomeCampo: string, visible: boolean): void;
+
+    /**
+     * Deixa o campo invisível buscando pelo ID do campo
+     */
+    setVisibleById(idDoCampo: string, visible: boolean): void;
 
     /**
      * Se habilitado os campos são exibidos como input readonly
      */
-    declare function setShowDisabledFields(habilita: boolean = false): void;
+    setShowDisabledFields(habilita: boolean): void;
 
     /**
      * Se habilitado o link "imprimir" é ocultado
      */
-    declare function setHidePrintLink(habilita: boolean = false): void;
+    setHidePrintLink(habilita: boolean): void;
 
     /**
      * Se habilitado o botão "excluir" é ocultado
      */
-    declare function setHideDeleteButton(habilita: boolean = false): void;
+    setHideDeleteButton(habilita: boolean): void;
+
+    /**
+     * Se definido como true todos os campos desabilitados não terão seus valores salvos
+     */
+    setEnhancedSecurityHiddenInputs(proteger: boolean): void;
+
+    /**
+     * Retorna o Modo do formulário.
+     *
+     * Tipos possíveis:
+     * - ADD: Criação
+     * - MOD: Edição
+     * - VIEW: Visualização
+     * - NONE: Não há comunicação com formulário. Ocorre no momento da validação dos campos, por exemplo.
+     */
+    getFormMode(): string;
+
+    /**
+     * Desabilita o botão de imprimir
+     */
+    setHidePrintLink(hide: boolean): void;
+
+    /**
+     * Retorna se o botão de imprimir está oculto
+     */
+    isHidePrintLink(): boolean;
+
+    /**
+     * Retorna os campos filhos, e seus valores, de uma tabela pai.
+     *
+     * Retorna um objeto com a propriedade sendo o nome do campo e seus valores.
+     */
+    getChildrenFromTable(tableName: string): object;
+
+    /**
+     * Retorna os IDs dos campos filhos de uma tabela pai.
+     */
+    getChildrenIndexes(tableName: string): string[];
+
+    /**
+     * Oculta o botão de apagar registro
+     */
+    setHideDeleteButton(hide: boolean): void;
+
+    /**
+     * Informa se o botão de apagar está oculto
+     */
+    isHideDeleteButton(): boolean;
+
+    /**
+     * Indica se está em mobile
+     */
+    getMobile(): boolean;
+
+    /**
+     * Indica se o campo está visível buscando pelo nome do campo
+     */
+    isVisible(nomeCampo: string): boolean;
+
+    /**
+     * Indica se o campo está visível buscando pelo ID do campo
+     */
+    isVisibleById(id: string): boolean;
 };
 
 /**
  * Disponibiliza funções para incluir conteúdo HTML no formulário
  */
-declare namespace customHTML {
+class customHTML {
 
     /**
      * Adiciona conteúdo no final do HTML do formulário
      * @param conteudo Conteúdo HTML a ser incluído
      */
-    declare function append(conteudo: string): void;
+    append(conteudo: string): void;
 };
 
 /**
@@ -1384,4 +1477,56 @@ declare namespace docAPI {
      * @returns Nomes dos arquivos que foram disponibilizados na área de upload
      */
     declare function copyDocumentToUploadArea(documentId: number, version: number): string[];
+}
+
+declare type autocompleteOnTagCallback = (item: object, tag: object) => void;
+
+interface errorData {
+    message?: string;
+    responseText: object;
+}
+
+interface autocompleteOptions {
+    highlight: boolean;
+    minLength: number;
+    hint: boolean;
+    searchTimeout: number;
+    type: string;
+    name: string;
+    tagClass: string;
+    maxTags: number;
+    allowDuplicates: boolean
+    onTagExists: autocompleteOnTagCallback;
+    onMaxTags: autocompleteOnTagCallback
+    displayKey: string;
+    tagMaxWidth: number;
+    templates: {
+        tag: string;
+        suggestion: string;
+    };
+    source: {
+        url: string;
+        limit: 10,
+        offset: 0,
+        limitKey: string;
+        patternKey: string;
+        root: string;
+    };
+    tagRemoveCss: {
+        margin: string;
+    };
+
+}
+
+declare type errorCallback = (error: errorData, data: object) => void;
+
+declare namespace FLUIGC {
+    /**
+     * Cria um campo com auto-complete
+     *
+     * @param target Seletor utilizado na JQuery
+     * @param options Opções adicionais para o autocomplete
+     * @param callback Função executada após trazer as respostas para o auto-complete
+     */
+    declare function autocomplete(target: string, options: autocompleteOptions, callback: errorCallback);
 }
