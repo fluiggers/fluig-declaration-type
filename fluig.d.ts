@@ -243,11 +243,135 @@ declare namespace com.fluig.sdk.service {
     class CommentService {}
     class CommunityService {}
     class ContentFilesService {}
-    class DocumentService {}
+    /**
+     * Fornece acesso aos serviços de documentos (GED)
+     */
+    class DocumentService {
+        /**
+         * Aprova ou reprova um documento.
+         */
+        approveDocument(documentId: number, version: number, approved: boolean, observation: string): void;
+
+        /**
+         * Copia o documento que esta na área de uplaod
+         */
+        copyDocumentToUploadArea(documentId: number): string[];
+
+        /**
+         * Cria o documento com permissões e aprovadors
+         */
+        createDocument(documentVO: com.fluig.sdk.api.document.DocumentVO): com.fluig.sdk.api.document.DocumentVO;
+
+        /**
+         * Cria uma documento privado
+         */
+        createPrivateDocument(companyId: number, userId: string, fileName: string, file: File): com.fluig.sdk.api.document.DocumentVO;
+
+        /**
+         * Cria uma documento privado
+         */
+        createPrivateDocument(companyId: number, userId: string, fileName: string, filePath: string): com.fluig.sdk.api.document.DocumentVO;
+
+        /**
+         * Remove o documento
+         */
+        deleteDocument(documentId: number): void;
+
+        /**
+         * Retorna o documento ativo passado o ID do mesmo.
+         */
+        getActive(documentId: number): com.fluig.sdk.api.document.DocumentVO
+
+        /**
+         * Retorna documento com as informações de checkout
+         */
+        getAllocatedDocument(documentId: number, version: number): com.fluig.sdk.api.document.AllocatedDocumentVO;
+
+        getCurrentUserPermission(documentId: number): com.fluig.sdk.api.document.SolvedPermissionVO;
+
+        /**
+         * Return the approvements history of the document
+         */
+        getDocumentApprovalHistory(documentId: number): java.util.List<com.fluig.sdk.api.document.DocumentApprovementHistoryVO>;
+
+        /**
+         * Retrieve all document approvers and yours status.
+         */
+        getDocumentApprovers(documentId: number): java.util.List<com.fluig.sdk.api.document.DocumentApproverVO>;
+
+        /**
+         * Retorna as permissões do documento
+         */
+        getDocumentPermissions(documentId: number, version: number): java.util.List<com.fluig.sdk.api.document.DocumentPermissionVO>;
+
+        /**
+         * Retorna a url do documento
+         */
+        getDownloadURL(documentId: number): string;
+
+        /**
+         * Retorna a permissão do usuário em um documento.
+         */
+        getUserPermissions(documentId: number, version: number, user: string): number;
+
+        /**
+         * Set Approvers for a specific document
+         */
+        setDocumentApprovers(documentId: number, documentSecurityVO: com.fluig.sdk.api.document.DocumentSecurityVO): void;
+
+        /**
+         * Determina as permissões do documento
+         */
+        setDocumentPermissions(documentId: number, permissions: java.util.List<com.fluig.sdk.api.document.DocumentPermissionVO>): void;
+
+        /**
+         * Update file
+         */
+        updateFile(docVO: com.fluig.sdk.api.document.DocumentVO): com.fluig.sdk.api.document.DocumentVO;
+
+        /**
+         * Valida configurações de documento
+         */
+        validateDocumentPublicUrlConfiguration(tenantId: number, documentId: number, version: number): void;
+    }
     class DocumentationProxyServiceService {}
     class FavoritesService {}
     class FilterAPIService {}
-    class FolderDocumentService {}
+
+    /**
+     * Fornece acesso aos serviços de pastas (GED)
+     */
+    class FolderDocumentService {
+        /**
+         * Criação de uma nova pasta
+         */
+        create(vo: com.fluig.sdk.api.document.FolderVO): com.fluig.sdk.api.document.FolderVO;
+
+        /**
+         * Recupera um documento através do id
+         */
+        get(documentId: number): com.fluig.sdk.api.document.DocumentVO;
+
+        /**
+         * Recupera lista de documentos através do id da pasta
+         */
+        list(folderId: number): java.util.List<com.fluig.sdk.api.document.DocumentVO>;
+
+        /**
+         * Recupera lista de documentos através do id da pasta
+         */
+        list(folderId: number, permission: number): java.util.List<com.fluig.sdk.api.document.DocumentVO>;
+
+        /**
+         * Retorna os documentos de uma pasta
+         */
+        listDocumentsByFolder(folderVO: com.fluig.sdk.api.document.FolderVO, limit: number, offset: number): java.util.List<com.fluig.sdk.api.document.DocumentVO>;
+
+        /**
+         * Atualiza documento ou pasta
+         */
+        updateDocumentDescription(companyId: number, documentId: number, description: string): com.fluig.sdk.api.document.DocumentVO;
+    }
     class GlobalParameterService {}
     class GroupService {}
     class HolidayAPIService {}
