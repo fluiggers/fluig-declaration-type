@@ -167,8 +167,74 @@ declare namespace fluigAPI {
     declare function getWorkflowService(): com.fluig.sdk.service.WorkflowAPIService;
 }
 
+/**
+ * Serviços do Fluig
+ */
 declare namespace com.fluig.sdk.service {
-    class AlertService {}
+    /**
+     * Fornece acesso aos serviços de notificações
+     */
+    class AlertService {
+        /**
+         * Método que conta os alertas não lidos de um usuário.
+         */
+        countUnreadAlerts(receiverId: number): number;
+
+        /**
+         * Método que conta os alertas de um modulo não lidos de um usuário
+         */
+        countUnreadAlertsByModule(module: string, receiverId: number): number;
+
+        /**
+         * Get the number of notification in the tenant
+         */
+        getTenantTotalOfNotification(): number;
+
+        /**
+         * Busca os alertas com ação vinculada, do usuário logado ordenado pela data de criação.
+         */
+        listAlertsWithAction(limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
+
+        /**
+         * Busca os alertas com nota, do usuário logado ordenado pela data de criação.
+         */
+        listAlertsWithNote(limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
+
+        /**
+         * Retorna todas as notificações do usuário logado ordenadas pela data de criação.
+         */
+        listAllAlerts(limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
+
+        /**
+         * Retorna todas as notificações de um usuário por um único módulo
+         */
+        listAllAlertsByModule(module: string, limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
+
+        /**
+         * Método marca os alertas informados de um usuario tambem dado como lidos
+         */
+        markAlertAsRead(loginReceiver: string, alertsId: java.util.List<number>): void;
+
+        /**
+         * Método marca todos os alertas de um usuario como lidos.
+         */
+        markAllAlertsAsRead(loginReceiver: string): void;
+
+        /**
+         * Método que remove os alertas informados de um usuario tambem dado, esse método também é responsável por remover os senders, places e objects relacionado aos alertas
+         */
+        removeAlerts(loginSender: string, alertsId: java.util.List<number>): void;
+
+        /**
+         * Salva a configuração de um usuário para receber ou não alertas de um dado evento através de um dado aplicativo.
+         */
+        saveConfiguration(alertConfig: com.fluig.sdk.api.alert.AlertConfigVO): void;
+
+        /**
+         * Método que deve ser invocado por todos os módulos do sistema para enviar alertas.
+         */
+        sendNotification(eventKey: string, loginSender: string, loginReceiver: string, object: com.fluig.sdk.api.alert.AlertVO, place: com.fluig.sdk.api.alert.AlertVO, actions: java.util.List<com.fluig.sdk.api.alert.AlertActionVO>, metadata: java.util.HashMap<string>): void;
+    }
     class ArticleService {}
     class AuthorizeClientSdkService {}
     class CardIndexService {}
