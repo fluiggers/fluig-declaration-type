@@ -539,7 +539,618 @@ declare namespace com.fluig.sdk.api.document {
     class DocumentSecurityConfigVO {}
     class DocumentSecurityVO {}
     class DocumentTaskVO {}
-    class DocumentVO {}
+
+    /**
+     * Representa um documento
+     */
+    class DocumentVO {
+        /**
+         * Recupera número de acessso
+         */
+        getAccessCount(): number;
+
+        /**
+         * Recupera versão ativa
+         */
+        getActiveVersion(): boolean;
+
+
+        /**
+         * Recupera o valor do comentário nas informações extras
+         */
+        getAdditionalComments(): string;
+
+        /**
+         * Recupera valor, se documento permite mult card por usuário
+         */
+        getAllowMuiltiCardsPerUser(): boolean;
+
+        /**
+         * Recupera condição aprovalAndOr
+         */
+        getApprovalAndOr(): boolean;
+
+        /**
+         * Recupera valor, se documento está aprovado
+         */
+        getApproved(): boolean;
+
+        /**
+         * Recupera valor da data de aprovação
+         */
+        getApprovedDate(): Date
+
+        /**
+         * Recupera id de atualização
+         */
+        getAtualizationId(): number;
+
+        /**
+         * Recupera descrição do card
+         */
+        getCardDescription(): string;
+
+        /**
+         * Recupera id do colega
+         */
+        getColleagueId(): string;
+
+        /**
+         * Recupera valor do crc
+         */
+        getCrc(): number;
+
+        /**
+         * Recupera valor para data de criação
+         */
+        getCreateDate(): Date
+
+        /**
+         * Recupera valor, se documento foi deletado
+         */
+        getDeleted(): boolean;
+
+        /**
+         * Recupera descrição do documento
+         */
+        getDocumentDescription(): string;
+
+        /**
+         * Recupera valor do document Id
+         */
+        getDocumentId(): number;
+
+        /**
+         * Recupera número de propriedade do documento
+         */
+        getDocumentPropertyNumber(): number;
+
+        /**
+         * Recupera versão do documento
+         */
+        getDocumentPropertyVersion(): number;
+
+        /**
+         * Recupera valor do tipo de documento
+         */
+        getDocumentType(): string;
+
+        /**
+         * Recupera valor do id do tipo de documento
+         */
+        getDocumentTypeId(): string;
+
+        /**
+         * Recupera valor, se download é habilitado
+         */
+        getDownloadEnabled(): boolean;
+
+        /**
+         * Recupera valor de draft
+         */
+        getDraft(): boolean;
+
+        /**
+         * Recupera data de expiração
+         */
+        getExpirationDate(): Date
+
+        /**
+         * Recupera valor, se documento expira
+         */
+        getExpires(): boolean;
+
+        /**
+         * Recupera os dados extras
+         */
+        getExtData(): java.util.HashMap<object>;
+
+        /**
+         * Recupera id documento externo
+         */
+        getExternalDocumentId(): string;
+
+        /**
+         * Recupera os dados extras
+         */
+        getExtraData(key: string): object;
+
+        /**
+         * Recupera id do icone
+         */
+        getIconId(): number;
+
+        /**
+         * Recupera valor do path do icon
+         */
+        getIconPath(): string;
+
+        /**
+         * Recupera valor, se documento é imultavel
+         */
+        getImutable(): boolean;
+
+        /**
+         * Recupera valor, se documento é indexado
+         */
+        getIndexed(): boolean;
+
+        /**
+         * Retorna se o documento herda as propriedades do parent
+         */
+        getInheritSecurity(): boolean;
+
+        /**
+         * Recupera valor, se documento pode ser visualizado internamente.
+         */
+        getInternalVisualizer(): boolean;
+
+        /**
+         * Recupera valor de palavra chave
+         */
+        getKeyWord(): string;
+
+        /**
+         * Recupera id da linguagem
+         */
+        getLanguageId(): string;
+
+        /**
+         * Recupera valor da última data de moficação
+         */
+        getLastModifiedDate(): Date
+
+        /**
+         * Recupera última data de modificação
+         */
+        getLastModifiedTime(): string;
+
+        /**
+         * Recupera valor, se documento está em checkout
+         */
+        getOnCheckout(): boolean;
+
+        /**
+         * Recupera id do pai do documento
+         */
+        getParentDocumentId(): number;
+
+        /**
+         * Recupera o tipo de permissão
+         */
+        getPermissionType(): number;
+
+        /**
+         * Recupera arquivo fisico
+         */
+        getPhisicalFile(): string;
+
+        /**
+         * Recupera valor do tamanho do arquivo fisico
+         */
+        getPhisicalFileSize(): number;
+
+        /**
+         * Recupera prioridade
+         */
+        getPriority(): number;
+
+        /**
+         * Recupera valor id privado do colega
+         */
+        getPrivateColleagueId(): string;
+
+        /**
+         * Recupera valor, se documento é privado
+         */
+        getPrivateDocument(): boolean;
+
+        /**
+         * Recupera id do publicador
+         */
+        getPublisherId(): string;
+
+        /**
+         * Recuprea arquivos relacionados
+         */
+        getRelatedFiles(): string;
+
+        /**
+         * Recupera tipo de restrição
+         */
+        getRestrictionType(): number;
+
+        /**
+         * Recupera valor do código do site
+         */
+        getSiteCode(): string;
+
+        /**
+         * Recupera id do tenant
+         */
+        getTenantId(): number;
+
+        /**
+         * Recupera valor do id do topico
+         */
+        getTopicId(): number;
+
+        /**
+         * Recupera valor, se documento é traduzido
+         */
+        getTranslated(): boolean;
+
+        /**
+         * Recupera updateIsoProperties
+         */
+        getUpdateIsoProperties(): boolean;
+
+        /**
+         * Recupera o identificador do upload
+         */
+        getUploadId(): string;
+
+        /**
+         * Recupera valor, se usuário será notificado
+         */
+        getUserNotify(): boolean;
+
+        /**
+         * Recupera valor do UUID
+         */
+        getUUID(): string;
+
+        /**
+         * Recupera data de inicio de validação
+         */
+        getValidationStartDate(): Date
+
+        /**
+         * Recupera valor da versão
+         */
+        getVersion(): number;
+
+        /**
+         * Recupera a ação que serão realizada em relaão a versão documento
+         */
+        getVersionAction(): string;
+
+        /**
+         * Recupera descrição da versão
+         */
+        getVersionDescription(): string;
+
+        /**
+         * Recupera visualização
+         */
+        getVisualization(): string;
+
+        /**
+         * Recupera id do volume
+         */
+        getVolumeId(): string;
+
+        /**
+         * Atribui valor para número de acessos
+         */
+        setAccessCount(accessCount: number): void;
+
+        /**
+         * Atribui valor para versão ativa
+         */
+        setActiveVersion(activeVersion: boolean): void;
+
+        /**
+         * Atribui o valor do comentário nas informações extras
+         */
+        setAdditionalComments(comments: string): void;
+
+        /**
+         * Atribui valor para allowMuiltiCardsPerUser
+         */
+        setAllowMuiltiCardsPerUser(allowMuiltiCardsPerUser: boolean): void;
+
+        /**
+         * Atribui valor para approvalAndOr
+         */
+        setApprovalAndOr(approvalAndOr: boolean): void;
+
+        /**
+         * Atribui valor, se documento está aprovado
+         */
+        setApproved(approved: boolean): void;
+
+        /**
+         * Atribui valor para data de aprovação
+         */
+        setApprovedDate(approvedDate: Date): void;
+
+        /**
+         * Atribui valor para id de atualização
+         */
+        setAtualizationId(atualizationId: number): void;
+
+        /**
+         * Atribui valor para descrição do card
+         */
+        setCardDescription(cardDescription: string): void;
+
+        /**
+         * Atribui valor para id do colega
+         */
+        setColleagueId(colleagueId: string): void;
+
+        /**
+         * Atribui valor para crc
+         */
+        setCrc(crc: number): void;
+
+        /**
+         * Atribui valor para data de criação
+         */
+        setCreateDate(createDate: Date): void;
+
+        /**
+         * Atribui valor, se documento foi deletado
+         */
+        setDeleted(deleted: boolean): void;
+
+        /**
+         * Atribui valor para descrição do documento
+         */
+        setDocumentDescription(documentDescription: string): void;
+
+        /**
+         * Atribui valor para id do documento
+         */
+        setDocumentId(documentId: number): void;
+
+        /**
+         * Atribui valor para número de propriedade do documento
+         */
+        setDocumentPropertyNumber(documentPropertyNumber: number): void;
+
+        /**
+         * Atribui versão de documento
+         */
+        setDocumentPropertyVersion(documentPropertyVersion: number): void;
+
+        /**
+         * Atribui valor para tipo de documento
+         */
+        setDocumentType(documentType: string): void;
+
+        /**
+         * Atribui valor para id do tipo de documento
+         */
+        setDocumentTypeId(documentTypeId: string): void;
+
+        /**
+         * Atribui valor, se download é habilitado
+         */
+        setDownloadEnabled(downloadEnabled: boolean): void;
+
+        /**
+         * Atribui valor para draft
+         */
+        setDraft(draft: boolean): void;
+
+        /**
+         * Atribui valor para data de expiração
+         */
+        setExpirationDate(expirationDate: Date): void;
+
+        /**
+         * Atribui valor, se documento expira
+         */
+        setExpires(expires: boolean): void;
+
+        /**
+         * Atribui valor para id documento externo
+         */
+        setExternalDocumentId(externalDocumentId: string): void;
+
+        /**
+         * Atribui valores para os dados extras
+         */
+        setExtraData(key: string, value: object): void;
+
+        /**
+         * Atribui valor para id do icone
+         */
+        setIconId(iconId: number): void;
+
+        /**
+         * Atribui valor do iconPath do arquivo
+         */
+        setIconPath(iconPath: string): void;
+
+        /**
+         * Atribui valor, se documento é imutavel
+         */
+        setImutable(imutable: boolean): void;
+
+        /**
+         * Atribui valor, se documento é indexado
+         */
+        setIndexed(indexed: boolean): void;
+
+        /**
+         * Atribui se herda as propriedades de segurança do parent
+         */
+        setInheritSecurity(inheritSecurity: boolean): void;
+
+        /**
+         * Atribui valor, se documento pode ser visualizado internamente
+         */
+        setInternalVisualizer(internalVisualizer: boolean): void;
+
+        /**
+         * Atribui valor para palavra chave
+         */
+        setKeyWord(keyWord: string): void;
+
+        /**
+         * Atribui valor para id da linguagem
+         */
+        setLanguageId(languageId: string): void;
+
+        /**
+         * Atribui valor para última data de modificação
+         */
+        setLastModifiedDate(lastModifiedDate: Date): void;
+
+        /**
+         * Atribui valor a última data de modificação
+         */
+        setOnCheckout(onCheckout: boolean): void;
+
+        /**
+         * Atribui valor, se documento está em checkout
+         */
+        setLastModifiedTime(lastModifiedTime: string): void;
+
+        /**
+         * Atribui valor para id do documento pai
+         */
+        setParentDocumentId(parentDocumentId: number): void;
+
+        /**
+         * Atribui valor para tipo de permissão
+         */
+        setPermissionType(permissionType: number): void;
+
+        /**
+         * Atribui valor para arquivo fisico
+         */
+        setPhisicalFile(phisicalFile: string): void;
+
+        /**
+         * Atribui valor para o tamanho do arquivo fisico
+         */
+        setPhisicalFileSize(phisicalFileSize: number): void;
+
+        /**
+         * Atribui valor prioridade
+         */
+        setPriority(priority: number): void;
+
+        /**
+         * Atribui valor id privado do colega
+         */
+        setPrivateColleagueId(privateColleagueId: string): void;
+
+        /**
+         * Atribui valor, se documento é privado
+         */
+        setPrivateDocument(privateDocument: boolean): void;
+
+        /**
+         * Atribui valor para id do publicador
+         */
+        setPublisherId(publisherId: string): void;
+
+        /**
+         * Atribui valor para arquivos relacionados
+         */
+        setRelatedFiles(relatedFiles: string): void;
+
+        /**
+         * Atribui valor para tipo de restrição
+         */
+        setRestrictionType(restrictionType: number): void;
+
+        /**
+         * Atribui valor para código de site
+         */
+        setSiteCode(siteCode: string): void;
+
+        /**
+         * Atribui valor para id do tenant
+         */
+        setTenantId(tenantId: number): void;
+
+        /**
+         * Atribui valor para id do topico
+         */
+        setTopicId(topicId: number): void;
+
+        /**
+         * Atribui valor, se documento é traduzido
+         */
+        setTranslated(translated: boolean): void;
+
+        /**
+         * Atribui valor para updateIsoProperties
+         */
+        setUpdateIsoProperties(updateIsoProperties: boolean): void;
+
+        /**
+         * Atribue o identificador do uplaod
+         */
+        setUploadId(uploadId: string): void;
+
+        /**
+         * Atribui valor se usuário será notificado
+         */
+        setUserNotify(userNotify: boolean): void;
+
+        /**
+         * Atribui valor para UUID
+         */
+        setUUID(uUID: string): void;
+
+        /**
+         * Atribui valor para data de início de validação
+         */
+        setValidationStartDate(validationStartDate: Date): void;
+
+        /**
+         * Atribui valor para versão
+         */
+        setVersion(version: number): void;
+
+        /**
+         * Atribue a ação que serão realizada em relaão a versão documento
+         */
+        setVersionAction(versionAction: string): void;
+
+        /**
+         * Atribui valor para descrição da versão
+         */
+        setVersionDescription(versionDescription: string): void;
+
+        /**
+         * Atribui valor para visualização
+         */
+        setVisualization(visualization: string): void;
+
+        /**
+         * Atribui valor ao id do volume
+         */
+        setVolumeId(volumeId: string): void;
+    }
+
     class FolderVO {}
     class RelatedDocumentVO {}
     class SolvedPermissionVO {}
