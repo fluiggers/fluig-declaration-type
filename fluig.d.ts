@@ -393,22 +393,22 @@ declare namespace com.fluig.sdk.service {
         /**
          * Lista os recursos da categoria
          */
-        listResourcesByCategory(category: string, filter: string, offset: number, limit: number): java.util.ArrayList<com.fluig.sdk.api.permission.PermissionAssetVO>
+        listResourcesByCategory(category: string, filter: string, offset: number, limit: number): java.util.List<com.fluig.sdk.api.permission.PermissionAssetVO>
 
         /**
          * Lista as permissões do recurso informado
          */
-        getPermissionsByResourceCode(resourceCode: string): java.util.ArrayList<com.fluig.sdk.api.permission.PermissionVO>
+        getPermissionsByResourceCode(resourceCode: string): java.util.List<com.fluig.sdk.api.permission.PermissionVO>
 
         /**
          * Crias as permissões para o recurso
          */
-        createPermissions(resourceCode: string, permissions: java.util.ArrayList<com.fluig.sdk.api.permission.PermissionVO>): void;
+        createPermissions(resourceCode: string, permissions: java.util.List<com.fluig.sdk.api.permission.PermissionVO>): void;
 
         /**
          * Remove as permissões do recurso
          */
-        deletePermissions(resourceCode: string, permissions: java.util.ArrayList<com.fluig.sdk.api.permission.PermissionVO>): void;
+        deletePermissions(resourceCode: string, permissions: java.util.List<com.fluig.sdk.api.permission.PermissionVO>): void;
     }
 
     class SocialBreadcrumbService {}
@@ -416,7 +416,100 @@ declare namespace com.fluig.sdk.service {
     class TagsCloudService {}
     class TasksService {}
     class TenantService {}
-    class UserService {}
+
+    /**
+     * Fornece acesso aos serviços de usuário
+     */
+    class UserService {
+
+        /**
+         * Adiciona um usuário a um grupo
+         */
+        addUserToGroup(tenantId: number, groupCode: string, userVO: com.fluig.sdk.user.UserVO): void;
+
+        /**
+         * Change the user password
+         */
+        changeUserPassword(vo: com.fluig.sdk.user.UserPasswordVO): void;
+
+        /**
+         * Cria um novo usuário
+         */
+        create(vo: com.fluig.sdk.user.UserVO): void;
+        create(tenantId: number, vo: com.fluig.sdk.user.UserVO): void;
+
+        /**
+         * Retorna o usuário pelo id
+         */
+        findById(id: number): com.fluig.sdk.user.UserVO
+
+        /**
+         * Retorna o usuário pelo login
+         */
+        findByLogin(login: string): com.fluig.sdk.user.UserVO
+
+        /**
+         * Retorna usuário pelo ID
+         */
+        findByUserCode(colleagueId: string): com.fluig.sdk.user.UserVO
+
+        /**
+         * Retorna o usuário corrente logado
+         */
+        getCurrent(): com.fluig.sdk.user.UserVO
+
+        /**
+         * Pesquisa por usuários baseado em um conjunto de parâmetros.
+         */
+        list(offset: number, limit: number): java.util.List<com.fluig.sdk.user.UserVO>;
+        list(params: java.util.HashMap<object>, offset: number, limit: number): java.util.List<com.fluig.sdk.user.UserVO>;
+        list(sortField: string, sortType: string, limit: number, offset: number, search: string): java.util.List<com.fluig.sdk.user.UserVO>;
+
+        /**
+         * Pesquisa por usuários ativos e inativos baseado em um conjunto de parâmetros.
+         */
+        listAll(sortField: string, sortType: string, limit: number, offset: number, search: string): java.util.List<com.fluig.sdk.user.UserVO>;
+
+        /**
+         * Pega todos os dados do usuário especificado pelo login
+         */
+        listData(login: string): java.util.HashMap<string>;
+
+        /**
+         * Pega todos os grupos do usuário especificado pelo login
+         */
+        listGroups(login: string): java.util.List<string>;
+
+        /**
+         * Pega todos os papéis do usuário especificado pelo login
+         */
+        listRoles(login: string): java.util.List<string>;
+
+        /**
+         * Remove dados do usuário
+         */
+        removeUserData(alias: string, key: string): void;
+
+        /**
+         * Atualiza o usuário
+         */
+        updateUser(vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
+
+        /**
+         * Atualiza os dados do usuário logado
+         */
+        updateUserData(data: java.util.HashMap<string>): boolean;
+
+        /**
+         * Atualiza os dados do usuário procurando pelo ID
+         */
+        updateUserDataById(data: java.util.HashMap<string>, userId: string): boolean;
+
+        /**
+         * Atualiza usuário mesmo que esteja desabilitado (inativo)
+         */
+        updateUserEvenDisabled(vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
+    }
     class WidgetService {}
     class WorkflowAPIService {}
 }
