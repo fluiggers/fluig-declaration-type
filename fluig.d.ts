@@ -2989,3 +2989,15 @@ declare namespace FLUIGC {
      */
     declare function autocomplete(target: string, options: autocompleteOptions, callback: errorCallback);
 }
+
+interface IwsConsultaSQL {
+    /**
+     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
+     *
+     * @param {string} codSQL Código (ID) do SQL cadastrado no RM
+     * @param {number} CodColigada
+     * @param {string} CodSistema
+     * @param {string} parametros Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
+     */
+    realizarConsultaSQL(codSQL:string, codColigada:number, codSistema:string, parametros:string): string;
+}
