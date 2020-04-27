@@ -1178,7 +1178,322 @@ declare namespace com.fluig.sdk.api.document {
         setVolumeId(volumeId: string): void;
     }
 
-    class FolderVO {}
+    /**
+     * Representa uma pasta
+     */
+    class FolderVO {
+
+        /**
+         * Recupera comentário adicional
+         */
+        getAdditionalComments(): string;
+
+        /**
+         * Recupera valor de approvalAndOr
+         */
+        getApprovalAndOr(): boolean;
+
+        /**
+         * Recupera valor do colleagueId
+         */
+        getColleagueId(): string;
+
+        /**
+         * Recupera valor da data de criação
+         */
+        getCreateDate(): Date;
+
+        /**
+         * Recupera valor de descrição do documento
+         */
+        getDocumentDescription(): string;
+
+        /**
+         * Recupera valor do documentoId
+         */
+        getDocumentId(): number;
+
+        /**
+         * Recupera id do tipo de documento
+         */
+        getDocumentTypeId(): string;
+
+        /**
+         * Recupera os tipos de documento
+         */
+        getDocumentTypes(): java.util.List<string>;
+
+        /**
+         * Recupera informação se download da pasta está disponível
+         */
+        getDownloadEnabled(): boolean;
+
+        /**
+         * Informa se a pasta pode expirar
+         */
+        getExpires(): boolean;
+
+        /**
+         * Recupera os filtros
+         */
+        getFilters(): java.util.HashMap<object>;
+
+        /**
+         * Recupera valor do iconId
+         */
+        getIconId(): number;
+
+        /**
+         * Recupera boolean se pasta é imutavel
+         */
+        getImutable(): boolean;
+
+        /**
+         * Recupera segurança herdada
+         */
+        getInheritSecurity(): boolean;
+
+        /**
+         * Recupera valor de visualizador interno
+         */
+        getInternalVisualizer(): boolean;
+
+        /**
+         * Recupera valor da palavra chave
+         */
+        getKeyWord(): string;
+
+        /**
+         * Recupera boolean se usuário será notificado
+         */
+        getNotifyUser(): boolean;
+
+        /**
+         * Recupera valor do id da pasta pai
+         */
+        getParentFolderId(): number;
+
+        /**
+         * Recupera lista de permissões
+         */
+        getPermissions(): java.util.List<com.fluig.sdk.api.document.DocumentPermissionVO>;
+
+
+        /**
+         * Recupera tipo de permissão
+         */
+        getPermissionType(): number;
+
+        /**
+         * Recupera boolean se documento é privado
+         */
+        getPrivateDocument(): boolean;
+
+        /**
+         * Recupera lista de publicadores aprovadores
+         */
+        getPublisherApprovers(): java.util.List<com.fluig.sdk.api.document.DocumentApproverVO>;
+
+        /**
+         * Recupera id do publicador
+         */
+        getPublisherId(): string;
+
+        /**
+         * Recupera lista de restrições de documentos
+         */
+        getRestrictions(): java.util.List<com.fluig.sdk.api.document.DocumentRestrictionVO>;
+
+        /**
+         * Recupera tipo de restrição
+         */
+        getRestrictionType(): number;
+
+        /**
+         * Recupera valor do tenantId
+         */
+        getTenantId(): number;
+
+        /**
+         * Recupera id do topico
+         */
+        getTopicId(): number;
+
+        /**
+         * Recupera informação se update de iso properties é permitido
+         */
+        getUpdateIsoProperties(): boolean;
+
+        /**
+         * Recupera valor da versão
+         */
+        getVersion(): number;
+
+        /**
+         * Recupera valor da descrição da versão
+         */
+        getVersionDescription(): string;
+
+        /**
+         * Recupera id do volume
+         */
+        getVolumeId(): string;
+
+        /**
+         * Atribui valor para comentário adicional
+         */
+        setAdditionalComments(additionalComments: string): void;
+
+        /**
+         * Atribui valor para approvalAndOr
+         */
+        setApprovalAndOr(approvalAndOr: boolean): void;
+
+        /**
+         * Atribui valor para colleagueId
+         */
+        setColleagueId(colleagueId: string): void;
+
+        /**
+         * Atribui valor a data de criação
+         */
+        setCreateDate(createDate: Date): void;
+
+        /**
+         * Atribui valor para descrição do documento
+         */
+        setDocumentDescription(documentDescription: string): void;
+
+        /**
+         * Atribui valor para documentId
+         */
+        setDocumentId(documentId: number): void;
+
+        /**
+         * Atribui valor para documentTypeId
+         */
+        setDocumentTypeId(documentTypeId: string): void;
+
+        /**
+         * Atribui tipo de documentos
+         */
+        setDocumentTypes(documentTypes: java.util.List<string>): void;
+
+        /**
+         * Atribui valor para informação se download de pasta está disponível
+         */
+        setDownloadEnabled(downloadEnabled: boolean): void;
+
+        /**
+         * Atribui valor para informar se a pasta pode expirar
+         */
+        setExpires(expires: boolean): void;
+
+        /**
+         * Atribui filtros
+         */
+        setFilters(filters: java.util.HashMap<object>): void;
+
+        /**
+         * Atribui valor para iconId
+         */
+        setIconId(iconId: number): void;
+
+        /**
+         * Atribui boolean se pasta será imutavel
+         */
+        setImutable(imutable: boolean): void;
+
+        /**
+         * Atribui valor para segurança herdada
+         */
+        setInheritSecurity(inheritSecurity: boolean): void;
+
+        /**
+         * Atribui boolean se pasta possui visualizador interno
+         */
+        setInternalVisualizer(internalVisualizer: boolean): void;
+
+        /**
+         * Configura valor da palavra chave
+         */
+        setKeyWord(keyWord: string): void;
+
+        /**
+         * Atribui boolean se usuário será notificado
+         */
+        setNotifyUser(notifyUser: boolean): void;
+
+        /**
+         * Atribui valor para id da pasta pai
+         */
+        setParentFolderId(parentFolderId: number): void;
+
+        /**
+         * Atribui valor para lista de permissões
+         */
+        setPermissions(permissions: java.util.List<com.fluig.sdk.api.document.DocumentPermissionVO>): void;
+
+        /**
+         * Atribui valor ao tipo de permissão
+         */
+        setPermissionType(permissionType: number): void;
+
+        /**
+         * Atribui boolean se documento é privado
+         */
+        setPrivateDocument(privateDocument: boolean): void;
+
+        /**
+         * Atribui valor para publicadores aprovadores
+         */
+        setPublisherApprovers(publisherApprovers: java.util.List<com.fluig.sdk.api.document.DocumentApproverVO>): void;
+
+        /**
+         * Atribui valor para id do publicador
+         */
+        setPublisherId(publisherId: string): void;
+
+        /**
+         * Atribui valor para lista de restrições de documentos
+         */
+        setRestrictions(restrictions: java.util.List<com.fluig.sdk.api.document.DocumentRestrictionVO>): void;
+
+        /**
+         * Atribui valor para tipo de restrição
+         */
+        setRestrictionType(restrictionType: number): void;
+
+        /**
+         * Atribui valor para tenantId
+         */
+        setTenantId(tenantId: number): void;
+
+        /**
+         * Atribui valor para topicId
+         */
+        setTopicId(topicId: number): void;
+
+        /**
+         * Atribui permitir atualização de iso properties
+         */
+        setUpdateIsoProperties(updateIsoProperties: boolean): void;
+
+        /**
+         * Atribui valor para versão
+         */
+        setVersion(version: number): void;
+
+        /**
+         * Atribui valor para descrição da versão
+         */
+        setVersionDescription(versionDescription: string): void;
+
+        /**
+         * Atribui valor do id do volume
+         */
+        setVolumeId(volumeId: string): void;
+    }
     class RelatedDocumentVO {}
     class SolvedPermissionVO {}
 }
