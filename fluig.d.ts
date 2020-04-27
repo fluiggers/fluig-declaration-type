@@ -2621,6 +2621,11 @@ enum ConstraintType {
 
 /**
  * Tipos de Documento
+ *
+ * Esse enum não existe no Fluig e foi criado somente para
+ * facilitar a identificação dos tipos de documento.
+ *
+ * No Fluig utilize somente os valores ao fazer as comparações.
  */
 enum DocumentTypeEnum {
     PASTA_RAIZ = '0',
@@ -2988,4 +2993,16 @@ declare namespace FLUIGC {
      * @param callback Função executada após trazer as respostas para o auto-complete
      */
     declare function autocomplete(target: string, options: autocompleteOptions, callback: errorCallback);
+}
+
+interface IwsConsultaSQL {
+    /**
+     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
+     *
+     * @param {string} codSQL Código (ID) do SQL cadastrado no RM
+     * @param {number} CodColigada
+     * @param {string} CodSistema
+     * @param {string} parametros Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
+     */
+    realizarConsultaSQL(codSQL:string, codColigada:number, codSistema:string, parametros:string): string;
 }
