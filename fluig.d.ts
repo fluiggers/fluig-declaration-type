@@ -660,7 +660,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor do tipo de documento
          */
-        getDocumentType(): string;
+        getDocumentType(): DocumentTypeEnum;
 
         /**
          * Recupera valor do id do tipo de documento
@@ -965,7 +965,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Atribui valor para tipo de documento
          */
-        setDocumentType(documentType: string): void;
+        setDocumentType(documentType: DocumentTypeEnum): void;
 
         /**
          * Atribui valor para id do tipo de documento
@@ -1221,7 +1221,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera os tipos de documento
          */
-        getDocumentTypes(): java.util.List<string>;
+        getDocumentTypes(): java.util.List<DocumentTypeEnum>;
 
         /**
          * Recupera informação se download da pasta está disponível
@@ -1377,7 +1377,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Atribui tipo de documentos
          */
-        setDocumentTypes(documentTypes: java.util.List<string>): void;
+        setDocumentTypes(documentTypes: java.util.List<DocumentTypeEnum>): void;
 
         /**
          * Atribui valor para informação se download de pasta está disponível
@@ -1817,23 +1817,8 @@ class DocumentDto {
 
     /**
      * Pega o tipo do documento
-     *
-     * Tipos possíveis:
-     * - 0: Pasta Raíz
-     * - 1: Pasta
-     * - 2: Documento Normal
-     * - 3: Documento Externo
-     * - 4: Formulário
-     * - 5: Ficha
-     * - 7: Anexo Workflow
-     * - 8: Novo Conteúdo
-     * - 9: Aplicativo
-     * - 10: Relatório
-     * - 15: Pasta Social
-     * - portal: Site
-     * - portalPage: Página de Site
      */
-    getDocumentType(): string;
+    getDocumentType(): DocumentTypeEnum;
 
     /**
      * Pega o número da pasta/formulário pai
@@ -2632,6 +2617,25 @@ enum ConstraintType {
      * Filtro: Não Deve Conter
      */
     MUST_NOT,
+}
+
+/**
+ * Tipos de Documento
+ */
+enum DocumentTypeEnum {
+    PASTA_RAIZ = '0',
+    PASTA = '1',
+    DOCUMENTO_NORMAL = '2',
+    DOCUMENTO_EXTERNO = '3',
+    FORMULARIO = '4',
+    FICHA = '5',
+    ANEXO_WORKFLOW = '7',
+    NOVO_CONTEUDO = '8',
+    APLICATIVO = '9',
+    RELATORIO = '10',
+    PASTA_SOCIAL = '15',
+    SITE = 'portal',
+    PAGINA_DE_SITE = 'portalPage',
 }
 
 class Dataset {
