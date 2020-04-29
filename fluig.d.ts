@@ -3022,6 +3022,177 @@ interface autocompleteOptions {
 
 declare type errorCallback = (error: errorData, data: object) => void;
 
+declare type simpleCallback = () => void;
+declare type dataCallback = (data: object) => void;
+
+interface filterSourceSettings {
+    /**
+     * URL que trará os dados
+     */
+    url: string,
+
+    /**
+     * Tipo do conteúdo retornado. Ex: application/json
+     */
+    contentType: string,
+    root: string,
+    pattern: string,
+    limit: number,
+    offset: number,
+    patternKey: string,
+    limitKey: string,
+    offsetKey: string
+}
+
+interface filterStyleSettings {
+    /**
+     * The selector for the autocomplete tag template.
+     */
+    templateTag?: string,
+
+    /**
+     * The selector for the autocomplete suggestion template.
+     */
+    templateSuggestion?: string,
+
+    /**
+     * The selector for the autocomplete tip message template.
+     */
+    templateTipMessage?: string,
+
+    /**
+     * Classname for the tags. Padrão é tag-gray
+     */
+    autocompleteTagClass?: string,
+
+    /**
+     * CSS class used to table selected lines.
+     */
+    tableSelectedLineClass?: string,
+
+    /**
+     * Receives the waiting time to make the request. This is important not to open a request for each character typed.
+     */
+    tableStyle?: string,
+
+    /**
+     * Defines a CSS class to apply to the table. Padrão é fluigicon-zoom-in
+     *
+     * Ex .: 'table-hover table-bordered table-striped'.
+     */
+    filterIconClass?: string
+}
+
+interface filterTableSettings {
+    header: filterTableHeader[],
+
+    /**
+     * Pode ser um array de chaves do objeto ou a classe CSS do template mustache.
+     *
+     * A sequência do array deve ser a mesma de header.
+     */
+    renderContent: string|string[],
+    formatData?: function
+}
+
+interface filterTableHeader {
+    /**
+     * Título da coluna
+     */
+    title?: string,
+
+    /**
+     * Atributo do objeto que será utilizado para ordenar essa coluna. Padrão é vazio.
+     *
+     * Caso não seja passado utilizará o conteúdo padrão da coluna que foi
+     * indicado em renderContent da tabela.
+     */
+    dataorder?: string,
+
+    /**
+     * Indica se será a coluna ordenada por padrão. Padrão é false.
+     */
+    standard?: boolean,
+
+    /**
+     * Tamanho visual da coluna. Utiliza uma das classes CSS col-
+     */
+    size?: string,
+
+    /**
+     * Indica se a coluna deverá ser exibida. Padrão é true
+     */
+    display?: boolean
+}
+
+interface filterSettings {
+    /**
+     * Campo que será exibido ao selecionar um valor
+     */
+    displayKey: string,
+
+    /**
+     * Configuração da fonte de dados
+     */
+    source: filterSourceSettings,
+
+    /**
+     * Configuração da Tabela de exibição dos itens
+     */
+    table: filterTableSettings,
+
+    /**
+     * Configuração dos estilos
+     */
+    style?: filterStyleSettings,
+
+    /**
+     * Altura da tabela (preferencialmente em px). Padrão: 260px
+     */
+    tableHeight?: string,
+
+    /**
+     * Permite múltiplas seleções? Padrão: false
+     */
+    multiSelect?: boolean,
+
+    /**
+     * Tempo limite (em ms) da busca na fonte de dados. Padrão 200ms
+     */
+    searchTimeout?: number,
+
+    /**
+     * Quantidade mínima de caracteres antes de iniciar a busca. Padrão 1
+     */
+    minLength?: number,
+
+    /**
+     * Limite de caracteres exibidos no item selecionado. Padrão: 200
+     */
+    tagMaxWidth?: number
+}
+
+class FluigcFilter {
+    getSelectedItems(): object[];
+    add(item: object): void;
+    removeAll(): void;
+
+    /**
+     * Escuta eventos do filtro.
+     *
+     * Importante: não coloque mais de um filtro em um mesmo pai, pois os eventos
+     * serão escutados por todos os filtros irmãos.
+     *
+     * O filtro dispara os seguintes eventos:
+     * - fluig.filter.load.complete => quando o filtro termina de carregar
+     * - fluig.filter.item.added => quando um item é selecionado/adicionado
+     *
+     * @param event
+     * @param callback
+     */
+    on(event: string, callback: simpleCallback|dataCallback): void;
+}
+
 declare namespace FLUIGC {
     /**
      * Cria um campo com auto-complete
@@ -3031,6 +3202,14 @@ declare namespace FLUIGC {
      * @param callback Função executada após trazer as respostas para o auto-complete
      */
     declare function autocomplete(target: string, options: autocompleteOptions, callback: errorCallback);
+
+    /**
+     * Cria um campo filter em um select (é o Zoom feito manualmente)
+     *
+     * @param target Seletor utilizado na JQuery
+     * @param settings Configurações do filtro
+     */
+    declare function filter(target: string, settings: filterSettings): FluigcFilter;
 }
 
 interface IwsConsultaSQL {
