@@ -2835,7 +2835,10 @@ class RelatedDocumentDto {
     getCompanyId(): number;
 }
 
-interface RequestSettings {
+/**
+ * Configuração para uma requisição efetuada pelo método WCMAPI.Create
+ */
+interface WcmApiRequestSettings {
     url?: string;
 
     /**
@@ -2906,15 +2909,49 @@ interface RequestSettings {
  * Consultar dados do ambiente da sessão via JS (Client Side)
  */
 declare namespace WCMAPI {
+    /**
+     * Versão do fluig
+     */
     const version: string;
 
+    /**
+     * Endereço do servidor (incluindo protocolo e porta)
+     */
     const serverURL: string;
+
+    /**
+     * ID do tenant ao qual o usuário está conectado
+     */
+    const organizationId: string;
+
+    /**
+     * Código do tenant ao qual o usuário está conectado
+     */
+    const tenantCode: string;
+
+    /**
+     * Raíz da URL do portal da plataforma
+     */
+    const serverContextURL: string;
+
+    /**
+     * Pega o endereço do servidor (incluindo protocolo e porta)
+     */
     declare function getServerURL(): string;
 
-    const tenantCode: string;
+    /**
+     * Pega o ID do tenant ao qual o usuário está conectado
+     */
+    declare function getOrganizationId(): string;
+
+    /**
+     * Pega o código do tenant ao qual o usuário está conectado
+     */
     declare function getTenantCode(): string;
 
-    const serverContextURL: string;
+    /**
+     * Retorna a raíz da URL do portal da plataforma
+     */
     declare function getServerContextURL(): string;
 
     /**
@@ -2922,7 +2959,7 @@ declare namespace WCMAPI {
      *
      * A requisição é feita pela JQuery.
      */
-    declare function Create(settings: RequestSettings): void;
+    declare function Create(settings: WcmApiRequestSettings): void;
 
     /**
      * Encerra a sessão do usuário
