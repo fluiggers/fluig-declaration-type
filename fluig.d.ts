@@ -174,7 +174,7 @@ declare namespace com.fluig.sdk.service {
     /**
      * Fornece acesso aos serviços de notificações
      */
-    class AlertService {
+    declare class AlertService {
         /**
          * Método que conta os alertas não lidos de um usuário.
          */
@@ -235,18 +235,18 @@ declare namespace com.fluig.sdk.service {
          */
         sendNotification(eventKey: string, loginSender: string, loginReceiver: string, object: com.fluig.sdk.api.alert.AlertVO, place: com.fluig.sdk.api.alert.AlertVO, actions: java.util.List<com.fluig.sdk.api.alert.AlertActionVO>, metadata: java.util.HashMap<string>): void;
     }
-    class ArticleService {}
-    class AuthorizeClientSdkService {}
-    class CardIndexService {}
-    class CardService {}
-    class CollaborationSDKService {}
-    class CommentService {}
-    class CommunityService {}
-    class ContentFilesService {}
+    declare class ArticleService {}
+    declare class AuthorizeClientSdkService {}
+    declare class CardIndexService {}
+    declare class CardService {}
+    declare class CollaborationSDKService {}
+    declare class CommentService {}
+    declare class CommunityService {}
+    declare class ContentFilesService {}
     /**
      * Fornece acesso aos serviços de documentos (GED)
      */
-    class DocumentService {
+    declare class DocumentService {
         /**
          * Aprova ou reprova um documento.
          */
@@ -334,14 +334,14 @@ declare namespace com.fluig.sdk.service {
          */
         validateDocumentPublicUrlConfiguration(tenantId: number, documentId: number, version: number): void;
     }
-    class DocumentationProxyServiceService {}
-    class FavoritesService {}
-    class FilterAPIService {}
+    declare class DocumentationProxyServiceService {}
+    declare class FavoritesService {}
+    declare class FilterAPIService {}
 
     /**
      * Fornece acesso aos serviços de pastas (GED)
      */
-    class FolderDocumentService {
+    declare class FolderDocumentService {
         /**
          * Criação de uma nova pasta
          */
@@ -372,19 +372,19 @@ declare namespace com.fluig.sdk.service {
          */
         updateDocumentDescription(companyId: number, documentId: number, description: string): com.fluig.sdk.api.document.DocumentVO;
     }
-    class GlobalParameterService {}
-    class GroupService {}
-    class HolidayAPIService {}
-    class I18NService {}
-    class IdentityService {}
-    class JobService {}
-    class LocalAPIService {}
-    class PageService {}
-    class PageWidgetService {}
-    class PostService {}
-    class SearchService {}
+    declare class GlobalParameterService {}
+    declare class GroupService {}
+    declare class HolidayAPIService {}
+    declare class I18NService {}
+    declare class IdentityService {}
+    declare class JobService {}
+    declare class LocalAPIService {}
+    declare class PageService {}
+    declare class PageWidgetService {}
+    declare class PostService {}
+    declare class SearchService {}
 
-    class SecurityService {
+    declare class SecurityService {
         /**
          * Verifica se o usuário logado possui determinada permissão no recurso informado
          */
@@ -411,16 +411,16 @@ declare namespace com.fluig.sdk.service {
         deletePermissions(resourceCode: string, permissions: java.util.List<com.fluig.sdk.api.permission.PermissionVO>): void;
     }
 
-    class SocialBreadcrumbService {}
-    class SocialSDKService {}
-    class TagsCloudService {}
-    class TasksService {}
-    class TenantService {}
+    declare class SocialBreadcrumbService {}
+    declare class SocialSDKService {}
+    declare class TagsCloudService {}
+    declare class TasksService {}
+    declare class TenantService {}
 
     /**
      * Fornece acesso aos serviços de usuário
      */
-    class UserService {
+    declare class UserService {
 
         /**
          * Adiciona um usuário a um grupo
@@ -510,20 +510,20 @@ declare namespace com.fluig.sdk.service {
          */
         updateUserEvenDisabled(vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
     }
-    class WidgetService {}
-    class WorkflowAPIService {}
+    declare class WidgetService {}
+    declare class WorkflowAPIService {}
 }
 
 
 declare namespace com.fluig.sdk.api.alert {
-    class AlertActionVO {}
-    class AlertConfigVO {}
-    class AlertEventVO {}
-    class AlertModuleVO {}
-    class AlertObjectVO {}
-    class AlertSenderVO {}
-    class AlertUserVO {}
-    class AlertVO {
+    declare class AlertActionVO {}
+    declare class AlertConfigVO {}
+    declare class AlertEventVO {}
+    declare class AlertModuleVO {}
+    declare class AlertObjectVO {}
+    declare class AlertSenderVO {}
+    declare class AlertUserVO {}
+    declare class AlertVO {
         getActions(): java.util.List<com.fluig.sdk.api.alert.AlertActionVO>;
         getCanRemove(): boolean;
         getCreationDate(): Date;
@@ -554,23 +554,23 @@ declare namespace com.fluig.sdk.api.alert {
 }
 
 declare namespace com.fluig.sdk.api.authorizeclient {
-    class AuthorizeClientSdkServiceVO {}
+    declare class AuthorizeClientSdkServiceVO {}
 }
 
 declare namespace com.fluig.sdk.api.document {
-    class AllocatedDocumentVO {}
-    class DocumentApprovementHistoryVO {}
-    class DocumentApproverVO {}
-    class DocumentPermissionVO {}
-    class DocumentRestrictionVO {}
-    class DocumentSecurityConfigVO {}
-    class DocumentSecurityVO {}
-    class DocumentTaskVO {}
+    declare class AllocatedDocumentVO {}
+    declare class DocumentApprovementHistoryVO {}
+    declare class DocumentApproverVO {}
+    declare class DocumentPermissionVO {}
+    declare class DocumentRestrictionVO {}
+    declare class DocumentSecurityConfigVO {}
+    declare class DocumentSecurityVO {}
+    declare class DocumentTaskVO {}
 
     /**
      * Representa um documento
      */
-    class DocumentVO {
+    declare class DocumentVO {
         /**
          * Recupera número de acessso
          */
@@ -1181,7 +1181,7 @@ declare namespace com.fluig.sdk.api.document {
     /**
      * Representa uma pasta
      */
-    class FolderVO {
+    declare class FolderVO {
 
         /**
          * Recupera comentário adicional
@@ -1494,46 +1494,46 @@ declare namespace com.fluig.sdk.api.document {
          */
         setVolumeId(volumeId: string): void;
     }
-    class RelatedDocumentVO {}
-    class SolvedPermissionVO {}
+    declare class RelatedDocumentVO {}
+    declare class SolvedPermissionVO {}
 }
 
 declare namespace com.fluig.sdk.api.ecm {
-    class CollaborationAppVO {};
-    class CollaborationVO {};
+    declare class CollaborationAppVO {};
+    declare class CollaborationVO {};
 }
 
 declare namespace com.fluig.sdk.api.enums {
-    class AssumeProcessTaskStatus {}
+    declare class AssumeProcessTaskStatus {}
 }
 
 declare namespace com.fluig.sdk.api.group {
-    class GroupVO {}
+    declare class GroupVO {}
 }
 
 declare namespace com.fluig.sdk.api.holiday {
-    class HolidayVO {}
+    declare class HolidayVO {}
 }
 
 declare namespace com.fluig.sdk.api.job {
-    class JobVO {}
+    declare class JobVO {}
 }
 
 declare namespace com.fluig.sdk.api.job.JobVO {
-    class IntervalType {}
+    declare class IntervalType {}
 }
 
 declare namespace com.fluig.sdk.api.local {
-    class LocalUserVO {}
-    class LocalVO {}
+    declare class LocalUserVO {}
+    declare class LocalVO {}
 }
 
 declare namespace com.fluig.sdk.api.oauth {
-    class OAuthSdkVO {}
+    declare class OAuthSdkVO {}
 }
 
 declare namespace com.fluig.sdk.api.permission {
-    class PermissionAssetVO {
+    declare class PermissionAssetVO {
         getId(): number;
         getCode(): string;
         getDescription(): string;
@@ -1545,7 +1545,7 @@ declare namespace com.fluig.sdk.api.permission {
         setPageCode(pageCode: string): void;
         setTypeCode(typeCode: string): void;
     }
-    class PermissionVO {
+    declare class PermissionVO {
         getCategory(): string;
         getCategoryCode(): string;
         getIsSelected(): boolean;
@@ -1560,88 +1560,88 @@ declare namespace com.fluig.sdk.api.permission {
 }
 
 declare namespace com.fluig.sdk.api.search {
-    class DefaultSearchRequest {}
-    class DefaultSearchResponse{}
+    declare class DefaultSearchRequest {}
+    declare class DefaultSearchResponse{}
 }
 
 declare namespace com.fluig.sdk.api.social {
-    class ArticleCoverVO {}
-    class ArticleVO {}
-    class CommentVO {}
-    class CommunityVO {}
-    class CropVO {}
-    class MediaVO {}
-    class PostVO {}
-    class SociableVO {}
-    class SocialBreadcrumbItemVO {}
-    class SocialBreadcrumbVO {}
-    class SocialVO {}
+    declare class ArticleCoverVO {}
+    declare class ArticleVO {}
+    declare class CommentVO {}
+    declare class CommunityVO {}
+    declare class CropVO {}
+    declare class MediaVO {}
+    declare class PostVO {}
+    declare class SociableVO {}
+    declare class SocialBreadcrumbItemVO {}
+    declare class SocialBreadcrumbVO {}
+    declare class SocialVO {}
 }
 
 declare namespace com.fluig.sdk.api.task {
-    class ResumedTasksVO {}
-    class TaskKindEnum {}
-    class TaskStatusEnum {}
+    declare class ResumedTasksVO {}
+    declare class TaskKindEnum {}
+    declare class TaskStatusEnum {}
 }
 
 declare namespace com.fluig.sdk.api.workflow {
-    class AssumeProcessTaskResultVO {}
-    class AssumeProcessTaskVO {}
-    class AssumeProcessTasksResultVO {}
-    class AssumeProcessTasksVO {}
-    class AttachmentVO {}
-    class CancelInstanceResultVO {}
-    class CancelInstanceVO {}
-    class CancelInstancesResultVO {}
-    class CancelInstancesVO {}
-    class CardIndexAttachmentVO {}
-    class CardIndexVO {}
-    class CardItemVO {}
-    class ProcessAttachmentVO {}
-    class ProcessDefinitionVO {}
-    class ProcessDefinitionVersionVO {}
-    class ProcessInstanceInfoVO {}
-    class ProcessObservationVO {}
-    class ProcessStateVO {}
-    class ProcessTaskInfoVO {}
-    class ProcessTaskVO {}
-    class ProcessVersionVO {}
-    class RequestProcessTaskVO {}
-    class RequestSLAVO {}
-    class RequestTaskSLAVO {}
-    class ResumeProcessTaskVO {}
-    class ResumeRequestsSLAVO {}
-    class WorkflowVO {}
+    declare class AssumeProcessTaskResultVO {}
+    declare class AssumeProcessTaskVO {}
+    declare class AssumeProcessTasksResultVO {}
+    declare class AssumeProcessTasksVO {}
+    declare class AttachmentVO {}
+    declare class CancelInstanceResultVO {}
+    declare class CancelInstanceVO {}
+    declare class CancelInstancesResultVO {}
+    declare class CancelInstancesVO {}
+    declare class CardIndexAttachmentVO {}
+    declare class CardIndexVO {}
+    declare class CardItemVO {}
+    declare class ProcessAttachmentVO {}
+    declare class ProcessDefinitionVO {}
+    declare class ProcessDefinitionVersionVO {}
+    declare class ProcessInstanceInfoVO {}
+    declare class ProcessObservationVO {}
+    declare class ProcessStateVO {}
+    declare class ProcessTaskInfoVO {}
+    declare class ProcessTaskVO {}
+    declare class ProcessVersionVO {}
+    declare class RequestProcessTaskVO {}
+    declare class RequestSLAVO {}
+    declare class RequestTaskSLAVO {}
+    declare class ResumeProcessTaskVO {}
+    declare class ResumeRequestsSLAVO {}
+    declare class WorkflowVO {}
 }
 
 declare namespace com.fluig.sdk.filter {
-    class FilterFieldVO {}
-    class FilterGroupResultVO {}
-    class FilterGroupVO {}
-    class FilterOrderVO {}
-    class FilterResultVO {}
-    class FilterVO {}
+    declare class FilterFieldVO {}
+    declare class FilterGroupResultVO {}
+    declare class FilterGroupVO {}
+    declare class FilterOrderVO {}
+    declare class FilterResultVO {}
+    declare class FilterVO {}
 }
 
 declare namespace com.fluig.sdk.identity {
-    class UserAuthTokenSessionVO {}
+    declare class UserAuthTokenSessionVO {}
 }
 
 declare namespace com.fluig.sdk.page {
-    class PageMobileApiVO {}
-    class PageWidgetMobileApiVO {}
-    class PublicApiPageVO {}
+    declare class PageMobileApiVO {}
+    declare class PageWidgetMobileApiVO {}
+    declare class PublicApiPageVO {}
 }
 
 declare namespace com.fluig.sdk.tenant {
-    class AdminUserVO {}
-    class TenantVO {}
+    declare class AdminUserVO {}
+    declare class TenantVO {}
 }
 
 declare namespace com.fluig.sdk.user {
-    class ColleagueVO {}
-    class UserPasswordVO {}
-    class UserVO {}
+    declare class ColleagueVO {}
+    declare class UserPasswordVO {}
+    declare class UserVO {}
 }
 
 class Iterator<T> {
@@ -1657,8 +1657,7 @@ class Iterator<T> {
 }
 
 declare namespace java.util {
-
-    class List<T> {
+    declare class List<T> {
         /**
          * Pega o elemento no índice indicado
          */
@@ -1680,15 +1679,42 @@ declare namespace java.util {
         iterator(): Iterator<T>
     }
 
-    class ArrayList<T> {
+    declare class ArrayList<T> {
+        /**
+         * Pega o elemento no índice indicado
+         */
         get(indice: number): T;
+
+        /**
+         * Adiciona um elemento à lista
+         */
         add(valor: T): void;
+
+        /**
+         * Indica o tamanho da lista
+         */
         size(): number;
+
+        /**
+         * Pega um iterator para percorrer a lista
+         */
+        iterator(): Iterator<T>
     }
 
-    class HashMap<T> {
+    declare class HashMap<T> {
+        /**
+         * Pega o elemento no índice indicado
+         */
         get(campo: string): T;
+
+        /**
+         * Adiciona um elemento
+         */
         put(campo: string, valor: T): void;
+
+        /**
+         * Indica o tamanho da lista
+         */
         size(): number;
     }
 }
@@ -1697,7 +1723,7 @@ declare namespace java.util {
 /**
  * Entidade Aprovador
  */
-class ApproverDto {
+declare class ApproverDto {
 
     /**
      * Pega o número do aprovador
@@ -1733,7 +1759,7 @@ class ApproverDto {
 /**
  * Entidade Documento para usar nos Eventos
  */
-class DocumentDto {
+declare class DocumentDto {
 
     /**
      * Pega o número do documento
@@ -1971,7 +1997,7 @@ class DocumentDto {
 /**
  * Entidade Segurança do Documento
  */
-class DocumentSecurityConfigDto {
+declare class DocumentSecurityConfigDto {
 
     /**
      * Pega o número do documento
@@ -2147,7 +2173,7 @@ declare function getValue(nomePropriedade: string): string;
  *
  * Usar em eventos do formulário (que recebem form como parâmetro).
  */
-class FormController {
+declare class FormController {
 
     /**
      * Retorna o ID da empresa
@@ -2281,7 +2307,7 @@ class FormController {
 /**
  * Disponibiliza funções para incluir conteúdo HTML no formulário
  */
-class customHTML {
+declare class customHTML {
 
     /**
      * Adiciona conteúdo no final do HTML do formulário
@@ -2643,7 +2669,7 @@ enum DocumentTypeEnum {
     PAGINA_DE_SITE = 'portalPage',
 }
 
-class Dataset {
+declare class Dataset {
     const rowsCount: number;
 
     /**
@@ -2749,11 +2775,10 @@ class Dataset {
     addIndex(valores: string[]|object[]): void;
 }
 
-class Constraint {
+interface Constraint {
     fieldName: string;
     initialValue: string;
     finalValue: string;
-
 }
 
 /**
@@ -2804,7 +2829,7 @@ declare namespace DatasetBuilder {
 /**
  * Entidade Documento Relacionado
  */
-class RelatedDocumentDto {
+declare class RelatedDocumentDto {
 
     /**
      * Retorna o número do documento
@@ -3021,7 +3046,6 @@ interface autocompleteOptions {
 }
 
 declare type errorCallback = (error: errorData, data: object) => void;
-
 declare type simpleCallback = () => void;
 declare type dataCallback = (data: object) => void;
 
@@ -3172,7 +3196,7 @@ interface filterSettings {
     tagMaxWidth?: number
 }
 
-class FluigcFilter {
+declare class FluigcFilter {
     getSelectedItems(): object[];
     add(item: object): void;
     removeAll(): void;
