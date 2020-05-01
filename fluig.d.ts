@@ -3381,6 +3381,127 @@ declare class FluigcFilter {
     on(event: string, callback: simpleCallback|dataCallback): void;
 }
 
+interface CalendarSettings {
+    /**
+     * Indica se exibirá a seleção de Data. Padrão true.
+     */
+    pickDate?: boolean;
+
+    /**
+     * Indica se exibirá a seleção de Tempo. Padrão false.
+     */
+    pickTime?: boolean;
+
+    /**
+     * Indica se usará minutos. Padrão true.
+     */
+    useMinutes?: boolean;
+
+    /**
+     * Indica se usará seguncos. Padrão true.
+     */
+    useSeconds?: boolean;
+
+    /**
+     * Indica se selecionará automaticamente a data corrente. Padrão true
+     */
+    useCurrent?: boolean;
+
+    /**
+     * Valor a incrementar os minutos quando clicar nas setas de subir/descer
+     */
+    minuteStepping?: number;
+
+    /**
+     * Define uma data mínima selecionável
+     */
+    minDate?: string;
+
+    /**
+     * Define a data máxima selecionável
+     */
+    maxDate?: string;
+
+    /**
+     * Exibe o indicador do dia de hoje
+     */
+    showToday?: boolean;
+
+    /**
+     * Código do idioma. Padrão pt-br
+     */
+    language?: string;
+
+    /**
+     * Data padrão
+     *
+     * Aceita também data da Moment.js
+     */
+    defaultDate?: string|Date;
+
+    /**
+     * Datas que não podem ser selecionadas
+     *
+     * Aceita também data da Moment.js
+     */
+    disabledDates?: string[]|Date[];
+
+    /**
+     * Únicas datas que  podem ser selecionadas
+     *
+     * Aceita também data da Moment.js
+     */
+    enabledDates?: string[]|Date[];
+
+    /**
+     * Use "strict" quando validar datas. Padrão false
+     */
+    useStrict?: boolean;
+
+    /**
+     * Exibe a seleção de Tempo ao lado da seleção de Data. Padrão false.
+     */
+    sideBySide?: boolean;
+
+    /**
+     * Dias da semana que não pode ser selecionados
+     *
+     * Dia da semana inicia em 0, para domingo.
+     */
+    daysOfWeekDisabled?: number[];
+}
+
+declare class Calendar {
+    /**
+     * Configura a data mínima que pode ser selecionada
+     *
+     * @param date Data como string (formato pt-br), Date ou moment
+     */
+    setMinDate(date: string|Date): void;
+
+    /**
+     * Configura a data máxima que pode ser selecionada
+     *
+     * @param date Data como string (formato pt-br), Date ou moment
+     */
+    setMaxDate(date: string|Date): void;
+    show(): void;
+    disable(): void;
+    enable(): void;
+
+    /**
+     * Atribui a data selecionada
+     *
+     * @param date Data como string (formato pt-br), Date ou moment
+     */
+    setDate(date: string|Date): void;
+
+    /**
+     * Pega a data como objeto moment (da lib momentjs)
+     */
+    getDate(): any;
+}
+
 declare namespace FLUIGC {
     /**
      * Cria um campo com auto-complete
@@ -3417,6 +3538,27 @@ declare namespace FLUIGC {
      * @param settings Configurações do filtro
      */
     declare function filter(target: string, settings: filterSettings): FluigcFilter;
+
+    /**
+     * Cria uma caixa de seleção para tratar data e horário
+     *
+     * @param target Seletor utilizado na JQuery
+     * @param settings Configurações do calendário
+     */
+    declare function calendar(target: string, settings: CalendarSettings): Calendar;
+}
+
+declare namespace FLUIGC.calendar {
+    /**
+     * Formata uma data em uma string de acordo com a formatação indicada.
+     *
+     * @see https://style.fluig.com/javascript.html#fluig-calendar
+     *
+     * @param date Data a ser formatada
+     * @param format Formatação
+     * @param language Idioma (padrão pt-br)
+     */
+    declare function formatDate(date: Date, format: string, language?: string): string;
 }
 
 interface IwsConsultaSQL {
