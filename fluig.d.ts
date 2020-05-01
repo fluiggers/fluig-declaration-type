@@ -3014,24 +3014,34 @@ interface errorData {
 }
 
 interface autocompleteOptions {
-    highlight: boolean;
-    minLength: number;
-    hint: boolean;
-    searchTimeout: number;
-    type: string;
-    name: string;
-    tagClass: string;
-    maxTags: number;
-    allowDuplicates: boolean
-    onTagExists: autocompleteOnTagCallback;
-    onMaxTags: autocompleteOnTagCallback
-    displayKey: string;
-    tagMaxWidth: number;
-    templates: {
-        tag: string;
-        suggestion: string;
-    };
-    source: {
+    /**
+     * Tipo do autocomplete
+     *
+     * Pode ser (padrão é tag):
+     * - autocomplete
+     * - tag
+     * - tagAutocomplete
+     */
+    type?: string;
+
+    /**
+     * Item exibido na sugestão
+     *
+     * Obrigatório para autocomplete e tagAutocomplete
+     */
+    displayKey?: string;
+
+    /**
+     * Nome do dataset
+     *
+     * Opcional para autocomplete e tagAutocomplete
+     */
+    name?: string;
+
+    /**
+     * Determina o serviço utilizado para buscar as sugestões
+     */
+    source: {
         url: string;
         limit: 10,
         offset: 0,
@@ -3039,10 +3049,164 @@ interface autocompleteOptions {
         patternKey: string;
         root: string;
     };
-    tagRemoveCss: {
-        margin: string;
+
+    /**
+     * Coloca o texto em negrito quando efetua a busca
+     */
+    highlight?: boolean;
+
+    /**
+     * Mínimo de caracteres antes de iniciar a busca
+     */
+    minLength?: number;
+
+    /**
+     * Se falso não exibirá as opções retornadas da busca
+     */
+    hint?: boolean;
+
+    /**
+     * Tempo limite para obter um resultado da busca
+     */
+    searchTimeout?: number;
+
+    /**
+     * Nome da classe utilizada na tag
+     */
+    tagClass?: string;
+
+    /**
+     * Máximo de tags permitidas para selecionar
+     */
+    maxTags?: number;
+
+    /**
+     * Permite selecionar a mesma tag várias vezes
+     */
+    allowDuplicates?: boolean
+
+    /**
+     * Evento disparado quando tentar adicionar uma tag repetida
+     */
+    onTagExists?: autocompleteOnTagCallback;
+
+    /**
+     * Evento disparado ao atingir o limite de tags
+     */
+    onMaxTags?: autocompleteOnTagCallback;
+
+    /**
+     * Largura máxima da tag
+     */
+    tagMaxWidth?: number;
+
+    /**
+     * Template da dica
+     */
+    templates?: {
+        tag: string;
+        suggestion: string;
+    };
+    
+    /**
+     * Objeto com o CSS para formatar uma tag removida
+     */
+    tagRemoveCss?: {
+        [property: string]: string;
     };
 
+}
+
+interface autocompleteTag {
+    description: string;
+}
+
+declare class AutoComplete {
+    /**
+     * Adiciona uma tag
+     *
+     * Método para os tipos tag e tagAutocomplete
+     */
+    add(tag: autocompleteTag): void;
+
+    /**
+     * Atualiza uma tag para o tipo tag ou tagAutocomplete
+     *
+     * Método para os tipos tag e tagAutocomplete
+     */
+    update(tag: autocompleteTag): void;
+
+    /**
+     * Remove uma tag para o tipo tag ou tagAutocomplete
+     *
+     * Método para os tipos tag e tagAutocomplete
+     */
+    remove(tag: autocompleteTag): void;
+
+    /**
+     * Remove todas as tags
+     *
+     * Método para os tipos tag e tagAutocomplete
+     */
+    removeAll(): void;
+
+    /**
+     * Retorna todas as tags
+     *
+     * Método para os tipos tag e tagAutocomplete
+     */
+    items(): autocompleteTag[];
+
+    /**
+     * Abre a caixa de seleção
+     *
+     * Método para o tipo autocomplete
+     */
+    open(): void;
+
+    /**
+     * Fecha a caixa de seleção
+     *
+     * Método para o tipo autocomplete
+     */
+    close(): void;
+
+    /**
+     * Pega o valor do elemento
+     *
+     * Método para o tipo autocomplete
+     */
+    val(): string;
+
+    /**
+     * Atribui um valor ao elemento
+     *
+     * Método para o tipo autocomplete
+     */
+    val(value: string): void;
+
+
+    /**
+     * Coloca o foco no autocomplete
+     */
+    focus(): void;
+
+    /**
+     * Pega o elemento input do autocomplete
+     */
+    input(): HTMLElement;
+
+    /**
+     * Atualiza o autocomplete
+     *
+     * Útil para quando fizer mudanças manuais no elemento.
+     */
+    refresh(): void;
+
+    /**
+     * Destrói o autocomplete
+     */
+    destroy(): void;
 }
 
 declare type errorCallback = (error: errorData, data: object) => void;
@@ -3221,11 +3385,24 @@ declare namespace FLUIGC {
     /**
      * Cria um campo com auto-complete
      *
+     * Eventos disponíveis para autocomplete:
+     * - fluig.autocomplete.cursorchanged
+     * - fluig.autocomplete.opened
+     * - fluig.autocomplete.closed
+     * - fluig.autocomplete.selected
+     * - fluig.autocomplete.autocompleted
+     * - fluig.autocomplete.beforeItemAdd
+     * - fluig.autocomplete.itemAdded
+     * - fluig.autocomplete.beforeItemUpdate
+     * - fluig.autocomplete.itemUpdated
+     * - fluig.autocomplete.beforeItemRemove
+     * - fluig.autocomplete.itemRemoved
+     *
      * @param target Seletor utilizado na JQuery
      * @param options Opções adicionais para o autocomplete
      * @param callback Função executada após trazer as respostas para o auto-complete
      */
-    declare function autocomplete(target: string, options: autocompleteOptions, callback: errorCallback);
+    declare function autocomplete(target: string, options: autocompleteOptions, callback: errorCallback): AutoComplete;
 
     /**
      * Cria um campo filter em um select (é o Zoom feito manualmente)
