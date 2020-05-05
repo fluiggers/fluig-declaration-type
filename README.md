@@ -7,3 +7,5 @@ Para facilitar o desenvolvimento no Visual Studio Code eu criei essa declaraçã
 o auto-complete.
 
 Basta colocar os arquivos **fluig.d.ts** e **jsconfig.json** na pasta principal do seu projeto.
+
+As declarações ainda estão incompletas. Conforme vou precisando de mais itens ou descubro novos itens olhando a documentação eu vou adicionando aqui. Sinta-se à vontade para ajudar a complementar o projeto.
