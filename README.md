@@ -6,4 +6,4 @@ problemas com ela.
 Para facilitar o desenvolvimento no Visual Studio Code eu criei essa declaração de tipos, assim é possível aproveitar
 o auto-complete.
 
-Basta colocar os dois arquivos na pasta principal do seu projeto.
+Basta colocar os arquivos **fluig.d.ts** e **jsconfig.json** na pasta principal do seu projeto.
