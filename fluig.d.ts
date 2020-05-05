@@ -2775,10 +2775,19 @@ declare class Dataset {
     addIndex(valores: string[]|object[]): void;
 }
 
-interface Constraint {
+declare class Constraint {
     fieldName: string;
     initialValue: string;
     finalValue: string;
+
+    /**
+     * Indica que a constraint fará uma busca usando LIKE ao invés de =
+     */
+    setLikeSearch(likeSearch: boolean): void;
+
+    getFieldName(): string;
+    getInitialValue(): string;
+    getFinalValue(): string;
 }
 
 /**
