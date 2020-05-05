@@ -2796,8 +2796,11 @@ declare namespace DatasetFactory {
      * Cria uma constraint para ser usada no método getDataset
      *
      * Para usar no HTML de formulário o arquivo vcXMLRPC.js precisa ser declarado: <script src="/webdesk/vcXMLRPC.js"></script>
+     * Para fazer uma pesquisa usando LIKE pelo formulário deve-se passar true no parâmetro searchLike ao invés de usar o método
+     * setLikeSearch do objeto Constraint.
      */
     declare function createConstraint(fieldName: string, initialValue: string, finalValue: string, constraintType: ConstraintType): Constraint;
+    declare function createConstraint(fieldName: string, initialValue: string, finalValue: string, constraintType: ConstraintType, searchLike: boolean): Constraint;
 
     /**
      * Pesquisa os dados de um dataset
