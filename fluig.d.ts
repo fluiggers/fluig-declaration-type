@@ -2942,6 +2942,7 @@ interface WcmApiRequestSettings {
     processData?: boolean;
 }
 
+
 /**
  * Consultar dados do ambiente da sessão via JS (Client Side)
  */
@@ -3512,6 +3513,33 @@ declare class Calendar {
      * Pega a data como objeto moment (da lib momentjs)
      */
     getDate(): any;
+}
+
+interface WidgetUpdatePreferences {
+    /**
+     * Indica se será uma chamada assíncrona
+     */
+    async: boolean;
+
+    /**
+     * Função executada em caso de sucesso
+     *
+     * @param data
+     */
+    success?: function (object): void;
+
+    /**
+     * Função executada em caso de falha
+     *
+     * @param jqXHR Objeto da JQuery
+     * @param message Mensagem do erro
+     * @param errorData Objeto retornado pelo erro
+     */
+    fail?: function (object, string, errorData): void;
+}
+
+declare namespace WCMSpaceAPI.PageService {
+    declare function UPDATEPREFERENCES(settings: WidgetUpdatePreferences, instanceId: number, preferences: object): void;
 }
 
 declare namespace FLUIGC {
