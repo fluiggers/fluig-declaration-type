@@ -2274,9 +2274,9 @@ declare class FormController {
     getChildrenFromTable(tableName: string): object;
 
     /**
-     * Retorna os IDs dos campos filhos de uma tabela pai.
+     * Retorna os índices dos campos filhos de uma tabela pai.
      */
-    getChildrenIndexes(tableName: string): string[];
+    getChildrenIndexes(tableName: string): number[];
 
     /**
      * Oculta o botão de apagar registro
