@@ -2157,6 +2157,7 @@ declare namespace ServiceManager {
  * Pega o valor das propriedades do Processo.
  *
  * Usar em eventos do processo e eventos de formulários de processo.
+ * @see https://tdn.totvs.com/pages/releaseview.action?pageId=270919174
  *
  * Propriedades:
  * - WKDef: Código do processo
@@ -2165,6 +2166,19 @@ declare namespace ServiceManager {
  * - WKNumState: Número da atividade
  * - WKCompany: Número da Empresa
  * - WKUser: Usuário Corrente
+ * - WKUserComment: Texto com as observações feitas pelos usuários na atividade corrente
+ * - WKCompletTask: Indica se a tarefa foi completada ("true" / "false")
+ * - WKNextState: Número da próxima atividade (destino)
+ * - WKCardId: Código do registro de formulário do processo
+ * - WKFormId: Código do formulário do processo
+ * - WKIdentityCompany: Identificador da empresa selecionada para Experiências de uso TOTVS
+ * - WKMobile: Identifica se a ação foi realizada através de um dispositivo mobile
+ * - WKIsService: Identifica se a solicitação de cancelamento foi realizada através de um serviço. Esta variável só pode ser consultada nos eventos beforeCancelProcess e afterCancelProcess
+ * - WKUserLocale: Identifica o idioma corrente do usuário
+ * - WKManagerMode: Identifica se o processo está sendo movimentado pela visão do gestor do processo ou não. Só funciona no Workflow
+ * - WKReplacement: Código do usuário substituto
+ * - WKIsTransfer: Permite verificar se o usuário está ou não transferindo uma tarefa
+ * -
  */
 declare function getValue(nomePropriedade: string): string;
 
