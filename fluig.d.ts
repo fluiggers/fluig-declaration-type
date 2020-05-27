@@ -379,7 +379,57 @@ declare namespace com.fluig.sdk.service {
     declare class IdentityService {}
     declare class JobService {}
     declare class LocalAPIService {}
-    declare class PageService {}
+
+    /**
+     * Serviço para tratar páginas
+     */
+    declare class PageService {
+        createPageDraftFromVersion(pageCode: string, pageVersion: number): void;
+        disable(pageCode: string): void;
+        enable(pageCode: string): void;
+
+        /**
+         * Retorna itens de menu da página
+         */
+        findMenuFromPage(pageCode: string): java.util.List<com.fluig.sdk.page.PublicApiPageVO>;
+
+        /**
+         * Consulta páginas do fluig
+         */
+        findPages(parentPageCode: string, isMobile: boolean, filter: string, start: number, size: number, searchLevel: number, internalPages: boolean): java.util.List<com.fluig.sdk.page.PublicApiPageVO>;
+        findPages(parentPageCode: string, isMobile: boolean, filter: string, start: number, size: number, searchLevel: number, internalPages: boolean, codePage: string): java.util.List<com.fluig.sdk.page.PublicApiPageVO>;
+
+        /**
+         * Retorna a URL do servidor
+         */
+        getServerURL(): string;
+
+        /**
+         * Recupera os valores de preferências para uma instância de uma widget.
+         */
+        getWidgetPreferences(instanceId: number): java.util.HashMap<string>;
+
+        mobileMapping(pageCode: string): com.fluig.sdk.page.PageMobileApiVO;
+
+        hide(pageCode: string): void;
+
+        publishPageDraft(pageCode: string, publicationDescription: string): void;
+
+        pageHistory(pageCode: string): java.util.List<string>;
+
+        /**
+         * Recarrega o layout de uma página
+         */
+        reloadPageLayout(pageCode: string): void;
+
+        /**
+         * Seta o valor de uma preferência para uma instância de uma widget
+         */
+        setWidgetPreference(instanceId: number, key: string, value: string): void;
+
+        show(pageCode: string): void;
+    }
+
     declare class PageWidgetService {}
     declare class PostService {}
     declare class SearchService {}
