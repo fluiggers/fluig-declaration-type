@@ -2690,10 +2690,10 @@ declare namespace hAPI {
      * +___(3 underlines) + número sequencial do registro.
      *
      * @example
-     *  var card = declare function getCardData(186);
+     *  var card = declare function getCardData(getValue("WKNumProces"));
      *  log.info(card.get("campo1"));
      */
-    declare function getCardData(numProcesso: number): HashMap;
+    declare function getCardData(numProcesso: number): java.util.HashMap<string>;
 
     /**
      * Inicia uma nova instância de um processo.
