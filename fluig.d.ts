@@ -3085,12 +3085,12 @@ declare namespace docAPI {
 
 declare type autocompleteOnTagCallback = (item: object, tag: object) => void;
 
-interface errorData {
+interface ErrorData {
     message?: string;
     responseText: object;
 }
 
-interface autocompleteOptions {
+interface AutoCompleteOptions {
     /**
      * Tipo do autocomplete
      *
@@ -3194,7 +3194,7 @@ interface autocompleteOptions {
 
 }
 
-interface autocompleteTag {
+interface AutoCompleteTag {
     description: string;
 }
 
@@ -3204,21 +3204,21 @@ declare class AutoComplete {
      *
      * Método para os tipos tag e tagAutocomplete
      */
-    add(tag: autocompleteTag): void;
+    add(tag: AutoCompleteTag): void;
 
     /**
      * Atualiza uma tag para o tipo tag ou tagAutocomplete
      *
      * Método para os tipos tag e tagAutocomplete
      */
-    update(tag: autocompleteTag): void;
+    update(tag: AutoCompleteTag): void;
 
     /**
      * Remove uma tag para o tipo tag ou tagAutocomplete
      *
      * Método para os tipos tag e tagAutocomplete
      */
-    remove(tag: autocompleteTag): void;
+    remove(tag: AutoCompleteTag): void;
 
     /**
      * Remove todas as tags
@@ -3232,7 +3232,7 @@ declare class AutoComplete {
      *
      * Método para os tipos tag e tagAutocomplete
      */
-    items(): autocompleteTag[];
+    items(): AutoCompleteTag[];
 
     /**
      * Abre a caixa de seleção
@@ -3286,11 +3286,11 @@ declare class AutoComplete {
     destroy(): void;
 }
 
-declare type errorCallback = (error: errorData, data: object) => void;
+declare type errorCallback = (error: ErrorData, data: object) => void;
 declare type simpleCallback = () => void;
 declare type dataCallback = (data: object) => void;
 
-interface filterSourceSettings {
+interface FilterSourceSettings {
     /**
      * URL que trará os dados
      */
@@ -3309,7 +3309,7 @@ interface filterSourceSettings {
     offsetKey: string
 }
 
-interface filterStyleSettings {
+interface FilterStyleSettings {
     /**
      * The selector for the autocomplete tag template.
      */
@@ -3348,8 +3348,8 @@ interface filterStyleSettings {
     filterIconClass?: string
 }
 
-interface filterTableSettings {
-    header: filterTableHeader[],
+interface FilterTableSettings {
+    header: FilterTableHeader[],
 
     /**
      * Pode ser um array de chaves do objeto ou a classe CSS do template mustache.
@@ -3360,7 +3360,7 @@ interface filterTableSettings {
     formatData?: function
 }
 
-interface filterTableHeader {
+interface FilterTableHeader {
     /**
      * Título da coluna
      */
@@ -3390,7 +3390,7 @@ interface filterTableHeader {
     display?: boolean
 }
 
-interface filterSettings {
+interface FilterSettings {
     /**
      * Campo que será exibido ao selecionar um valor
      */
@@ -3399,17 +3399,17 @@ interface filterSettings {
     /**
      * Configuração da fonte de dados
      */
-    source: filterSourceSettings,
+    source: FilterSourceSettings,
 
     /**
      * Configuração da Tabela de exibição dos itens
      */
-    table: filterTableSettings,
+    table: FilterTableSettings,
 
     /**
      * Configuração dos estilos
      */
-    style?: filterStyleSettings,
+    style?: FilterStyleSettings,
 
     /**
      * Altura da tabela (preferencialmente em px). Padrão: 260px
@@ -3657,7 +3657,7 @@ declare namespace FLUIGC {
      * @param options Opções adicionais para o autocomplete
      * @param callback Função executada após trazer as respostas para o auto-complete
      */
-    declare function autocomplete(target: string, options: autocompleteOptions, callback: errorCallback): AutoComplete;
+    declare function autocomplete(target: string, options: AutoCompleteOptions, callback: errorCallback): AutoComplete;
 
     /**
      * Cria um campo filter em um select (é o Zoom feito manualmente)
@@ -3671,7 +3671,7 @@ declare namespace FLUIGC {
      * @param target Seletor utilizado na JQuery
      * @param settings Configurações do filtro
      */
-    declare function filter(target: string, settings: filterSettings): FluigcFilter;
+    declare function filter(target: string, settings: FilterSettings): FluigcFilter;
 
     /**
      * Cria uma caixa de seleção para tratar data e horário
