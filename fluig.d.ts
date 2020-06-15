@@ -3437,6 +3437,34 @@ interface filterSettings {
     tagMaxWidth?: number
 }
 
+interface ToastSettings {
+    /**
+     * Título do Toast. Diferença é que fica em negrito.
+     */
+    title?: string,
+
+    /**
+     * Mensagem repassada
+     */
+    message?: string,
+
+    /**
+     * Tipos possíveis: success, danger, info and warning
+     * Padrão: success
+     */
+    type?: string,
+
+    /**
+     * Tempo, em milisegundos, ou as strings slow ou fast.
+     *
+     * O tempo padrão são 4000 milisegundos.
+     * slow representa 2000 e fast representa 6000.
+     *
+     * O Toast do tipo danger ignora o timeout.
+     */
+    timeout?: number|string
+}
+
 declare class FluigcFilter {
     getSelectedItems(): object[];
     add(item: object): void;
@@ -3606,6 +3634,8 @@ declare namespace WCMSpaceAPI.PageService {
     declare function UPDATEPREFERENCES(settings: WidgetUpdatePreferences, instanceId: number, preferences: object): void;
 }
 
+
+
 declare namespace FLUIGC {
     /**
      * Cria um campo com auto-complete
@@ -3650,6 +3680,13 @@ declare namespace FLUIGC {
      * @param settings Configurações do calendário
      */
     declare function calendar(target: string, settings: CalendarSettings): Calendar;
+
+    /**
+     * Exibe uma mensagem simples no topo da página.
+     *
+     * Muito utilizado para substituir alert do JS.
+     */
+    declare function toast(settings: ToastSettings): void;
 }
 
 declare namespace FLUIGC.calendar {
