@@ -3267,6 +3267,10 @@ declare namespace docAPI {
     declare function copyDocumentToUploadArea(documentId: number, version: number): string[];
 }
 
+declare type errorCallback = (error: ErrorData, data: object) => void;
+declare type simpleCallback = () => void;
+declare type dataCallback = (data: object) => void;
+
 declare type autocompleteOnTagCallback = (item: object, tag: object) => void;
 
 interface ErrorData {
@@ -3470,9 +3474,133 @@ declare class AutoComplete {
     destroy(): void;
 }
 
-declare type errorCallback = (error: ErrorData, data: object) => void;
-declare type simpleCallback = () => void;
-declare type dataCallback = (data: object) => void;
+interface LoadingSettings {
+    /**
+     * Mensagem exibida
+     *
+     * Padrão: "Loading..."
+     */
+    textMessage?: string,
+
+    /**
+     * Título exibido quando theme == true
+     *
+     * Padrão: ""
+     */
+    title?: string,
+
+    /**
+     * Estilo para o bloco de carregamento
+     *
+     * Objeto CSS aceito pela JQuery.
+     *
+     * Padrão: null
+     */
+    css?: object,
+
+    /**
+     * Estilo para o overlay
+     *
+     * Objeto CSS aceito pela JQuery.
+     *
+     * Padrão: null
+     */
+    overlayCSS?: object,
+
+    /**
+     * Estilo para o cursor antes de bloquear
+     *
+     * Padrão: ""
+     */
+    cursorReset?: string,
+
+    /**
+     * Índice Z-Index
+     *
+     * Padrão: null
+     */
+    baseZ?: number,
+
+    /**
+     * Indica se será centralizado na tela
+     *
+     * Padrão: true
+     */
+    centerX?: boolean,
+
+    /**
+     * Indica se será centralizado na tela
+     *
+     * Padrão: true
+     */
+    centerZ?: boolean,
+
+    /**
+     * Desabilita eventos de teclado e mouse
+     *
+     * Padrão: true
+     */
+    bindEvents?: boolean,
+
+    /**
+     * Tempo, em ms, do efeito de transição no bloqueio
+     *
+     * Se for 0 não terá efeito de transição.
+     */
+    fadeIn?: number,
+
+    /**
+     * Tempo, em ms, do efeito de transição no desbloqueio
+     *
+     * Se for 0 não terá efeito de transição.
+     */
+    fadeOut?: number,
+
+    /**
+     * Tempo, em ms, para aguardar antes de desbloquear
+     *
+     * Se for 0 vai desabilitar o auto desbloqueio.
+     */
+    timeout?: number,
+
+    /**
+     * Indica se será exibido o overlay
+     *
+     * Padrão: true
+     */
+    showOverlay?: boolean,
+
+    /**
+     * Função para ser executado após o efeito de transição do bloqueio
+     */
+    onBlock?: simpleCallback,
+
+    /**
+     * Função para ser executado após o efeito de transição do desbloqueio
+     *
+     * O elemento desbloqueado será passado à função.
+     */
+    onUnBlock?: dataCallback,
+
+    /**
+     * Indica se vai ignorar um bloqueio quando já está bloqueado
+     *
+     * Padrão: false
+     */
+    ignoreIfBlocked?: boolean
+}
+
+declare class Loading {
+    /**
+     * Exibe a tela de carregamento
+     */
+    show(): void;
+
+    /**
+     * Esconde a tela de carregamento
+     */
+    hide(): void;
+}
 
 interface FilterSourceSettings {
     /**
@@ -3871,6 +3999,16 @@ declare namespace FLUIGC {
      * Muito utilizado para substituir alert do JS.
      */
     declare function toast(settings: ToastSettings): void;
+
+    /**
+     * Cria uma tela de carregamento em elemento específico ou na janela inteira
+     *
+     * Caso o objeto window seja passado a tela de carregamento ocupará a janela inteira.
+     *
+     * @param selector Uma string com seletor JQuery ou objeto window
+     * @param settings Configurações possíveis para o Loading
+     */
+    declare function loading(selector: string|Window, settings: LoadingSettings): Loading;
 }
 
 declare namespace FLUIGC.calendar {
