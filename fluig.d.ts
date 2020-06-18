@@ -3023,6 +3023,44 @@ declare class Dataset {
     addIndex(valores: string[]|object[]): void;
 }
 
+/**
+ * Resultado de uma consulta ao Dataset usando o WCM
+ *
+ * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
+ */
+interface DatasetWcmResult {
+    /**
+     * O nome das colunas
+     */
+    columns: string[];
+
+    /**
+     * As propriedades do objeto são os nomes das colunas
+     */
+    values: object[];
+}
+
+/**
+ * Formato de Callback para consulta assíncrona ao Dataset usando o WCM
+ *
+ * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
+ */
+interface DatasetWcmCallback {
+    /**
+     * Função que será executada em caso de sucesso
+     */
+    success: function (DatasetWcmResult);
+
+    /**
+     * Função que será executada em caso de falha
+     *
+     * @param jqXHR Objeto da JQuery
+     * @param textStatus
+     * @param errorThrown
+     */
+    error: function (object, string, string): void;
+}
+
 declare class Constraint {
     fieldName: string;
     initialValue: string;
@@ -3072,6 +3110,20 @@ declare namespace DatasetFactory {
      * var dataset = DatasetFactory.getDataset("colleague", ["colleagueName"], constraints);
      */
     declare function getDataset(nomeDataset: string, campos?: string[], constraints?: Constraint[], ordem?: string[]): Dataset;
+
+    /**
+     * Pesquisa os dados de um dataset de forma assíncrona
+     *
+     * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
+     *
+     * @example
+     * var constraints = [
+     *     DatasetFactory.createConstraint("colleaguePK.colleagueId", "adm", "adm", ConstraintType.MUST_NOT),
+     *     DatasetFactory.createConstraint("valor", "100", "999", ConstraintType.MUST)
+     * ];
+     * var dataset = DatasetFactory.getDataset("colleague", ["colleagueName"], constraints);
+     */
+    declare function getDataset(nomeDataset: string, campos?: string[], constraints?: Constraint[], ordem?: string[], callback: DatasetWcmCallback): void;
 }
 
 /**
