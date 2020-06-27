@@ -3065,6 +3065,7 @@ declare class Constraint {
     fieldName: string;
     initialValue: string;
     finalValue: string;
+    constraintType: ConstraintType;
 
     /**
      * Indica que a constraint fará uma busca usando LIKE ao invés de =
@@ -3248,11 +3249,6 @@ interface WcmApiRequestSettings {
  */
 declare namespace WCMAPI {
     /**
-     * Versão do fluig
-     */
-    const version: string;
-
-    /**
      * Endereço do servidor (incluindo protocolo e porta)
      */
     const serverURL: string;
@@ -3261,6 +3257,41 @@ declare namespace WCMAPI {
      * ID do tenant ao qual o usuário está conectado
      */
     const organizationId: string;
+
+    /**
+     * Indica se usuário está logado
+     */
+    const userIsLogged: boolean;
+
+    /**
+     * Nome do usuário logado
+     */
+    const user: string;
+
+    /**
+     * Login do usuário logado
+     */
+    const userLogin: string;
+
+    /**
+     * Código (matrícula) do usuário logado
+     */
+    const userCode: string;
+
+    /**
+     * E-mail do usuário logado
+     */
+    const userEmail: string;
+
+    /**
+     * Indica se a sessão está expirada
+     */
+    const sessExpired: boolean;
+
+    /**
+     * Versão do fluig
+     */
+    const version: string;
 
     /**
      * Código do tenant ao qual o usuário está conectado
