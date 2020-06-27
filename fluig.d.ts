@@ -3881,6 +3881,92 @@ declare class FluigcFilter {
     on(event: string, callback: simpleCallback|dataCallback): void;
 }
 
+declare class FluigcModal {
+    /**
+     * Remove (fecha) a Modal
+     */
+    remove(): void;
+
+    /**
+     * Indica se a Modal está visível
+     */
+    isOpen(): boolean;
+}
+
+/**
+ * Configuração dos botões da Modal
+ */
+interface ModalActionSettings {
+    /**
+     * Rótulo exibido
+     */
+    label: string;
+
+    /**
+     * Evento ouvido em bindings.global da SuperWidget
+     *
+     * Precisa ter o prefixo data-
+     * Exemplo de valor: data-save-settings
+     */
+    bind?: string;
+
+    /**
+     * Estilo utilizado no botão
+     *
+     * Por padrão o primeiro botão recebe btn-primary
+     * e os demais recebem btn-default
+     */
+    classType?: string;
+
+    /**
+     * Indica se o botão fechará a Modal
+     *
+     * Por padrão é false.
+     *
+     * IMPORTANTE: se for true ele não executará o bind registrado.
+     */
+    autoClose?: boolean;
+}
+
+/**
+ * Configurações da Modal
+ */
+interface ModalSettings {
+    /**
+     * Título exibido na modal
+     */
+    title: string;
+
+    /**
+     * Conteúdo da Modal
+     *
+     * Pode ser uma string HTML, template Mustache
+     * ou retorno de uma chamada a WCMAPI.convertFtlAsync
+     */
+    content: string;
+
+    /**
+     * ID da Modal
+     *
+     * Por padrão é fluig-modal.
+     * A cada chamada o elemento HTML da modal é construído e
+     * então destruído quando a modal é fechada.
+     */
+    id?: string;
+
+    /**
+     * Tamanho da Modal
+     *
+     * Pode ser: small | large | full
+     */
+    size: string;
+
+    /**
+     * Botões da Modal
+     */
+    actions: ModalActionSettings[];
+}
+
 interface CalendarSettings {
     /**
      * Indica se exibirá a seleção de Data. Padrão true.
@@ -4092,6 +4178,13 @@ declare namespace FLUIGC {
      * @param settings Configurações possíveis para o Loading
      */
     declare function loading(selector: string|Window, settings: LoadingSettings): Loading;
+
+    /**
+     * Cria uma Modal
+     *
+     * @param settings Configurações
+     */
+    declare function modal(settings: ModalSettings): FluigcModal;
 }
 
 declare namespace FLUIGC.calendar {
