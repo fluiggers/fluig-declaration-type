@@ -3023,10 +3023,49 @@ declare class Dataset {
     addIndex(valores: string[]|object[]): void;
 }
 
+/**
+ * Resultado de uma consulta ao Dataset usando o WCM
+ *
+ * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
+ */
+interface DatasetWcmResult {
+    /**
+     * O nome das colunas
+     */
+    columns: string[];
+
+    /**
+     * As propriedades do objeto são os nomes das colunas
+     */
+    values: object[];
+}
+
+/**
+ * Formato de Callback para consulta assíncrona ao Dataset usando o WCM
+ *
+ * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
+ */
+interface DatasetWcmCallback {
+    /**
+     * Função que será executada em caso de sucesso
+     */
+    success: function (DatasetWcmResult);
+
+    /**
+     * Função que será executada em caso de falha
+     *
+     * @param jqXHR Objeto da JQuery
+     * @param textStatus
+     * @param errorThrown
+     */
+    error: function (object, string, string): void;
+}
+
 declare class Constraint {
     fieldName: string;
     initialValue: string;
     finalValue: string;
+    constraintType: ConstraintType;
 
     /**
      * Indica que a constraint fará uma busca usando LIKE ao invés de =
@@ -3072,6 +3111,20 @@ declare namespace DatasetFactory {
      * var dataset = DatasetFactory.getDataset("colleague", ["colleagueName"], constraints);
      */
     declare function getDataset(nomeDataset: string, campos?: string[], constraints?: Constraint[], ordem?: string[]): Dataset;
+
+    /**
+     * Pesquisa os dados de um dataset de forma assíncrona
+     *
+     * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
+     *
+     * @example
+     * var constraints = [
+     *     DatasetFactory.createConstraint("colleaguePK.colleagueId", "adm", "adm", ConstraintType.MUST_NOT),
+     *     DatasetFactory.createConstraint("valor", "100", "999", ConstraintType.MUST)
+     * ];
+     * var dataset = DatasetFactory.getDataset("colleague", ["colleagueName"], constraints);
+     */
+    declare function getDataset(nomeDataset: string, campos?: string[], constraints?: Constraint[], ordem?: string[], callback: DatasetWcmCallback): void;
 }
 
 /**
@@ -3196,11 +3249,6 @@ interface WcmApiRequestSettings {
  */
 declare namespace WCMAPI {
     /**
-     * Versão do fluig
-     */
-    const version: string;
-
-    /**
      * Endereço do servidor (incluindo protocolo e porta)
      */
     const serverURL: string;
@@ -3209,6 +3257,41 @@ declare namespace WCMAPI {
      * ID do tenant ao qual o usuário está conectado
      */
     const organizationId: string;
+
+    /**
+     * Indica se usuário está logado
+     */
+    const userIsLogged: boolean;
+
+    /**
+     * Nome do usuário logado
+     */
+    const user: string;
+
+    /**
+     * Login do usuário logado
+     */
+    const userLogin: string;
+
+    /**
+     * Código (matrícula) do usuário logado
+     */
+    const userCode: string;
+
+    /**
+     * E-mail do usuário logado
+     */
+    const userEmail: string;
+
+    /**
+     * Indica se a sessão está expirada
+     */
+    const sessExpired: boolean;
+
+    /**
+     * Versão do fluig
+     */
+    const version: string;
 
     /**
      * Código do tenant ao qual o usuário está conectado
@@ -3267,14 +3350,18 @@ declare namespace docAPI {
     declare function copyDocumentToUploadArea(documentId: number, version: number): string[];
 }
 
+declare type errorCallback = (error: ErrorData, data: object) => void;
+declare type simpleCallback = () => void;
+declare type dataCallback = (data: object) => void;
+
 declare type autocompleteOnTagCallback = (item: object, tag: object) => void;
 
-interface errorData {
+interface ErrorData {
     message?: string;
     responseText: object;
 }
 
-interface autocompleteOptions {
+interface AutoCompleteOptions {
     /**
      * Tipo do autocomplete
      *
@@ -3378,7 +3465,7 @@ interface autocompleteOptions {
 
 }
 
-interface autocompleteTag {
+interface AutoCompleteTag {
     description: string;
 }
 
@@ -3388,21 +3475,21 @@ declare class AutoComplete {
      *
      * Método para os tipos tag e tagAutocomplete
      */
-    add(tag: autocompleteTag): void;
+    add(tag: AutoCompleteTag): void;
 
     /**
      * Atualiza uma tag para o tipo tag ou tagAutocomplete
      *
      * Método para os tipos tag e tagAutocomplete
      */
-    update(tag: autocompleteTag): void;
+    update(tag: AutoCompleteTag): void;
 
     /**
      * Remove uma tag para o tipo tag ou tagAutocomplete
      *
      * Método para os tipos tag e tagAutocomplete
      */
-    remove(tag: autocompleteTag): void;
+    remove(tag: AutoCompleteTag): void;
 
     /**
      * Remove todas as tags
@@ -3416,7 +3503,7 @@ declare class AutoComplete {
      *
      * Método para os tipos tag e tagAutocomplete
      */
-    items(): autocompleteTag[];
+    items(): AutoCompleteTag[];
 
     /**
      * Abre a caixa de seleção
@@ -3470,11 +3557,135 @@ declare class AutoComplete {
     destroy(): void;
 }
 
-declare type errorCallback = (error: errorData, data: object) => void;
-declare type simpleCallback = () => void;
-declare type dataCallback = (data: object) => void;
+interface LoadingSettings {
+    /**
+     * Mensagem exibida
+     *
+     * Padrão: "Loading..."
+     */
+    textMessage?: string,
 
-interface filterSourceSettings {
+    /**
+     * Título exibido quando theme == true
+     *
+     * Padrão: ""
+     */
+    title?: string,
+
+    /**
+     * Estilo para o bloco de carregamento
+     *
+     * Objeto CSS aceito pela JQuery.
+     *
+     * Padrão: null
+     */
+    css?: object,
+
+    /**
+     * Estilo para o overlay
+     *
+     * Objeto CSS aceito pela JQuery.
+     *
+     * Padrão: null
+     */
+    overlayCSS?: object,
+
+    /**
+     * Estilo para o cursor antes de bloquear
+     *
+     * Padrão: ""
+     */
+    cursorReset?: string,
+
+    /**
+     * Índice Z-Index
+     *
+     * Padrão: null
+     */
+    baseZ?: number,
+
+    /**
+     * Indica se será centralizado na tela
+     *
+     * Padrão: true
+     */
+    centerX?: boolean,
+
+    /**
+     * Indica se será centralizado na tela
+     *
+     * Padrão: true
+     */
+    centerZ?: boolean,
+
+    /**
+     * Desabilita eventos de teclado e mouse
+     *
+     * Padrão: true
+     */
+    bindEvents?: boolean,
+
+    /**
+     * Tempo, em ms, do efeito de transição no bloqueio
+     *
+     * Se for 0 não terá efeito de transição.
+     */
+    fadeIn?: number,
+
+    /**
+     * Tempo, em ms, do efeito de transição no desbloqueio
+     *
+     * Se for 0 não terá efeito de transição.
+     */
+    fadeOut?: number,
+
+    /**
+     * Tempo, em ms, para aguardar antes de desbloquear
+     *
+     * Se for 0 vai desabilitar o auto desbloqueio.
+     */
+    timeout?: number,
+
+    /**
+     * Indica se será exibido o overlay
+     *
+     * Padrão: true
+     */
+    showOverlay?: boolean,
+
+    /**
+     * Função para ser executado após o efeito de transição do bloqueio
+     */
+    onBlock?: simpleCallback,
+
+    /**
+     * Função para ser executado após o efeito de transição do desbloqueio
+     *
+     * O elemento desbloqueado será passado à função.
+     */
+    onUnBlock?: dataCallback,
+
+    /**
+     * Indica se vai ignorar um bloqueio quando já está bloqueado
+     *
+     * Padrão: false
+     */
+    ignoreIfBlocked?: boolean
+}
+
+declare class Loading {
+    /**
+     * Exibe a tela de carregamento
+     */
+    show(): void;
+
+    /**
+     * Esconde a tela de carregamento
+     */
+    hide(): void;
+}
+
+interface FilterSourceSettings {
     /**
      * URL que trará os dados
      */
@@ -3493,7 +3704,7 @@ interface filterSourceSettings {
     offsetKey: string
 }
 
-interface filterStyleSettings {
+interface FilterStyleSettings {
     /**
      * The selector for the autocomplete tag template.
      */
@@ -3532,8 +3743,8 @@ interface filterStyleSettings {
     filterIconClass?: string
 }
 
-interface filterTableSettings {
-    header: filterTableHeader[],
+interface FilterTableSettings {
+    header: FilterTableHeader[],
 
     /**
      * Pode ser um array de chaves do objeto ou a classe CSS do template mustache.
@@ -3544,7 +3755,7 @@ interface filterTableSettings {
     formatData?: function
 }
 
-interface filterTableHeader {
+interface FilterTableHeader {
     /**
      * Título da coluna
      */
@@ -3574,7 +3785,7 @@ interface filterTableHeader {
     display?: boolean
 }
 
-interface filterSettings {
+interface FilterSettings {
     /**
      * Campo que será exibido ao selecionar um valor
      */
@@ -3583,17 +3794,17 @@ interface filterSettings {
     /**
      * Configuração da fonte de dados
      */
-    source: filterSourceSettings,
+    source: FilterSourceSettings,
 
     /**
      * Configuração da Tabela de exibição dos itens
      */
-    table: filterTableSettings,
+    table: FilterTableSettings,
 
     /**
      * Configuração dos estilos
      */
-    style?: filterStyleSettings,
+    style?: FilterStyleSettings,
 
     /**
      * Altura da tabela (preferencialmente em px). Padrão: 260px
@@ -3621,6 +3832,34 @@ interface filterSettings {
     tagMaxWidth?: number
 }
 
+interface ToastSettings {
+    /**
+     * Título do Toast. Diferença é que fica em negrito.
+     */
+    title?: string,
+
+    /**
+     * Mensagem repassada
+     */
+    message?: string,
+
+    /**
+     * Tipos possíveis: success, danger, info and warning
+     * Padrão: success
+     */
+    type?: string,
+
+    /**
+     * Tempo, em milisegundos, ou as strings slow ou fast.
+     *
+     * O tempo padrão são 4000 milisegundos.
+     * slow representa 2000 e fast representa 6000.
+     *
+     * O Toast do tipo danger ignora o timeout.
+     */
+    timeout?: number|string
+}
+
 declare class FluigcFilter {
     getSelectedItems(): object[];
     add(item: object): void;
@@ -3640,6 +3879,92 @@ declare class FluigcFilter {
      * @param callback
      */
     on(event: string, callback: simpleCallback|dataCallback): void;
+}
+
+declare class FluigcModal {
+    /**
+     * Remove (fecha) a Modal
+     */
+    remove(): void;
+
+    /**
+     * Indica se a Modal está visível
+     */
+    isOpen(): boolean;
+}
+
+/**
+ * Configuração dos botões da Modal
+ */
+interface ModalActionSettings {
+    /**
+     * Rótulo exibido
+     */
+    label: string;
+
+    /**
+     * Evento ouvido em bindings.global da SuperWidget
+     *
+     * Precisa ter o prefixo data-
+     * Exemplo de valor: data-save-settings
+     */
+    bind?: string;
+
+    /**
+     * Estilo utilizado no botão
+     *
+     * Por padrão o primeiro botão recebe btn-primary
+     * e os demais recebem btn-default
+     */
+    classType?: string;
+
+    /**
+     * Indica se o botão fechará a Modal
+     *
+     * Por padrão é false.
+     *
+     * IMPORTANTE: se for true ele não executará o bind registrado.
+     */
+    autoClose?: boolean;
+}
+
+/**
+ * Configurações da Modal
+ */
+interface ModalSettings {
+    /**
+     * Título exibido na modal
+     */
+    title: string;
+
+    /**
+     * Conteúdo da Modal
+     *
+     * Pode ser uma string HTML, template Mustache
+     * ou retorno de uma chamada a WCMAPI.convertFtlAsync
+     */
+    content: string;
+
+    /**
+     * ID da Modal
+     *
+     * Por padrão é fluig-modal.
+     * A cada chamada o elemento HTML da modal é construído e
+     * então destruído quando a modal é fechada.
+     */
+    id?: string;
+
+    /**
+     * Tamanho da Modal
+     *
+     * Pode ser: small | large | full
+     */
+    size: string;
+
+    /**
+     * Botões da Modal
+     */
+    actions: ModalActionSettings[];
 }
 
 interface CalendarSettings {
@@ -3790,6 +4115,8 @@ declare namespace WCMSpaceAPI.PageService {
     declare function UPDATEPREFERENCES(settings: WidgetUpdatePreferences, instanceId: number, preferences: object): void;
 }
 
+
+
 declare namespace FLUIGC {
     /**
      * Cria um campo com auto-complete
@@ -3811,7 +4138,7 @@ declare namespace FLUIGC {
      * @param options Opções adicionais para o autocomplete
      * @param callback Função executada após trazer as respostas para o auto-complete
      */
-    declare function autocomplete(target: string, options: autocompleteOptions, callback: errorCallback): AutoComplete;
+    declare function autocomplete(target: string, options: AutoCompleteOptions, callback: errorCallback): AutoComplete;
 
     /**
      * Cria um campo filter em um select (é o Zoom feito manualmente)
@@ -3825,7 +4152,7 @@ declare namespace FLUIGC {
      * @param target Seletor utilizado na JQuery
      * @param settings Configurações do filtro
      */
-    declare function filter(target: string, settings: filterSettings): FluigcFilter;
+    declare function filter(target: string, settings: FilterSettings): FluigcFilter;
 
     /**
      * Cria uma caixa de seleção para tratar data e horário
@@ -3834,6 +4161,30 @@ declare namespace FLUIGC {
      * @param settings Configurações do calendário
      */
     declare function calendar(target: string, settings: CalendarSettings): Calendar;
+
+    /**
+     * Exibe uma mensagem simples no topo da página.
+     *
+     * Muito utilizado para substituir alert do JS.
+     */
+    declare function toast(settings: ToastSettings): void;
+
+    /**
+     * Cria uma tela de carregamento em elemento específico ou na janela inteira
+     *
+     * Caso o objeto window seja passado a tela de carregamento ocupará a janela inteira.
+     *
+     * @param selector Uma string com seletor JQuery ou objeto window
+     * @param settings Configurações possíveis para o Loading
+     */
+    declare function loading(selector: string|Window, settings: LoadingSettings): Loading;
+
+    /**
+     * Cria uma Modal
+     *
+     * @param settings Configurações
+     */
+    declare function modal(settings: ModalSettings): FluigcModal;
 }
 
 declare namespace FLUIGC.calendar {
