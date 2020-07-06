@@ -3103,6 +3103,11 @@ declare namespace DatasetFactory {
      *
      * Para usar no HTML de formulário o arquivo vcXMLRPC.js precisa ser declarado: <script src="/webdesk/vcXMLRPC.js"></script>
      *
+     * @param nomeDataset O nome do Dataset.
+     * @param campos Os campos que serão retornados.
+     * @param constraints Os filtros aplicados ao dataset.
+     * @param ordem Os campos que farão a ordenação do resultado. Pode-se acrescenter ;desc ao nome do campo para ordenar de forma decrescente.
+     *
      * @example
      * var constraints = [
      *     DatasetFactory.createConstraint("colleaguePK.colleagueId", "adm", "adm", ConstraintType.MUST_NOT),
