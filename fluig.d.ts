@@ -137,7 +137,7 @@ declare namespace fluigAPI {
     declare function getSocialService(): com.fluig.sdk.service.SocialSDKService;
 
     /**
-     * Recupera o servico de tagscloud
+     * Recupera o serviço de TagsCloud
      */
     declare function getTagsCloudService(): com.fluig.sdk.service.TagsCloudService;
 
@@ -211,17 +211,17 @@ declare namespace com.fluig.sdk.service {
         listAllAlertsByModule(module: string, limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
 
         /**
-         * Método marca os alertas informados de um usuario tambem dado como lidos
+         * Método marca os alertas informados de um usuário também dado como lidos
          */
         markAlertAsRead(loginReceiver: string, alertsId: java.util.List<number>): void;
 
         /**
-         * Método marca todos os alertas de um usuario como lidos.
+         * Método marca todos os alertas de um usuário como lidos.
          */
         markAllAlertsAsRead(loginReceiver: string): void;
 
         /**
-         * Método que remove os alertas informados de um usuario tambem dado, esse método também é responsável por remover os senders, places e objects relacionado aos alertas
+         * Método que remove os alertas informados de um usuário também dado, esse método também é responsável por remover os senders, places e objects relacionado aos alertas
          */
         removeAlerts(loginSender: string, alertsId: java.util.List<number>): void;
 
@@ -253,12 +253,12 @@ declare namespace com.fluig.sdk.service {
         approveDocument(documentId: number, version: number, approved: boolean, observation: string): void;
 
         /**
-         * Copia o documento que esta na área de uplaod
+         * Copia o documento que esta na área de upload
          */
         copyDocumentToUploadArea(documentId: number): string[];
 
         /**
-         * Cria o documento com permissões e aprovadors
+         * Cria o documento com permissões e aprovadores
          */
         createDocument(documentVO: com.fluig.sdk.api.document.DocumentVO): com.fluig.sdk.api.document.DocumentVO;
 
@@ -290,7 +290,7 @@ declare namespace com.fluig.sdk.service {
         getCurrentUserPermission(documentId: number): com.fluig.sdk.api.document.SolvedPermissionVO;
 
         /**
-         * Return the approvements history of the document
+         * Return the approvement history of the document
          */
         getDocumentApprovalHistory(documentId: number): java.util.List<com.fluig.sdk.api.document.DocumentApprovementHistoryVO>;
 
@@ -747,7 +747,7 @@ declare namespace com.fluig.sdk.api.document {
      */
     declare class DocumentVO {
         /**
-         * Recupera número de acessso
+         * Recupera número de acessos
          */
         getAccessCount(): number;
 
@@ -763,12 +763,12 @@ declare namespace com.fluig.sdk.api.document {
         getAdditionalComments(): string;
 
         /**
-         * Recupera valor, se documento permite mult card por usuário
+         * Recupera valor, se documento permite multi card por usuário
          */
         getAllowMuiltiCardsPerUser(): boolean;
 
         /**
-         * Recupera condição aprovalAndOr
+         * Recupera condição approvalAndOr
          */
         getApprovalAndOr(): boolean;
 
@@ -878,7 +878,7 @@ declare namespace com.fluig.sdk.api.document {
         getExtraData(key: string): object;
 
         /**
-         * Recupera id do icone
+         * Recupera id do ícone
          */
         getIconId(): number;
 
@@ -888,7 +888,7 @@ declare namespace com.fluig.sdk.api.document {
         getIconPath(): string;
 
         /**
-         * Recupera valor, se documento é imultavel
+         * Recupera valor, se documento é imutável
          */
         getImutable(): boolean;
 
@@ -918,7 +918,7 @@ declare namespace com.fluig.sdk.api.document {
         getLanguageId(): string;
 
         /**
-         * Recupera valor da última data de moficação
+         * Recupera valor da última data de modificação
          */
         getLastModifiedDate(): Date
 
@@ -943,12 +943,12 @@ declare namespace com.fluig.sdk.api.document {
         getPermissionType(): number;
 
         /**
-         * Recupera arquivo fisico
+         * Recupera arquivo físico
          */
         getPhisicalFile(): string;
 
         /**
-         * Recupera valor do tamanho do arquivo fisico
+         * Recupera valor do tamanho do arquivo físico
          */
         getPhisicalFileSize(): number;
 
@@ -973,7 +973,7 @@ declare namespace com.fluig.sdk.api.document {
         getPublisherId(): string;
 
         /**
-         * Recuprea arquivos relacionados
+         * Recupera arquivos relacionados
          */
         getRelatedFiles(): string;
 
@@ -993,7 +993,7 @@ declare namespace com.fluig.sdk.api.document {
         getTenantId(): number;
 
         /**
-         * Recupera valor do id do topico
+         * Recupera valor do id do tópico
          */
         getTopicId(): number;
 
@@ -1033,7 +1033,7 @@ declare namespace com.fluig.sdk.api.document {
         getVersion(): number;
 
         /**
-         * Recupera a ação que serão realizada em relaão a versão documento
+         * Recupera a ação que será realizada em relação a versão documento
          */
         getVersionAction(): string;
 
@@ -1068,9 +1068,9 @@ declare namespace com.fluig.sdk.api.document {
         setAdditionalComments(comments: string): void;
 
         /**
-         * Atribui valor para allowMuiltiCardsPerUser
+         * Atribui valor para allowMultiCardsPerUser
          */
-        setAllowMuiltiCardsPerUser(allowMuiltiCardsPerUser: boolean): void;
+        setAllowMuiltiCardsPerUser(allowMultiCardsPerUser: boolean): void;
 
         /**
          * Atribui valor para approvalAndOr
@@ -1090,7 +1090,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Atribui valor para id de atualização
          */
-        setAtualizationId(atualizationId: number): void;
+        setAtualizationId(actualizationId: number): void;
 
         /**
          * Atribui valor para descrição do card
@@ -1178,7 +1178,7 @@ declare namespace com.fluig.sdk.api.document {
         setExtraData(key: string, value: object): void;
 
         /**
-         * Atribui valor para id do icone
+         * Atribui valor para id do ícone
          */
         setIconId(iconId: number): void;
 
@@ -1188,9 +1188,9 @@ declare namespace com.fluig.sdk.api.document {
         setIconPath(iconPath: string): void;
 
         /**
-         * Atribui valor, se documento é imutavel
+         * Atribui valor, se documento é imutável
          */
-        setImutable(imutable: boolean): void;
+        setImutable(immutable: boolean): void;
 
         /**
          * Atribui valor, se documento é indexado
@@ -1243,14 +1243,14 @@ declare namespace com.fluig.sdk.api.document {
         setPermissionType(permissionType: number): void;
 
         /**
-         * Atribui valor para arquivo fisico
+         * Atribui valor para arquivo físico
          */
-        setPhisicalFile(phisicalFile: string): void;
+        setPhisicalFile(physicalFile: string): void;
 
         /**
-         * Atribui valor para o tamanho do arquivo fisico
+         * Atribui valor para o tamanho do arquivo físico
          */
-        setPhisicalFileSize(phisicalFileSize: number): void;
+        setPhisicalFileSize(physicalFileSize: number): void;
 
         /**
          * Atribui valor prioridade
@@ -1293,7 +1293,7 @@ declare namespace com.fluig.sdk.api.document {
         setTenantId(tenantId: number): void;
 
         /**
-         * Atribui valor para id do topico
+         * Atribui valor para id do tópico
          */
         setTopicId(topicId: number): void;
 
@@ -1308,7 +1308,7 @@ declare namespace com.fluig.sdk.api.document {
         setUpdateIsoProperties(updateIsoProperties: boolean): void;
 
         /**
-         * Atribue o identificador do uplaod
+         * Atribue o identificador do upload
          */
         setUploadId(uploadId: string): void;
 
@@ -1333,7 +1333,7 @@ declare namespace com.fluig.sdk.api.document {
         setVersion(version: number): void;
 
         /**
-         * Atribue a ação que serão realizada em relaão a versão documento
+         * Atribue a ação que será realizada em relação a versão documento
          */
         setVersionAction(versionAction: string): void;
 
@@ -1419,7 +1419,7 @@ declare namespace com.fluig.sdk.api.document {
         getIconId(): number;
 
         /**
-         * Recupera boolean se pasta é imutavel
+         * Recupera boolean se pasta é imutável
          */
         getImutable(): boolean;
 
@@ -1490,7 +1490,7 @@ declare namespace com.fluig.sdk.api.document {
         getTenantId(): number;
 
         /**
-         * Recupera id do topico
+         * Recupera id do tópico
          */
         getTopicId(): number;
 
@@ -1575,9 +1575,9 @@ declare namespace com.fluig.sdk.api.document {
         setIconId(iconId: number): void;
 
         /**
-         * Atribui boolean se pasta será imutavel
+         * Atribui boolean se pasta será imutável
          */
-        setImutable(imutable: boolean): void;
+        setImutable(immutable: boolean): void;
 
         /**
          * Atribui valor para segurança herdada
@@ -2072,12 +2072,12 @@ declare namespace java.util {
         /**
          * Pega o elemento no índice indicado
          */
-        get(indice: number): T;
+        get(index: number): T;
 
         /**
          * Adiciona um elemento à lista
          */
-        add(valor: T): void;
+        add(value: T): void;
 
         /**
          * Indica o tamanho da lista
@@ -2094,12 +2094,12 @@ declare namespace java.util {
         /**
          * Pega o elemento no índice indicado
          */
-        get(indice: number): T;
+        get(index: number): T;
 
         /**
          * Adiciona um elemento à lista
          */
-        add(valor: T): void;
+        add(value: T): void;
 
         /**
          * Indica o tamanho da lista
@@ -2116,12 +2116,12 @@ declare namespace java.util {
         /**
          * Pega o elemento no índice indicado
          */
-        get(campo: string): T;
+        get(name: string): T;
 
         /**
          * Adiciona um elemento
          */
-        put(campo: string, valor: T): void;
+        put(name: string, value: T): void;
 
         /**
          * Indica o tamanho da lista
@@ -2138,7 +2138,7 @@ declare namespace java.util {
         /**
          * Adiciona um elemento ao hash
          */
-        add(valor: T): void;
+        add(value: T): void;
 
         /**
          * Indica o tamanho da lista
@@ -2387,7 +2387,7 @@ declare class DocumentDto {
     getUpdateIsoProperties(): boolean;
 
     /**
-     * Pega a hora da última modificação em milisegundos
+     * Pega a hora da última modificação em milissegundos
      */
     getLastModifiedTime(): string;
 
@@ -2546,15 +2546,15 @@ declare namespace notifier {
      * Usar em eventos do Processo.
      *
      * @example
-     * var parametros = new java.util.HashMap();
-     * parametros.put("subject", "ASSUNTO");
-     * parametros.put("NOME_USUARIO", "João");
-     * parametros.put("CODIGO_USUARIO", "01");
+     * var parameters = new java.util.HashMap();
+     * parameters.put("subject", "Assunto");
+     * parameters.put("NAME", "João");
+     * parameters.put("CODE", "01");
      *
-     * var usuarios = new java.util.ArrayList();
-     * usuarios.add("adm");
+     * var users = new java.util.ArrayList();
+     * users.add("adm");
      *
-     * notifier.notify("adm", "mail1", parametros, usuarios, "text/html");
+     * notifier.notify("adm", "mail1", parameters, users, "text/html");
      *
      * @param fromId Matrícula do usuário que está enviando o e-mail
      * @param templateId Código do template de e-mail
@@ -2758,9 +2758,9 @@ declare class customHTML {
 
     /**
      * Adiciona conteúdo no final do HTML do formulário
-     * @param conteudo Conteúdo HTML a ser incluído
+     * @param html Conteúdo HTML a ser incluído
      */
-    append(conteudo: string): void;
+    append(html: string): void;
 };
 
 /**
@@ -2818,7 +2818,7 @@ declare namespace hAPI {
      * colaboradores.add("adm");
      * hAPI.setAutomaticDecision(2, colaboradores, "Decisão Automática");
      */
-    declare function setAutomaticDecision(numAtividade: number, responsaveis: java.util.ArrayList<string>, comentario: string): void;
+    declare function setAutomaticDecision(taskNumber: number, responsible: java.util.ArrayList<string>, comment: string): void;
 
     /**
      * Pega todas as threads em execução de um processo
@@ -2839,13 +2839,13 @@ declare namespace hAPI {
      * // Define o prazo para Hoje ao meio dia
      * hAPI.setDueDate(1, 0, "adm", new java.util.Date(), 12 * 60 * 60);
      *
-     * @param numProcesso ID do Processo
+     * @param processId ID do Processo
      * @param numThread ID da Thread (geralmente 0). Usado para processos que possuem FORK
      * @param userId ID do responsável pela atividade
-     * @param dataConclusao
+     * @param dueDate Data do prazo de encerramento
      * @param tempoSegundos Quantidade de segundos, a partir de 00:00:00, para alcançar determinada hora
      */
-    declare function setDueDate(numProcesso: number, numThread: number, userId: string, dataConclusao: Date, tempoSegundos: number): void;
+    declare function setDueDate(processId: number, numThread: number, userId: string, dueDate: Date, timeInSeconds: number): void;
 
     /**
      * Transfere o processo atual para outro(s) colaborador(es).
@@ -2856,22 +2856,22 @@ declare namespace hAPI {
      *  colaboradores.add("adm");
      *  hAPI.transferTask(colaboradores, "Tarefa Transferida", 0);
      *
-     * @param usuarios IDs dos usuarios
-     * @param comentario
+     * @param users IDs dos usuários
+     * @param comment
      * @param numThread ID da Thread. Normalmente 0
      */
-    declare function transferTask(usuarios: java.util.ArrayList<string>, comentario: string, numThread?: number = 0): void;
+    declare function transferTask(users: java.util.ArrayList<string>, comment: string, numThread?: number = 0): void;
 
     /**
      * Define uma observação para a atividade atual do processo.
      * Usar em eventos do Processo.
      *
-     * @param usuarioId Matrícula do Colaborador
-     * @param numProcesso ID do Processo
-     * @param numThread ID da Thread (geralmente 0). Usado para processos que possuem FORK.
-     * @param comentario Comentário do processo para a atividade corrente
+     * @param userId Matrícula do Colaborador
+     * @param processId ID do Processo
+     * @param threadId ID da Thread (geralmente 0). Usado para processos que possuem FORK.
+     * @param comment Comentário do processo para a atividade corrente
      */
-    declare function setTaskComments(usuarioId: string, numProcesso: number, numThread: number, comentario: string): void;
+    declare function setTaskComments(userId: string, processId: number, threadId: number, comment: string): void;
 
     /**
      * Retorna o valor de uma propriedade avançada do Processo.
@@ -2903,19 +2903,19 @@ declare namespace hAPI {
      * colaboradores.add("adm");
      * var formData = new java.util.HashMap();
      * formData.put("nome_do_campo_1", "valor_do_campo_1");
-     * var resposta = startProcess("ProcessoXPTO", 0, colaboradores, "Iniciado automaticamente", false, formData, false);
+     * var resposta = startProcess("Processo", 0, colaboradores, "Iniciado automaticamente", false, formData, false);
      * var numProcessoCriado = resposta.get("iProcess");
      *
-     * @param idProcesso Código do processo cadastrado no Fluig.
-     * @param atividadeDestino Número da atividade de inicio do processo. Pode ser informado 0.
-     * @param usuarios Matrícula dos usuários que receberão a atividade.
-     * @param comentario Comentário para a atividade do processo.
-     * @param completaTarefa indica se a tarefa sera finalizada apás a criação do processo.
-     * @param valoresForm HashMap representando propriedade/valor dos campos do formulário do processo.
-     * @param modoGestor indica se a tarefa sera inicializada com o modo gestor do Fluig ativo.
+     * @param processId Código do processo cadastrado no Fluig.
+     * @param taskNumber Número da atividade de inicio do processo. Pode ser informado 0.
+     * @param users Matrícula dos usuários que receberão a atividade.
+     * @param comment Comentário para a atividade do processo.
+     * @param taskFinished indica se a tarefa sera finalizada apás a criação do processo.
+     * @param form HashMap representando propriedade/valor dos campos do formulário do processo.
+     * @param managerMode indica se a tarefa sera inicializada com o modo gestor do Fluig ativo.
      * @returns HashMap com informações referentes ao processo criado
      */
-    declare function startProcess(idProcesso: string, atividadeDestino: number, usuarios: java.util.ArrayList<string>, comentario?: string, completaTarefa?: boolean, valoresForm?: java.util.HashMap<string>, modoGestor?: boolean): java.util.HashMap<string>;
+    declare function startProcess(processId: string, taskNumber: number, users: java.util.ArrayList<string>, comment?: string, taskFinished?: boolean, form?: java.util.HashMap<string>, managerMode?: boolean): java.util.HashMap<string>;
 
     /**
      * Calcula um prazo
@@ -2931,7 +2931,7 @@ declare namespace hAPI {
      * var processo = getValue("WKNumProces");
      * hAPI.setDueDate(processo, 0, 'adm', deadlineDate[0], deadlineDate[1]);
      */
-    declare function calculateDeadLineHours(data: Date, segundos: number, prazo: number, periodoId: string): DeadLineDate;
+    declare function calculateDeadLineHours(deadlineDate: Date, seconds: number, deadlineInHours: number, periodId: string): DeadLineDate;
 
     /**
      * Calcula um prazo
@@ -2947,14 +2947,14 @@ declare namespace hAPI {
      * var processo = getValue("WKNumProces");
      * hAPI.setDueDate(processo, 0, 'adm', deadlineDate[0], deadlineDate[1]);
      */
-    declare function calculateDeadLineTime(data: Date, segundos: number, prazo: number, periodoId: string): DeadLineDate;
+    declare function calculateDeadLineTime(deadlineDate: Date, seconds: number, deadlineInHours: number, periodId: string): DeadLineDate;
 
     /**
-     * Atribui um usuario substituto para a atividade atual do processo.
+     * Atribui um usuário substituto para a atividade atual do processo.
      *
      * Usar em eventos do Processo.
      */
-    declare function setColleagueReplacement(novoResponsavel: string): void;
+    declare function setColleagueReplacement(responsible: string): void;
 
     /**
      * Retorna o link para movimentação da solicitação.
@@ -2966,7 +2966,7 @@ declare namespace hAPI {
     /**
      * Pega o ID da Thread atual
      */
-    declare function getActualThread(numEmpresa, numProcesso, numAtiv): number;
+    declare function getActualThread(companyNumber, processNumber, activityNumber): number;
 
     /**
      * Permite a criação de atividades adhoc dentro dos eventos do Fluig
@@ -3001,7 +3001,7 @@ declare namespace hAPI {
     /**
      *
      */
-    declare function getAvailableStatesDetail(companyId: number, userId: string, proccessId: number, proccessInstanceId: number, threadSequenceId: number = 0);
+    declare function getAvailableStatesDetail(companyId: number, userId: string, processId: number, processInstanceId: number, threadSequenceId: number = 0);
 };
 
 /**
@@ -3035,10 +3035,10 @@ declare namespace Global {
 /**
  * Adiciona um Filho ao Pai
  *
- * @param {String} tablename Nome da tabela
+ * @param {String} tableName Nome da tabela
  * @returns {Number} Id do filho criado
 */
-declare function wdkAddChild(tablename: string): number;
+declare function wdkAddChild(tableName: string): number;
 
 /**
  * Pega os dados de um determinado Dataset ou Formulário
@@ -3082,7 +3082,7 @@ enum ConstraintType {
     /**
      * Filtro: Pode Conter
      *
-     * Inteprete como OU lógico
+     * Interprete como OU lógico
      */
     SHOULD,
 
@@ -3305,7 +3305,7 @@ declare namespace DatasetFactory {
      * @param nomeDataset O nome do Dataset.
      * @param campos Os campos que serão retornados.
      * @param constraints Os filtros aplicados ao dataset.
-     * @param ordem Os campos que farão a ordenação do resultado. Pode-se acrescenter ;desc ao nome do campo para ordenar de forma decrescente.
+     * @param ordem Os campos que farão a ordenação do resultado. Pode-se acrescentar ;desc ao nome do campo para ordenar de forma decrescente.
      *
      * @example
      * var constraints = [
@@ -3925,7 +3925,7 @@ interface FilterStyleSettings {
     templateTipMessage?: string,
 
     /**
-     * Classname for the tags. Padrão é tag-gray
+     * Class name for the tags. Padrão é tag-gray
      */
     autocompleteTagClass?: string,
 
@@ -4054,9 +4054,9 @@ interface ToastSettings {
     type?: string,
 
     /**
-     * Tempo, em milisegundos, ou as strings slow ou fast.
+     * Tempo, em milissegundos, ou as strings slow ou fast.
      *
-     * O tempo padrão são 4000 milisegundos.
+     * O tempo padrão são 4000 milissegundos.
      * slow representa 2000 e fast representa 6000.
      *
      * O Toast do tipo danger ignora o timeout.
@@ -4188,7 +4188,7 @@ interface CalendarSettings {
     useMinutes?: boolean;
 
     /**
-     * Indica se usará seguncos. Padrão true.
+     * Indica se usará segundos. Padrão true.
      */
     useSeconds?: boolean;
 
@@ -4408,10 +4408,10 @@ interface IwsConsultaSQL {
     /**
      * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
      *
-     * @param {string} codSQL Código (ID) do SQL cadastrado no RM
-     * @param {number} CodColigada
-     * @param {string} CodSistema
-     * @param {string} parametros Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
+     * @param {string} sql Código (ID) do SQL cadastrado no RM
+     * @param {number} coligadaNumber
+     * @param {string} systemCode
+     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
      */
-    realizarConsultaSQL(codSQL:string, codColigada:number, codSistema:string, parametros:string): string;
+    realizarConsultaSQL(sql:string, coligadaNumber:number, systemCode:string, parameters:string): string;
 }
