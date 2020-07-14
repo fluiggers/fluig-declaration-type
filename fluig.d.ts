@@ -561,7 +561,132 @@ declare namespace com.fluig.sdk.service {
         updateUserEvenDisabled(vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
     }
     declare class WidgetService {}
-    declare class WorkflowAPIService {}
+
+    /**
+     * Fornece acesso aos serviços de workflow
+     */
+    declare class WorkflowAPIService {
+        /**
+         * Faz com que o usuário repassado assuma a tarefa
+         */
+        assumeProcessTask(assumeProcessTaskVO: com.fluig.sdk.api.workflow.AssumeProcessTaskVO): com.fluig.sdk.api.workflow.AssumeProcessTaskResultVO;
+        assumeProcessTask(companyId: number, userId: string, processInstanceId: number, movementSequence: number, replacementId: string): com.fluig.sdk.api.workflow.ProcessTaskVO;
+
+        /**
+         * Faz com que os usuários repassados assumam as tarefas vinculadas aos mesmos
+         */
+        assumeProcessTasks(assumeProcessTasksVO: com.fluig.sdk.api.workflow.AssumeProcessTasksVO): com.fluig.sdk.api.workflow.AssumeProcessTaskResultVO;
+
+        cancelInstance(cancelInstanceVO: com.fluig.sdk.api.workflow.CancelInstanceVO): com.fluig.sdk.api.workflow.CancelInstanceResultVO;
+        cancelInstances(cancelInstanceVO: com.fluig.sdk.api.workflow.CancelInstancesVO): com.fluig.sdk.api.workflow.CancelInstancesResultVO;
+
+        /**
+         * Insere um complemento em uma solicitação
+         */
+        createProcessObservation(processObservationVO: com.fluig.sdk.api.workflow.ProcessObservationVO): com.fluig.sdk.api.workflow.ProcessObservationVO;
+
+        findAssignedToMeTasks(processId: string, initialStartDate: string, finalStartDate: string, requester: string, manager: string, page: string, pageSize: string, statusTypeTaskRequest: string, calculate: string, expand: string, cardFilters: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestProcessTaskVO>;
+
+        findManagedByMeTasks(processId: string, initialStartDate: string, finalStartDate: string, assignee: string, requester: string, page: string, pageSize: string, statusTypeTaskRequest: string, calculate: string, expand: string, cardFilters: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestProcessTaskVO>;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como requisitante
+         */
+        findMyRequestsSLA(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, assignee: string, manager: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+
+        findMyRequestsTasks(processId: string, initialStartDate: string, finalStartDate: string, assignee: string, manager: string, page: string, pageSize: string, statusTypeTaskRequest: string, calculate: string, expand: string, cardFilters: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestProcessTaskVO>;
+
+        /**
+         * Retorna a lista de complementos em uma solicitação
+         */
+        findObservations(processInstanceId: number, stateSequence: number, threadSequence: number): java.util.List<com.fluig.sdk.api.workflow.ProcessObservationVO>;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como responsável
+         */
+        findRequestSLAByProcessInstanceId(processInstanceId: number, populateCurrentTasks: boolean, calculate: boolean, populateCardFields: boolean, populateLocals: boolean, assigneeLocals: boolean): com.fluig.sdk.api.workflow.RequestSLAVO;
+        findRequestSLAByProcessInstanceId(processInstanceId: string, expand: string, calculate: string): com.fluig.sdk.api.workflow.RequestSLAVO;
+
+        /**
+         * Recupera uma lista das solicitações de SLA dos processos configurados
+         */
+        findRequestsSLA(): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: java.util.List<string>): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: java.util.List<string>, statusRequiredList: java.util.List<string>): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: java.util.List<string>, statusRequiredList: java.util.List<string>, returnCurrentTasks: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string>, statusRequiredList: java.util.List<string>, returnCurrentTasks: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string>, statusRequiredList: java.util.List<string>, initialStartDate: Date, finalStartDate: Date, initialDeadlineDate: Date, finalDeadlineDate: Date, initialWarningDate: Date, finalWarningDate: Date, returnCurrentTasks: boolean, requester: string, assignee: string, manager: string, requesterLocals: java.util.List<string>, assigneeLocals: java.util.List<string>, orderParams: java.util.List<com.totvs.technology.foundation.sdk.service.vo.common.OrderParam>, calculate: boolean, page: number, pageSize: number, populateCardFields: boolean, populateLocalsValue: boolean, populateAssigneeLocalsValue: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, requester: string, assignee: string, manager: string, requesterLocals: string, assigneeLocals: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como responsável
+         */
+        findRequestsSLAAssignedToMe(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, requester: string, manager: string, requesterLocals: string, assigneeLocals: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como gestor
+         */
+        findRequestsSLAManagedByMe(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, requester: string, assignee: string, requesterLocals: string, assigneeLocals: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+
+        findSLATasks(processId: string, initialStartDate: string, finalStartDate: string, assignee: string, requester: string, manager: string, page: string, pageSize: string, statusTypeTaskRequest: string, calculate: string, expand: string, cardFilters: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestProcessTaskVO>;
+
+        /**
+         * Retorna uma lista das atividades pendentes de um processo
+         */
+        getActiveTasks(processInstanceId: number): com.fluig.sdk.api.workflow.ProcessInstanceInfoVO;
+
+        /**
+         * Retorna uma lista de processos disponíveis para o usuário
+         */
+        getAvailableProcess(tenantId: number, userId: string): java.util.List<com.fluig.sdk.api.workflow.ProcessVersionVO>;
+
+        /**
+         * Retorna a versão de um processo
+         */
+        getProcessVersion(processId: string): number;
+
+        /**
+         * Retorna todos os processos da empresa
+         */
+        listProcess(pattern: string, limit: number, offset: number): java.util.List<com.fluig.sdk.api.workflow.ProcessDefinitionVO>;
+
+        /**
+         * Retorna todos os processos da empresa
+         */
+        listSlaProcess(): java.util.List<com.fluig.sdk.api.workflow.ProcessDefinitionVO>;
+
+        resumeAssignedToMeTasks(processId: string, startDate: string, endDate: string, requester: string, manager: string): com.fluig.sdk.api.workflow.ResumeProcessTaskVO;
+        resumeManagedByMeTasks(processId: string, startDate: string, endDate: string, requester: string, assignee: string): com.fluig.sdk.api.workflow.ResumeProcessTaskVO;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como requisitante
+         */
+        resumeMyRequestsSLA(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, assignee: string, manager: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+
+        resumeMyRequestsTasks(processId: string, startDate: string, endDate: string, assignee: string, manager: string): com.fluig.sdk.api.workflow.ResumeProcessTaskVO;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados
+         */
+        resumeRequestsSLA(): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string>, countersRequiredList: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string>, countersRequiredList: java.util.List<string>, initialStartDate: Date, finalStartDate: Date, initialDeadlineDate: Date, finalDeadlineDate: Date, initialWarningDate: Date, finalWarningDate: Date, requester: string, assignee: string, manager: string, requesterLocalsList: java.util.List<string>, assigneeLocalsList: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, requester: string, assignee: string, manager: string, requesterLocals: string, assigneeLocals: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como responsável
+         */
+        resumeRequestsSLAAssignedToMe(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, requester: string, manager: string, requesterLocals: string, assigneeLocals: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como gestor
+         */
+        resumeRequestsSLAManagedByMe(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, requester: string, assignee: string, requesterLocals: string, assigneeLocals: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+
+        resumeSLATasks(processId: string, startDate: string, endDate: string, assignee: string, requester: string, manager: string): com.fluig.sdk.api.workflow.ResumeProcessTaskVO;
+    }
 }
 
 
@@ -1554,7 +1679,10 @@ declare namespace com.fluig.sdk.api.ecm {
 }
 
 declare namespace com.fluig.sdk.api.enums {
-    declare class AssumeProcessTaskStatus {}
+    enum AssumeProcessTaskStatus {
+        SUCCESS,
+        ERROR,
+    }
 }
 
 declare namespace com.fluig.sdk.api.group {
@@ -1635,8 +1763,36 @@ declare namespace com.fluig.sdk.api.task {
 }
 
 declare namespace com.fluig.sdk.api.workflow {
-    declare class AssumeProcessTaskResultVO {}
-    declare class AssumeProcessTaskVO {}
+    declare class AssumeProcessTaskResultVO {
+        getColleagueId(): string;
+        getComplement(): string;
+        getErrorCode(): string;
+        getMessage(): string;
+        getMovementSequence(): number;
+        getProcessInstanceId(): number;
+        getStatus(): com.fluig.sdk.api.enums.AssumeProcessTaskStatus;
+        getTenantId(): number;
+        setColleagueId(colleagueId: string): void;
+        setComplement(complement: string): void;
+        setErrorCode(errorCode: string): void;
+        setMessage(message: string): void;
+        setMovementSequence(movementSequence: number): void;
+        setProcessInstanceId(processInstanceId: number): void;
+        setStatus(status: com.fluig.sdk.api.enums.AssumeProcessTaskStatus): void;
+        setTenantId(tenantId: number): void;
+    }
+
+    declare class AssumeProcessTaskVO {
+        getColleagueId(): string;
+        getReplacementId(): string;
+        getMovementSequence(): number;
+        getProcessInstanceId(): number;
+        setColleagueId(colleagueId: string): void;
+        setReplacementId(replacementId: string): void;
+        setMovementSequence(movementSequence: number): void;
+        setProcessInstanceId(processInstanceId: number): void;
+    }
+
     declare class AssumeProcessTasksResultVO {}
     declare class AssumeProcessTasksVO {}
     declare class AttachmentVO {}
@@ -1654,7 +1810,24 @@ declare namespace com.fluig.sdk.api.workflow {
     declare class ProcessObservationVO {}
     declare class ProcessStateVO {}
     declare class ProcessTaskInfoVO {}
-    declare class ProcessTaskVO {}
+
+    declare class ProcessTaskVO {
+        getColleagueId(): string;
+        getComplement(): string;
+        getSelectedColleagueId(): string;
+        getCompanyId(): number;
+        getMovementSequence(): number;
+        getProcessInstanceId(): number;
+        getTransferredSequence(): number;
+        setColleagueId(colleagueId: string): void;
+        setComplement(complement: string): void;
+        setSelectedColleagueId(selectedColleagueId: string): void;
+        setCompanyId(companyId: number): void;
+        setMovementSequence(movementSequence: number): void;
+        setProcessInstanceId(processInstanceId: number): void;
+        setTransferredSequence(transferredSequence: number): void;
+    }
+
     declare class ProcessVersionVO {}
     declare class RequestProcessTaskVO {}
     declare class RequestSLAVO {}
@@ -1878,6 +2051,10 @@ declare namespace com.fluig.sdk.user {
     }
 }
 
+declare namespace com.totvs.technology.foundation.sdk.service.vo.common {
+    declare class OrderParam {}
+}
+
 class Iterator<T> {
     /**
      * Indica se ainda há elementos a percorrer
@@ -1950,6 +2127,28 @@ declare namespace java.util {
          * Indica o tamanho da lista
          */
         size(): number;
+
+        /**
+         * Pega um iterator para percorrer o hash
+         */
+        iterator(): Iterator<T>
+    }
+
+    declare class LinkedHashSet<T> {
+        /**
+         * Adiciona um elemento ao hash
+         */
+        add(valor: T): void;
+
+        /**
+         * Indica o tamanho da lista
+         */
+        size(): number;
+
+        /**
+         * Pega um iterator para percorrer o hash
+         */
+        iterator(): Iterator<T>
     }
 }
 
