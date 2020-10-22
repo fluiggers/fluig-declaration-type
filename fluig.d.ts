@@ -2809,6 +2809,14 @@ declare namespace hAPI {
     declare function setCardValue(nomeCampo: string, valor: string): string;
 
     /**
+     * Adiciona um filho no formulário pai e filho do processo
+     *
+     * @param tableName Nome da tabela pai-filho
+     * @param cardData Mapa com os campos e valores
+     */
+    declare function addCardChild(tableName: string, cardData: java.util.HashMap<string>): void;
+
+    /**
      * Encaminha o processo para uma determinada atividade
      *
      * Deve ser usado para tomar decisões em atividades automáticas de listener (AutomaticTasks).
@@ -2828,6 +2836,20 @@ declare namespace hAPI {
      * log.info(threads.get(0));
      */
     declare function getActiveStates(): java.util.ArrayList<object>;
+
+    /**
+     * Pega o ID do processo Pai (caso de subprocesso)
+     *
+     * @param processInstanceId ID do processo
+     */
+    declare function getParentInstance(processInstanceId: number): number;
+
+    /**
+     * Pega uma lista dos processos que são filhos do processo indicado (subprocessos)
+     *
+     * @param processInstanceId ID do processo
+     */
+    declare function getChildrenInstances(processInstanceId: number): java.util.List<number>;
 
     /**
      * Altera o prazo de uma atividade do processo
