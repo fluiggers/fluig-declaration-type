@@ -3017,8 +3017,10 @@ declare namespace hAPI {
 
     /**
      * Permite anexar documentos do GED à solicitação workflow
+     *
+     * @throws {Error}
      */
-    declare function attachDocument(documentDto: DocumentDto): void;
+    declare function attachDocument(documentId: number): void;
 
     /**
      *
