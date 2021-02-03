@@ -2722,6 +2722,8 @@ declare class FormController {
 
     /**
      * Retorna os índices dos campos filhos de uma tabela pai.
+     *
+     * @see https://tdn.totvs.com/pages/releaseview.action?pageId=270924158#EventosdeFormul%C3%A1rio-getChildrenIndexes
      */
     getChildrenIndexes(tableName: string): number[];
 
@@ -3021,6 +3023,20 @@ declare namespace hAPI {
      * @throws {Error}
      */
     declare function attachDocument(documentId: number): void;
+
+    /**
+     * Retorna os campos filhos, e seus valores, de uma tabela pai.
+     *
+     * Retorna um objeto com a propriedade sendo o nome do campo e seus valores.
+     */
+    declare function getChildrenFromTable(tableName: string): object;
+
+    /**
+     * Retorna os índices dos campos filhos de uma tabela pai.
+     *
+     * @see https://tdn.totvs.com/display/public/fluig/Eventos+de+Processos#EventosdeProcessos-EventosdeFormul%C3%A1rioPaiFilho
+     */
+    declare function getChildrenIndexes(tableName: string): number[];
 
     /**
      *
