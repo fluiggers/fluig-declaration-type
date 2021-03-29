@@ -1,6 +1,6 @@
 {
   "name": "@brunogasparetto/fluig-declaration-type",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Fluig decaration types",
   "types": "fluig.d.ts",
   "scripts": {
