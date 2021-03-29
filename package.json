@@ -1,0 +1,26 @@
+{
+  "name": "fluig-declaration-type",
+  "version": "1.0.0",
+  "description": "Fluig decaration types",
+  "types": "fluig.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunogasparetto/fluig-declaration-type.git"
+  },
+  "keywords": [
+    "Fluig"
+  ],
+  "author": "Bruno Gasparetto <brunogasparetto@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brunogasparetto/fluig-declaration-type/issues"
+  },
+  "homepage": "https://github.com/brunogasparetto/fluig-declaration-type#readme",
+  "dependencies": {
+    "@types/jquery": "^3.5.5",
+    "@types/moment": "^2.13.0"
+  }
+}
