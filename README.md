@@ -6,12 +6,16 @@ problemas com ela.
 Para facilitar o desenvolvimento no Visual Studio Code eu criei essa declaração de tipos, assim é possível aproveitar
 o auto-complete.
 
-Basta colocar os arquivos **fluig.d.ts** e **jsconfig.json** na pasta principal do seu projeto.
-
 As declarações ainda estão incompletas. Conforme vou precisando de mais itens ou descubro novos itens olhando a
 documentação eu vou adicionando aqui.
 
 Sinta-se à vontade para ajudar a complementar o projeto com PR.
+
+## Como instalar
+
+Primeiro é necessário iniciar seu projeto npm com o comando `npm init`.
+
+Então executar o comando `npm i @brunogasparetto/fluig-declaration-type`.
 
 ## Fontes de Documentação do Fluig
 

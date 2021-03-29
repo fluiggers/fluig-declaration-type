@@ -1,5 +1,5 @@
 {
-  "name": "fluig-declaration-type",
+  "name": "@brunogasparetto/fluig-declaration-type",
   "version": "1.0.0",
   "description": "Fluig decaration types",
   "types": "fluig.d.ts",
@@ -22,5 +22,6 @@
   "dependencies": {
     "@types/jquery": "^3.5.5",
     "@types/moment": "^2.13.0"
-  }
+  },
+  "devDependencies": {}
 }
