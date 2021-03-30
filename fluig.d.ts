@@ -3280,6 +3280,26 @@ interface DatasetWcmResult {
 }
 
 /**
+ * Indicativo das restrições ao sincronizar dados em Mobile
+ */
+interface DatasetMobileSync {
+    /**
+     * As colunas (em letras maiúsculas) a serem salvas no Mobile
+     */
+    fields: string[];
+
+    /**
+     * Os filtros adicionais
+     */
+    constraints: Constraint[];
+
+    /**
+     * Campos da ordenação
+     */
+    sortFields: string[];
+}
+
+/**
  * Formato de Callback para consulta assíncrona ao Dataset usando o WCM
  *
  * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
