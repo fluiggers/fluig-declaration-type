@@ -13,9 +13,7 @@ Sinta-se à vontade para ajudar a complementar o projeto com PR.
 
 ## Como instalar
 
-Primeiro é necessário iniciar seu projeto npm com o comando `npm init`.
-
-Então executar o comando `npm i @brunogasparetto/fluig-declaration-type`.
+Copie os arquivos `fluig.d.ts` e `jsconfig.json` para o diretório principal do seu projeto Fluig.
 
 ## Fontes de Documentação do Fluig
 
