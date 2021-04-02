@@ -2164,6 +2164,9 @@ declare namespace java.util {
 
     declare class LinkedHashSet<T> extends Set<T> {
     }
+
+    declare class LinkedHashMap<K, V> extends HashMap<K, V> {
+    }
 }
 
 
