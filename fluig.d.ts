@@ -233,7 +233,7 @@ declare namespace com.fluig.sdk.service {
         /**
          * Método que deve ser invocado por todos os módulos do sistema para enviar alertas.
          */
-        sendNotification(eventKey: string, loginSender: string, loginReceiver: string, object: com.fluig.sdk.api.alert.AlertVO, place: com.fluig.sdk.api.alert.AlertVO, actions: java.util.List<com.fluig.sdk.api.alert.AlertActionVO>, metadata: java.util.HashMap<string>): void;
+        sendNotification(eventKey: string, loginSender: string, loginReceiver: string, object: com.fluig.sdk.api.alert.AlertVO, place: com.fluig.sdk.api.alert.AlertVO, actions: java.util.List<com.fluig.sdk.api.alert.AlertActionVO>, metadata: java.util.HashMap<string, string>): void;
     }
     declare class ArticleService {}
     declare class AuthorizeClientSdkService {}
@@ -407,7 +407,7 @@ declare namespace com.fluig.sdk.service {
         /**
          * Recupera os valores de preferências para uma instância de uma widget.
          */
-        getWidgetPreferences(instanceId: number): java.util.HashMap<string>;
+        getWidgetPreferences(instanceId: number): java.util.HashMap<string, string>;
 
         mobileMapping(pageCode: string): com.fluig.sdk.page.PageMobileApiVO;
 
@@ -523,7 +523,7 @@ declare namespace com.fluig.sdk.service {
         /**
          * Pega todos os dados do usuário especificado pelo login
          */
-        listData(login: string): java.util.HashMap<string>;
+        listData(login: string): java.util.HashMap<string, string>;
 
         /**
          * Pega todos os grupos do usuário especificado pelo login
@@ -548,12 +548,12 @@ declare namespace com.fluig.sdk.service {
         /**
          * Atualiza os dados do usuário logado
          */
-        updateUserData(data: java.util.HashMap<string>): boolean;
+        updateUserData(data: java.util.HashMap<string, string>): boolean;
 
         /**
          * Atualiza os dados do usuário procurando pelo ID
          */
-        updateUserDataById(data: java.util.HashMap<string>, userId: string): boolean;
+        updateUserDataById(data: java.util.HashMap<string, string>, userId: string): boolean;
 
         /**
          * Atualiza usuário mesmo que esteja desabilitado (inativo)
@@ -614,8 +614,8 @@ declare namespace com.fluig.sdk.service {
         findRequestsSLA(processes: java.util.List<string>): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
         findRequestsSLA(processes: java.util.List<string>, statusRequiredList: java.util.List<string>): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
         findRequestsSLA(processes: java.util.List<string>, statusRequiredList: java.util.List<string>, returnCurrentTasks: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
-        findRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string>, statusRequiredList: java.util.List<string>, returnCurrentTasks: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
-        findRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string>, statusRequiredList: java.util.List<string>, initialStartDate: Date, finalStartDate: Date, initialDeadlineDate: Date, finalDeadlineDate: Date, initialWarningDate: Date, finalWarningDate: Date, returnCurrentTasks: boolean, requester: string, assignee: string, manager: string, requesterLocals: java.util.List<string>, assigneeLocals: java.util.List<string>, orderParams: java.util.List<com.totvs.technology.foundation.sdk.service.vo.common.OrderParam>, calculate: boolean, page: number, pageSize: number, populateCardFields: boolean, populateLocalsValue: boolean, populateAssigneeLocalsValue: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>, statusRequiredList: java.util.List<string>, returnCurrentTasks: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>, statusRequiredList: java.util.List<string>, initialStartDate: Date, finalStartDate: Date, initialDeadlineDate: Date, finalDeadlineDate: Date, initialWarningDate: Date, finalWarningDate: Date, returnCurrentTasks: boolean, requester: string, assignee: string, manager: string, requesterLocals: java.util.List<string>, assigneeLocals: java.util.List<string>, orderParams: java.util.List<com.totvs.technology.foundation.sdk.service.vo.common.OrderParam>, calculate: boolean, page: number, pageSize: number, populateCardFields: boolean, populateLocalsValue: boolean, populateAssigneeLocalsValue: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
         findRequestsSLA(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, requester: string, assignee: string, manager: string, requesterLocals: string, assigneeLocals: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
 
         /**
@@ -670,9 +670,9 @@ declare namespace com.fluig.sdk.service {
          */
         resumeRequestsSLA(): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
         resumeRequestsSLA(processes: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
-        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
-        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string>, countersRequiredList: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
-        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string>, countersRequiredList: java.util.List<string>, initialStartDate: Date, finalStartDate: Date, initialDeadlineDate: Date, finalDeadlineDate: Date, initialWarningDate: Date, finalWarningDate: Date, requester: string, assignee: string, manager: string, requesterLocalsList: java.util.List<string>, assigneeLocalsList: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>, countersRequiredList: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>, countersRequiredList: java.util.List<string>, initialStartDate: Date, finalStartDate: Date, initialDeadlineDate: Date, finalDeadlineDate: Date, initialWarningDate: Date, finalWarningDate: Date, requester: string, assignee: string, manager: string, requesterLocalsList: java.util.List<string>, assigneeLocalsList: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
         resumeRequestsSLA(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, requester: string, assignee: string, manager: string, requesterLocals: string, assigneeLocals: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
 
         /**
@@ -2112,7 +2112,7 @@ declare namespace java.util {
         iterator(): Iterator<T>
     }
 
-    declare class HashMap<T> {
+    declare class HashMap<K, V> {
         /**
          * Pega o elemento no índice indicado
          */
@@ -2558,12 +2558,12 @@ declare namespace notifier {
      *
      * @param fromId Matrícula do usuário que está enviando o e-mail
      * @param templateId Código do template de e-mail
-     * @param parameters java.util.HashMap<string> com os parâmetros do e-mail
+     * @param parameters java.util.HashMap<string, string> com os parâmetros do e-mail
      * @param to java.util.ArrayList<string> com os destinatários do e-mail
      * @param mimeType Tipo do conteúdo do e-mail. Pode ser text/html ou text/plain
      *
      */
-    declare function notify(fromId: string, templateId: string, parameters: java.util.HashMap<string>, to: java.util.ArrayList<string>, mimeType: string): void;
+    declare function notify(fromId: string, templateId: string, parameters: java.util.HashMap<string, string>, to: java.util.ArrayList<string>, mimeType: string): void;
 };
 
 
@@ -2816,7 +2816,7 @@ declare namespace hAPI {
      * @param tableName Nome da tabela pai-filho
      * @param cardData Mapa com os campos e valores
      */
-    declare function addCardChild(tableName: string, cardData: java.util.HashMap<string>): void;
+    declare function addCardChild(tableName: string, cardData: java.util.HashMap<string, string>): void;
 
     /**
      * Encaminha o processo para uma determinada atividade
@@ -2916,7 +2916,7 @@ declare namespace hAPI {
      *  var card = declare function getCardData(getValue("WKNumProces"));
      *  log.info(card.get("campo1"));
      */
-    declare function getCardData(numProcesso: number): java.util.HashMap<string>;
+    declare function getCardData(numProcesso: number): java.util.HashMap<string, string>;
 
     /**
      * Inicia uma nova instância de um processo.
@@ -2939,7 +2939,7 @@ declare namespace hAPI {
      * @param managerMode indica se a tarefa sera inicializada com o modo gestor do Fluig ativo.
      * @returns HashMap com informações referentes ao processo criado
      */
-    declare function startProcess(processId: string, taskNumber: number, users: java.util.ArrayList<string>, comment?: string, taskFinished?: boolean, form?: java.util.HashMap<string>, managerMode?: boolean): java.util.HashMap<string>;
+    declare function startProcess(processId: string, taskNumber: number, users: java.util.ArrayList<string>, comment?: string, taskFinished?: boolean, form?: java.util.HashMap<string, string>, managerMode?: boolean): java.util.HashMap<string, string>;
 
     /**
      * Calcula um prazo
