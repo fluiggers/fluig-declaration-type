@@ -2068,6 +2068,38 @@ class Iterator<T> {
 }
 
 declare namespace java.util {
+    declare class  Set<T> {
+        /**
+         * Adiciona um elemento ao conjunto
+         */
+        add(value: T): boolean;
+
+        /**
+         * Indica se o conjunto está vazio
+         */
+        isEmpty(): boolean;
+
+        /**
+         * Pega a quantidade de elementos do conjunto
+         */
+        size(): number;
+
+        /**
+         * Remove todos os elementos
+         */
+        clear(): void;
+
+        /**
+        * Verifica se existe o elemento
+        */
+        contains(value: T): boolean;
+
+        /**
+         * Pega um iterator para percorrer o conjunto
+         */
+        iterator(): Iterator<T>;
+    }
+
     declare class List<T> {
         /**
          * Pega o elemento no índice indicado
@@ -2085,43 +2117,39 @@ declare namespace java.util {
         size(): number;
 
         /**
+         * Remove todos os elementos
+         */
+        clear(): void;
+
+        /**
+         * Verifica se existe o elemento
+         */
+        contains(value: T): boolean;
+
+        /**
+         * Indica se a lista está vazia
+         */
+         isEmpty(): boolean;
+
+        /**
          * Pega um iterator para percorrer a lista
          */
         iterator(): Iterator<T>
     }
 
-    declare class ArrayList<T> {
-        /**
-         * Pega o elemento no índice indicado
-         */
-        get(index: number): T;
-
-        /**
-         * Adiciona um elemento à lista
-         */
-        add(value: T): void;
-
-        /**
-         * Indica o tamanho da lista
-         */
-        size(): number;
-
-        /**
-         * Pega um iterator para percorrer a lista
-         */
-        iterator(): Iterator<T>
+    declare class ArrayList<T> extends List<T> {
     }
 
     declare class HashMap<K, V> {
         /**
          * Pega o elemento no índice indicado
          */
-        get(name: string): T;
+        get(name: K): T;
 
         /**
          * Adiciona um elemento
          */
-        put(name: string, value: T): void;
+        put(name: K, value: T): void;
 
         /**
          * Indica o tamanho da lista
@@ -2129,26 +2157,12 @@ declare namespace java.util {
         size(): number;
 
         /**
-         * Pega um iterator para percorrer o hash
+         * Retorna um conjunto com as chaves do Mapa
          */
-        iterator(): Iterator<T>
+        keySet(): Set<K>;
     }
 
-    declare class LinkedHashSet<T> {
-        /**
-         * Adiciona um elemento ao hash
-         */
-        add(value: T): void;
-
-        /**
-         * Indica o tamanho da lista
-         */
-        size(): number;
-
-        /**
-         * Pega um iterator para percorrer o hash
-         */
-        iterator(): Iterator<T>
+    declare class LinkedHashSet<T> extends Set<T> {
     }
 }
 
