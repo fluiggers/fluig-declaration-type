@@ -512,7 +512,7 @@ declare namespace com.fluig.sdk.service {
          * Pesquisa por usuários baseado em um conjunto de parâmetros.
          */
         list(offset: number, limit: number): java.util.List<com.fluig.sdk.user.UserVO>;
-        list(params: java.util.HashMap<object>, offset: number, limit: number): java.util.List<com.fluig.sdk.user.UserVO>;
+        list(params: java.util.HashMap<string, object>, offset: number, limit: number): java.util.List<com.fluig.sdk.user.UserVO>;
         list(sortField: string, sortType: string, limit: number, offset: number, search: string): java.util.List<com.fluig.sdk.user.UserVO>;
 
         /**
@@ -865,7 +865,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera os dados extras
          */
-        getExtData(): java.util.HashMap<object>;
+        getExtData(): java.util.HashMap<string, object>;
 
         /**
          * Recupera id documento externo
@@ -1411,7 +1411,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera os filtros
          */
-        getFilters(): java.util.HashMap<object>;
+        getFilters(): java.util.HashMap<string, object>;
 
         /**
          * Recupera valor do iconId
@@ -1567,7 +1567,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Atribui filtros
          */
-        setFilters(filters: java.util.HashMap<object>): void;
+        setFilters(filters: java.util.HashMap<string, object>): void;
 
         /**
          * Atribui valor para iconId
@@ -1902,7 +1902,7 @@ declare namespace com.fluig.sdk.user {
         /**
          * Pega todos os dados extras
          */
-        getExtData(): java.util.HashMap<object>;
+        getExtData(): java.util.HashMap<string, object>;
 
         /**
          * Pega um dado extra
@@ -1977,7 +1977,7 @@ declare namespace com.fluig.sdk.user {
         /**
          * Atribui os dados extras
          */
-        setExtData(extData: java.util.HashMap<object>): void;
+        setExtData(extData: java.util.HashMap<string, object>): void;
 
         /**
          * Atribui um valor para um dado extra
