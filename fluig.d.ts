@@ -2055,20 +2055,20 @@ declare namespace com.totvs.technology.foundation.sdk.service.vo.common {
     declare class OrderParam {}
 }
 
-class Iterator<T> {
-    /**
-     * Indica se ainda há elementos a percorrer
-     */
-    hasNext(): boolean;
-
-    /**
-     * Pega o próximo elemento
-     */
-    next(): T;
-}
-
 declare namespace java.util {
-    declare class  Set<T> {
+    declare class Iterator<T> {
+        /**
+         * Indica se ainda há elementos a percorrer
+         */
+        hasNext(): boolean;
+
+        /**
+         * Pega o próximo elemento
+         */
+        next(): T;
+    }
+
+    declare class Set<T> {
         /**
          * Adiciona um elemento ao conjunto
          */
@@ -2097,7 +2097,7 @@ declare namespace java.util {
         /**
          * Pega um iterator para percorrer o conjunto
          */
-        iterator(): Iterator<T>;
+        iterator(): java.util.Iterator<T>;
     }
 
     declare class List<T> {
@@ -2114,7 +2114,7 @@ declare namespace java.util {
         /**
          * Adiciona todos os elementos da lista indicada para esta lista
          */
-        addAll(l: List<T>): void;
+        addAll(l: java.util.List<T>): void;
 
         /**
          * Indica o tamanho da lista
@@ -2139,7 +2139,7 @@ declare namespace java.util {
         /**
          * Pega um iterator para percorrer a lista
          */
-        iterator(): Iterator<T>
+        iterator(): java.util.Iterator<T>
     }
 
     declare class ArrayList<T> extends List<T> {
@@ -2169,21 +2169,21 @@ declare namespace java.util {
         /**
          * Copia todos os elementos do mapa indicado para este mapa
          */
-        putAll(m: Map<K, V>): void;
+        putAll(m: java.util.Map<K, V>): void;
 
         /**
          * Retorna um conjunto com as chaves do Mapa
          */
-        keySet(): Set<K>;
+        keySet(): java.util.Set<K>;
     }
 
-    declare class HashMap<K, V> extends Map<K, V> {
+    declare class HashMap<K, V> extends java.util.Map<K, V> {
     }
 
-    declare class LinkedHashSet<T> extends Set<T> {
+    declare class LinkedHashSet<T> extends java.util.Set<T> {
     }
 
-    declare class LinkedHashMap<K, V> extends HashMap<K, V> {
+    declare class LinkedHashMap<K, V> extends java.util.HashMap<K, V> {
     }
 }
 
