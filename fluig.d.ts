@@ -2112,6 +2112,11 @@ declare namespace java.util {
         add(value: T): void;
 
         /**
+         * Adiciona todos os elementos da lista indicada para esta lista
+         */
+        addAll(l: List<T>): void;
+
+        /**
          * Indica o tamanho da lista
          */
         size(): number;
@@ -2140,7 +2145,7 @@ declare namespace java.util {
     declare class ArrayList<T> extends List<T> {
     }
 
-    declare class HashMap<K, V> {
+    declare class Map<K, V> {
         /**
          * Pega o elemento no índice indicado
          */
@@ -2157,9 +2162,22 @@ declare namespace java.util {
         size(): number;
 
         /**
+         * Remove todos os elementos
+         */
+         clear(): void;
+
+        /**
+         * Copia todos os elementos do mapa indicado para este mapa
+         */
+        putAll(m: Map<K, V>): void;
+
+        /**
          * Retorna um conjunto com as chaves do Mapa
          */
         keySet(): Set<K>;
+    }
+
+    declare class HashMap<K, V> extends Map<K, V> {
     }
 
     declare class LinkedHashSet<T> extends Set<T> {
