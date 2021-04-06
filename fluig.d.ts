@@ -3673,12 +3673,12 @@ declare type ModalCallback = (error: boolean, data: string) => void;
 declare type ConfirmCallback = (result: boolean, element: HTMLElement, event: Event) => void;
 
 /**
- * Callback da mensagem de Alerta
+ * Callback de mensagem
  *
  * @param element Botão clicado
  * @param data Evento disparado
  */
-declare type AlertCallback = (element: HTMLElement, event: Event) => void;
+declare type MessageCallback = (element: HTMLElement, event: Event) => void;
 
 
 interface ErrorData {
@@ -4305,6 +4305,28 @@ interface AlertSettings {
 }
 
 /**
+ * Configurações da Mensagem de Erro
+ */
+interface ErrorSettings {
+    /**
+     * Título
+     */
+    title: string;
+
+    /**
+     * Mensagem
+     */
+    message: string;
+
+    /**
+     * Detalhes do erro
+     *
+     * Pode quebrar linha utilizando \n
+     */
+    details: string;
+}
+
+/**
  * Configurações da Modal
  */
 interface ModalSettings {
@@ -4569,15 +4591,23 @@ declare namespace FLUIGC.message {
      * @param settings Configurações
      * @param callback Função para executar após o usuário responder a confirmação
      */
-     declare function confirm(settings: ConfirmSettings, callback: ConfirmCallback): void;
+    declare function confirm(settings: ConfirmSettings, callback: ConfirmCallback): void;
 
-     /**
+    /**
      * Cria uma Mensagem de Alerta
      *
      * @param settings Configurações
-     * @param callback Função para executar após o usuário responder o alerta
+     * @param callback Função para executar após o usuário fechar o alerta
      */
-     declare function alert(settings: AlertSettings, callback: AlertCallback): void;
+    declare function alert(settings: AlertSettings, callback: MessageCallback): void;
+
+    /**
+     * Cria uma Mensagem de Erro
+     *
+     * @param settings Configurações
+     * @param callback Função para executar após o usuário fechar o erro
+     */
+    declare function error(settings: ErrorSettings, callback: MessageCallback): void;
 }
 
 declare namespace FLUIGC.calendar {
