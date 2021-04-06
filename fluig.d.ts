@@ -3649,11 +3649,11 @@ declare namespace docAPI {
     declare function copyDocumentToUploadArea(documentId: number, version: number): string[];
 }
 
-declare type errorCallback = (error: ErrorData, data: object) => void;
-declare type simpleCallback = () => void;
-declare type dataCallback = (data: object) => void;
+declare type ErrorCallback = (error: ErrorData, data: object) => void;
+declare type SimpleCallback = () => void;
+declare type DataCallback = (data: object) => void;
 
-declare type autocompleteOnTagCallback = (item: object, tag: object) => void;
+declare type AutoCompleteOnTagCallback = (item: object, tag: object) => void;
 
 /**
  * Callback de Modal
@@ -3761,12 +3761,12 @@ interface AutoCompleteOptions {
     /**
      * Evento disparado quando tentar adicionar uma tag repetida
      */
-    onTagExists?: autocompleteOnTagCallback;
+    onTagExists?: AutoCompleteOnTagCallback;
 
     /**
      * Evento disparado ao atingir o limite de tags
      */
-    onMaxTags?: autocompleteOnTagCallback;
+    onMaxTags?: AutoCompleteOnTagCallback;
 
     /**
      * Largura máxima da tag
@@ -3981,14 +3981,14 @@ interface LoadingSettings {
     /**
      * Função para ser executado após o efeito de transição do bloqueio
      */
-    onBlock?: simpleCallback,
+    onBlock?: SimpleCallback,
 
     /**
      * Função para ser executado após o efeito de transição do desbloqueio
      *
      * O elemento desbloqueado será passado à função.
      */
-    onUnBlock?: dataCallback,
+    onUnBlock?: DataCallback,
 
     /**
      * Indica se vai ignorar um bloqueio quando já está bloqueado
@@ -4203,7 +4203,7 @@ declare class FluigcFilter {
      * @param event
      * @param callback
      */
-    on(event: string, callback: simpleCallback|dataCallback): void;
+    on(event: string, callback: SimpleCallback|DataCallback): void;
 }
 
 declare class FluigcModal {
@@ -4512,7 +4512,7 @@ declare namespace FLUIGC {
      * @param options Opções adicionais para o autocomplete
      * @param callback Função executada após trazer as respostas para o auto-complete
      */
-    declare function autocomplete(target: string, options: AutoCompleteOptions, callback: errorCallback): AutoComplete;
+    declare function autocomplete(target: string, options: AutoCompleteOptions, callback: ErrorCallback): AutoComplete;
 
     /**
      * Cria um campo filter em um select (é o Zoom feito manualmente)
