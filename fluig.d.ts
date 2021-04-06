@@ -3655,6 +3655,32 @@ declare type dataCallback = (data: object) => void;
 
 declare type autocompleteOnTagCallback = (item: object, tag: object) => void;
 
+/**
+ * Callback de Modal
+ *
+ * @param {boolean} error Indica se houve erro
+ * @param {string} data Todo o conteúdo da propriedade content da modal
+ */
+declare type ModalCallback = (error: boolean, data: string) => void;
+
+/**
+ * Callback da mensagem de Confirmação
+ *
+ * @param {boolean} result Resultado da confirmação (True se clicou em Sim)
+ * @param {HTMLElement} element Botão clicado
+ * @param {event} data Evento disparado
+ */
+declare type ConfirmCallback = (result: boolean, element: HTMLElement, event: Event) => void;
+
+/**
+ * Callback da mensagem de Alerta
+ *
+ * @param {HTMLElement} element Botão clicado
+ * @param {event} data Evento disparado
+ */
+declare type AlertCallback = (element: HTMLElement, event: Event) => void;
+
+
 interface ErrorData {
     message?: string;
     responseText: object;
@@ -4228,6 +4254,57 @@ interface ModalActionSettings {
 }
 
 /**
+ * Configurações da Mensagem de Confirmação
+ */
+interface ConfirmSettings {
+    /**
+     * Título
+     */
+    title: string;
+
+    /**
+     * Mensagem
+     */
+    message: string;
+
+    /**
+     * Texto do Botão Sim
+     *
+     * Padrão: Sim
+     */
+    labelYes?: string;
+
+    /**
+     * Texto do Botão Não
+     *
+     * Padrão: Não
+     */
+    labelNo?: string;
+}
+
+/**
+ * Configurações da Mensagem de Alerta
+ */
+interface AlertSettings {
+    /**
+     * Título
+     */
+    title: string;
+
+    /**
+     * Mensagem
+     */
+    message: string;
+
+    /**
+     * Texto do Botão Ok
+     *
+     * Padrão: OK
+     */
+    label?: string;
+}
+
+/**
  * Configurações da Modal
  */
 interface ModalSettings {
@@ -4414,8 +4491,6 @@ declare namespace WCMSpaceAPI.PageService {
     declare function UPDATEPREFERENCES(settings: WidgetUpdatePreferences, instanceId: number, preferences: object): void;
 }
 
-
-
 declare namespace FLUIGC {
     /**
      * Cria um campo com auto-complete
@@ -4482,8 +4557,27 @@ declare namespace FLUIGC {
      * Cria uma Modal
      *
      * @param settings Configurações
+     * @param callback Função para executar após a criação da modal
      */
-    declare function modal(settings: ModalSettings): FluigcModal;
+    declare function modal(settings: ModalSettings, callback: ModalCallback): FluigcModal;
+}
+
+declare namespace FLUIGC.message {
+    /**
+     * Cria uma Mensagem de Confirmação
+     *
+     * @param settings Configurações
+     * @param callback Função para executar após o usuário responder a confirmação
+     */
+     declare function confirm(settings: ConfirmSettings, callback: ConfirmCallback): void;
+
+     /**
+     * Cria uma Mensagem de Alerta
+     *
+     * @param settings Configurações
+     * @param callback Função para executar após o usuário responder o alerta
+     */
+     declare function alert(settings: AlertSettings, callback: AlertCallback): void;
 }
 
 declare namespace FLUIGC.calendar {
