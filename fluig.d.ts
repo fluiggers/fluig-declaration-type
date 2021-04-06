@@ -3658,25 +3658,25 @@ declare type AutoCompleteOnTagCallback = (item: object, tag: object) => void;
 /**
  * Callback de Modal
  *
- * @param {boolean} error Indica se houve erro
- * @param {string} data Todo o conteúdo da propriedade content da modal
+ * @param error Indica se houve erro
+ * @param data Todo o conteúdo da propriedade content da modal
  */
 declare type ModalCallback = (error: boolean, data: string) => void;
 
 /**
  * Callback da mensagem de Confirmação
  *
- * @param {boolean} result Resultado da confirmação (True se clicou em Sim)
- * @param {HTMLElement} element Botão clicado
- * @param {event} data Evento disparado
+ * @param result Resultado da confirmação (True se clicou em Sim)
+ * @param element Botão clicado
+ * @param data Evento disparado
  */
 declare type ConfirmCallback = (result: boolean, element: HTMLElement, event: Event) => void;
 
 /**
  * Callback da mensagem de Alerta
  *
- * @param {HTMLElement} element Botão clicado
- * @param {event} data Evento disparado
+ * @param element Botão clicado
+ * @param data Evento disparado
  */
 declare type AlertCallback = (element: HTMLElement, event: Event) => void;
 
