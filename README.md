@@ -13,7 +13,7 @@ Sinta-se à vontade para ajudar a complementar o projeto com PR.
 
 ## Como instalar
 
-Copie os arquivos `fluig.d.ts` e `jsconfig.json` para o diretório principal do seu projeto Fluig.
+Baixe a [Última Release](https://github.com/brunogasparetto/fluig-declaration-type/releases/latest) e descompacte os arquivos `fluig.d.ts` e `jsconfig.json` para o diretório principal do seu projeto Fluig.
 
 ## Fontes de Documentação do Fluig
 
