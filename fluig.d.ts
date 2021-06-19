@@ -4623,6 +4623,160 @@ declare namespace FLUIGC.calendar {
     declare function formatDate(date: Date, format: string, language?: string): string;
 }
 
+/**
+ * Callback de Inicialização do Botão Switch
+ *
+ * @param event Evento disparado
+ * @this HTMLElement
+ */
+declare type SwitchInitCallback = (event: JQuery.Event) => void;
+
+/**
+ * Callback de mudança de estado do Botão Switch
+ *
+ * @param event Evento disparado
+ * @param checked Indica se está selecionado
+ * @this HTMLElement
+ */
+declare type SwitchChangeCallback = (event: JQuery.Event, checked: boolean) => void;
+
+/**
+ * Botão Switch
+ *
+ * @see https://style.fluig.com/javascript.html#switch-button
+ */
+declare namespace FLUIGC.switcher {
+
+    /**
+     * Transforma um checkbox ou radio em um botão switch
+     *
+     * Ao inicializar o botão switch será feita a leitura das opções
+     * do elemento HTML (os atributos do checkbox ou radio) para orientar
+     * como o botão deve ser.
+     *
+     * As opções no checkbox/radio são:
+     *
+     * | Atributo | Valores | Padrão |
+     * |----------|---------|--------|
+     * | checked | true, false | false |
+     * | data-size | null, 'mini', 'small', 'normal', 'large' | null|
+     * | data-animate | true, false | true|
+     * | disabled | true, false | false|
+     * | readonly | true, false | false|
+     * | data-on-color | 'primary', 'info', 'success', 'warning', 'danger', 'default' | 'primary'|
+     * | data-off-color | 'primary', 'info', 'success', 'warning', 'danger', 'default' | 'default'|
+     * | data-on-text |  | 'ON'|
+     * | data-off-text |  | 'OFF'|
+     *
+     * @tutorial https://style.fluig.com/javascript.html#switch-button
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function init(element: string|JQuery): void;
+
+    /**
+     * Transforma todos os checkbox e radio de um container em botões switch
+     *
+     * Ao inicializar o botão switch será feita a leitura das opções
+     * do elemento HTML (os atributos do checkbox ou radio) para orientar
+     * como o botão deve ser.
+     *
+     * As opções no checkbox/radio são:
+     *
+     * | Atributo | Valores | Padrão |
+     * |----------|---------|--------|
+     * | checked | true, false | false |
+     * | data-size | null, 'mini', 'small', 'normal', 'large' | null|
+     * | data-animate | true, false | true|
+     * | disabled | true, false | false|
+     * | readonly | true, false | false|
+     * | data-on-color | 'primary', 'info', 'success', 'warning', 'danger', 'default' | 'primary'|
+     * | data-off-color | 'primary', 'info', 'success', 'warning', 'danger', 'default' | 'default'|
+     * | data-on-text |  | 'ON'|
+     * | data-off-text |  | 'OFF'|
+     *
+     * @tutorial https://style.fluig.com/javascript.html#switch-button
+     *
+     * @param parentElement Seletor JQuery, ou Objeto, do elemento pai
+     * @param fieldName Nome do input deve iniciar com o valor indicado
+     */
+    declare function initAll(parentElement: string|JQuery, fieldName?: string): void;
+
+    /**
+     * Pega o estado do botão
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function getState(element: string|JQuery): boolean;
+
+    /**
+     * Configura o estado como checked
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function setTrue(element: string|JQuery): void;
+
+    /**
+     * Configura o estado como false (não selecionado)
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function setFalse(element: string|JQuery): void;
+
+    /**
+     * Alterna o estado do botão
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function toggleState(element: string|JQuery): void;
+
+    /**
+     * Habilita o botão (remove disabled do checkbox/radio)
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function enable(element: string|JQuery): void;
+
+    /**
+     * Desabilita o botão (coloca disabled no checkbox/radio)
+     *
+     * Cuidado: inputs desabilitados não são enviados pelo formulário.
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function disable(element: string|JQuery): void;
+
+    /**
+     * Indica se é para o botão ser somente leitura
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function isReadOnly(element: string|JQuery, readOnly: boolean): void;
+
+    /**
+     * Remove o botão switch
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function destroy(element: string|JQuery): void;
+
+    /**
+     * Evento disparado quando iniciar um botão Switch
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     * @param callback Função executada ao disparar o evento
+     */
+    declare function onInit(element: string|JQuery, callback: SwitchInitCallback): void;
+
+    /**
+     * Evento disparado houver mudança de estado do botão Switch
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     * @param callback Função executada ao disparar o evento
+     */
+    declare function onChange(element: string|JQuery, callback: SwitchChangeCallback): void;
+}
+
 interface IwsConsultaSQL {
     /**
      * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
