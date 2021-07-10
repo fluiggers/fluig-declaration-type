@@ -236,7 +236,32 @@ declare namespace com.fluig.sdk.service {
         sendNotification(eventKey: string, loginSender: string, loginReceiver: string, object: com.fluig.sdk.api.alert.AlertVO, place: com.fluig.sdk.api.alert.AlertVO, actions: java.util.List<com.fluig.sdk.api.alert.AlertActionVO>, metadata: java.util.HashMap<string, string>): void;
     }
     declare class ArticleService {}
-    declare class AuthorizeClientSdkService {}
+
+    /**
+     * Cliente para requisições externas usando autenticação do Fluig
+     */
+    declare class AuthorizeClientSdkService {
+        /**
+         * Executa a chamada ao WS
+         *
+         * O parâmetro passado deve ser um objeto convertido em string (JSON.stringfy) com as seguintes propriedades:
+         *
+         * - companyId;
+         * - serviceCode: ID do serviço cadastrado no Fluig;
+         * - endpoint;
+         * - method: Método HTTP (GET, POST, PUT, DELETE);
+         * - timeoutService (em segundos);
+         * - params: Objeto com os valores a serem enviados na requisição;
+         * - headers: Objeto com os valores a serem enviados no cabeçalho;
+         * - options: Objeto com as propriedades da requisição:
+         *     - encoding (padrão UTF-8)
+         *     - mediaType (padrão application/json)
+         *     - useSSL (padrão false)
+         *
+         * @tutorial https://tdn.totvs.com/pages/releaseview.action?pageId=239041233#Autoriza%C3%A7%C3%A3oparaclientdeServi%C3%A7osREST-Consumindooservi%C3%A7ocomautentica%C3%A7%C3%A3oOAuth1,OAuth2,BasicAuthentication,CustomAuthenticationeNoneAuthentication
+         */
+        invoke(data: string): com.fluig.sdk.api.authorizeclient.AuthorizeClientSdkServiceVO;
+    }
     declare class CardIndexService {}
     declare class CardService {}
     declare class CollaborationSDKService {}
@@ -729,7 +754,25 @@ declare namespace com.fluig.sdk.api.alert {
 }
 
 declare namespace com.fluig.sdk.api.authorizeclient {
-    declare class AuthorizeClientSdkServiceVO {}
+    declare class AuthorizeClientSdkServiceVO {
+        /**
+         * Pega o Resultado da Requisição
+         *
+         * Se for um JSON basta usar JSON.parse() para converter em objeto.
+         */
+        getResult(): string;
+        getCompanyId(): number;
+        getDescription(): string;
+        getEndpoint(): string;
+        getHeaders(): java.util.Map<string, string>;
+        getHttpStatusResult(): number;
+        getMethod(): string;
+        getOptions(): java.util.Map<string, object>;
+        getParams(): java.util.Map<string, object>;
+        getServiceCode(): string;
+        getStrParams(): string;
+        getTimeoutService(): string;
+    }
 }
 
 declare namespace com.fluig.sdk.api.document {
