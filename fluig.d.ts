@@ -2185,6 +2185,384 @@ declare namespace java.util {
 
     declare class LinkedHashMap<K, V> extends java.util.HashMap<K, V> {
     }
+
+    declare class Date {
+
+        /**
+         * Inicializa com a data do momento que o objeto foi criado
+         */
+        constructor();
+
+        /**
+         * Inicializa com a data em milisegundos decorridos desde 1970-01-01 00:00:00 GMT
+         */
+        constructor(date: number);
+
+        /**
+         * Compara se essa data é posterior à data indicada
+         */
+        after(when: Date): boolean;
+
+        /**
+         * Compara se essa data é anterior à data indicada
+         */
+        before(when: Date): boolean;
+
+        /**
+         * Retorna o dia do mês
+         *
+         * @deprecated Usar Calendar.get(Calendar.DAY_OF_MONTH)
+         */
+        getDate(): number;
+
+        /**
+         * Retorna o dia da semana
+         *
+         * @deprecated Usar Calendar.get(Calendar.DAY_OF_WEEK)
+         */
+        getDay(): number;
+
+        /**
+         * Retorna a hora
+         *
+         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY)
+         */
+        getHours(): number;
+
+        /**
+         * Retorna os minutos
+         *
+         * @deprecated Usar Calendar.get(Calendar.MINUTE)
+         */
+        getMinutes(): number;
+
+        /**
+         * Retorna o mês
+         *
+         * @deprecated Usar Calendar.get(Calendar.MONTH)
+         */
+        getMonth(): number;
+
+        /**
+         * Retorna os segundos
+         *
+         * @deprecated Usar Calendar.get(Calendar.SECOND)
+         */
+        getSeconds(): number;
+
+        /**
+         * Retorna o ano
+         *
+         * @deprecated Usar Calendar.get(Calendar.YEAR) - 1900
+         */
+        getYear(): number;
+
+        /**
+         * Atribui o dia do mês
+         *
+         * @deprecated Usar Calendar.set(Calendar.DAY_OF_MONTH, dia)
+         */
+        setDate(): number;
+
+        /**
+         * Atribui a hora
+         *
+         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY, hora)
+         */
+        setHours(): number;
+
+        /**
+         * Atribui os minutos
+         *
+         * @deprecated Usar Calendar.set(Calendar.MINUTE, minutos)
+         */
+        setMinutes(): number;
+
+        /**
+         * Atribui o mês
+         *
+         * @deprecated Usar Calendar.set(Calendar.MONTH, mes)
+         */
+        setMonth(): number;
+
+        /**
+         * Atribui os segundos
+         *
+         * @deprecated Usar Calendar.set(Calendar.SECOND, segundos)
+         */
+        setSeconds(): number;
+
+        /**
+         * Atribui o ano
+         *
+         * @deprecated Usar Calendar.set(Calendar.YEAR, ano + 1900)
+         */
+        setYear(): number;
+    }
+
+    /**
+     * A Classe Calendar não deve ser instanciada com operador new. Use sempre o método getInstance().
+     *
+     * Essa classe á abstrata e o Java normalmente vai instanciar um GregorianCalendar quando chamada a getInstance().
+     */
+    declare abstract class Calendar {
+        /**
+         * Cria uma instância de Calendário
+         *
+         * Essa classe é abstrata, por isso não é possível instanciá-la diretamente.
+         */
+        static getInstance(): Calendar;
+
+        // Constantes indicando os valores dos meses
+
+        /**
+         * Indica o valor de Janeiro
+         */
+        static const JANUARY: number;
+
+        /**
+         * Indica o valor de Fevereiro
+         */
+        static const FEBRUARY: number;
+
+        /**
+         * Indica o valor de Março
+         */
+        static const MARCH: number;
+
+        /**
+         * Indica o valor de Abril
+         */
+        static const APRIL: number;
+
+        /**
+         * Indica o valor de Maio
+         */
+        static const MAY: number;
+
+        /**
+         * Indica o valor de Junho
+         */
+        static const JUNE: number;
+
+        /**
+         * Indica o valor de Julho
+         */
+        static const JULY: number;
+
+        /**
+         * Indica o valor de Agosto
+         */
+        static const AUGUST: number;
+
+        /**
+         * Indica o valor de Setembro
+         */
+        static const SEPTEMBER: number;
+
+        /**
+         * Indica o valor de Outubro
+         */
+        static const OCTOBER: number;
+
+        /**
+         * Indica o valor de Novembro
+         */
+        static const NOVEMBER: number;
+
+        /**
+         * Indica o valor de Dezembro
+         */
+        static const DECEMBER: number;
+
+        // Constantes de horário
+
+        /**
+         * Indica que a hora é antes de meio dia
+         */
+        static const AM: number;
+
+        /**
+         * Indica que a hora é após meio dia
+         */
+        static const PM: number;
+
+        // Constantes de dia da semana
+
+        /**
+         * Indica que é Domingo
+         */
+        static const SUNDAY: number;
+
+        /**
+         * Indica que é segunda-feira
+         */
+        static const MONDAY: number;
+
+        /**
+         * Indica que é terça-feira
+         */
+        static const TUESDAY: number;
+
+        /**
+         * Indica que é quarta-feira
+         */
+        static const WEDNESDAY: number;
+
+        /**
+         * Indica que é quinta-feira
+         */
+         static const THURSDAY: number;
+
+        /**
+         * Indica que é sexta-feira
+         */
+        static const FRIDAY: number;
+
+        /**
+         * Indica que é Sábado
+         */
+        static const SATURDAY: number;
+
+
+        // Constantes de campo
+
+        /**
+         * Campo que indica se horário é antes ou depois do meio dia
+         */
+        static const AM_PM: number;
+
+        /**
+         * Campo que indica o dia do mês
+         */
+        static const DATE: number;
+
+        /**
+         * Campo que indica o dia do mês
+         */
+        static const DAY_OF_MONTH: number;
+
+        /**
+         * Campo que indica o dia da semana
+         */
+        static const DAY_OF_WEEK: number;
+
+        /**
+         * Campo que indica o dia do ano
+         */
+        static const DAY_OF_YEAR: number;
+
+        /**
+         * Campo que indica a hora antes ou depois do meio dia (12h)
+         */
+        static const HOUR: number;
+
+        /**
+         * Campo que indica a hora do dia (24h)
+         */
+        static const HOUR_OF_DAY: number;
+
+        /**
+         * Campo que indica os milissegundos
+         */
+        static const MILLISECOND: number;
+
+        /**
+         * Campo que indica os minutos
+         */
+        static const MINUTE: number;
+
+        /**
+         * Campo que indica o mês
+         */
+        static const MONTH: number;
+
+        /**
+         * Campo que indica os segundos
+         */
+        static const SECOND: number;
+
+        /**
+         * Campo que indica a semana do mês
+         */
+        static const WEEK_OF_MONTH: number;
+
+        /**
+         * Campo que indica a semana do ano
+         */
+        static const WEEK_OF_YEAR: number;
+
+        /**
+         * Campo que indica o ano
+         */
+        static const YEAR: number;
+
+        /**
+         * Retorna o valor do campo indicado
+         *
+         * @param {number} campo Uma das constantes da classe indicando o campo
+         */
+        get(campo: number): number;
+
+        /**
+         * Retorna o valor do campo indicado
+         *
+         * @param {number} campo Uma das constantes da classe indicando o campo
+         * @param {number} valor O valor que será atribuído ao campo
+         */
+        set(campo: number, valor: number): void;
+
+        /**
+         * Retorna o calendário como um objeto Date
+         */
+        getTime(): Date;
+
+        /**
+         * Configura o calendário usando um objeto Date
+         */
+        setTime(data: Date): void;
+
+        /**
+         * Compara se essa data é posterior à data indicada
+         */
+        after(data: Calendar): boolean;
+
+        /**
+         * Compara se essa data é anterior à data indicada
+         */
+        before(data: Calendar): boolean;
+
+        /**
+         * Configura o calendário com o Ano, Mês e Dia
+         */
+        set(ano: number, mes: number, dia: number): void;
+
+        /**
+         * Configura o calendário com o Ano, Mês, Dia, Hora e Minutos
+         */
+        set(ano: number, mes: number, dia: number, hora: number, minutos: number): void;
+
+        /**
+         * Configura o calendário com o Ano, Mês, Dia, Hora, Minutos e Segundos
+         */
+        set(ano: number, mes: number, dia: number, hora: number, minutos: number, segundos: number): void;
+
+        /**
+         * Adiciona ou Subtrai 1 unidade do campo indicado
+         *
+         * @param {number} campo Uma das constantes de campo
+         * @param {boolean} aumentaValor Se for true aumentará o campo, senão ele será diminuído
+         */
+        roll(campo: number, aumentaValor: boolean): void;
+
+        /**
+         * Adiciona ou Subtrai unidades do campo indicado
+         *
+         * @param {number} campo Uma das constantes de campo
+         * @param {boolean} valor Valor que será utilizado no cálculo. Se positivo aumentará, se negativo diminuirá
+         */
+        roll(campo: number, valor: number): void;
+    }
 }
 
 
@@ -4787,4 +5165,215 @@ interface IwsConsultaSQL {
      * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
      */
     realizarConsultaSQL(sql:string, coligadaNumber:number, systemCode:string, parameters:string): string;
+}
+
+declare namespace java.lang {
+    declare class Object {
+        /**
+         * Retorna o valor do objeto como uma string
+         */
+        toString(): string;
+    }
+}
+
+declare namespace java.text {
+
+    /**
+     * Formatador de Datas
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+     */
+    declare class SimpleDateFormat {
+        /**
+         * Cria um novo formatador de datas com o padrão indicado
+         *
+         * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+         */
+        constructor(formato: string);
+
+        /**
+         * Retorna a data formatada conforme o padrão da formatação
+         */
+        format(data: java.util.Date): string;
+
+        /**
+         * Converte uma string, formatada como indicado no construtor, em um objeto Date
+         */
+        parse(dataFormatada: string): java.util.Date;
+    }
+}
+
+declare namespace javax.naming {
+    /**
+     * Inicia um Contexto
+     */
+    declare class InitialContext {
+
+        /**
+         * Recupera o DataSource do Banco de Dados
+         *
+         * @param {string} dataSource O nome do dataSource. Ex: /jdbc/PostgreSqlDS
+         * @throws Exception
+         */
+        lookup(dataSource: string): javax.sql.DataSource;
+
+        /**
+         * Fecha o contexto ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+}
+
+declare namespace javax.sql {
+    declare class DataSource {
+        /**
+         * Recupera a Conexão com o Banco de Dados
+         *
+         * @throws Exception
+         */
+        getConnection(): Connection;
+    }
+
+    /**
+     * Conexão com o Banco de Dados
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html
+     */
+    declare class Connection {
+        /**
+         * Cria o objeto que executará o SQL
+         *
+         * @throws Exception
+         */
+        createStatement(): Statement;
+
+        /**
+         * Encerra a conexão ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+
+    /**
+     * Objeto que executa uma instrução SQL
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html
+     */
+    declare class Statement {
+        /**
+         * Executa um SQL que deve ser uma consulta (SELECT)
+         *
+         * @throws Exception
+         */
+        executeQuery(sql: string): ResultSet;
+
+        /**
+         * Executa um SQL que modifica algo no banco (INSERT, UPDATE ou DELETE)
+         *
+         * @returns {number} Quantidade de registros afetados
+         * @throws Exception
+         */
+        executeUpdate(sql: string): number;
+
+        /**
+         * Libera os recursos da execução imediatamente ao invés de aguardar o coletor de lixo
+         */
+         close(): void;
+    }
+
+    /**
+     * Representa o resultado de uma consulta SQL
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
+     */
+    declare class ResultSet {
+
+        /**
+         * Move o cursor para o primeiro resultado da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        first(): boolean;
+
+        /**
+         * Move o cursor para o último resultado da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        last(): boolean;
+
+        /**
+         * Move o cursor para o próximo resultado da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        next(): boolean;
+
+        /**
+         * Move o cursor para o resultado anterior da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        previous(): boolean;
+
+        /**
+         * Pega o número, tipos e propriedades das colunas retornadas na consulta
+         */
+        getMetaData(): ResultSetMetaData;
+
+        /**
+         * Retorna o valor da coluna como um Objeto Java
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
+         */
+        getObject(columnIndex: number): java.lang.Object;
+        getObject(columnLabel: string): java.lang.Object;
+
+        /**
+         * Retorna o valor da coluna como uma string
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
+         */
+        getString(columnIndex: number): string;
+        getString(columnLabel: string): string;
+
+        /**
+         * Retorna o valor da coluna como um boolean
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
+         */
+        getBoolean(columnIndex: number): boolean;
+        getBoolean(columnLabel: string): boolean;
+
+        /**
+         * Retorna o valor da coluna como objeto Date
+         *
+         * Esse método retorna um java.sql.Date que herda de java.util.Date.
+         * Para evitar retrabalho deixei como java.util.Date mesmo.
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como byte, java.sql.Blob etc.
+         */
+        getDate(columnIndex: number): java.util.Date;
+        getDate(columnLabel: string): java.util.Date;
+
+        /**
+         * Libera o resultado da consulta imediatamente ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+
+    declare class ResultSetMetaData {
+        /**
+         * Pega o total de colunas da consulta
+         */
+        getColumnCount(): number;
+
+        /**
+         * Pega o Nome da Coluna (label)
+         */
+        getColumnName(column: number): string;
+    }
 }
