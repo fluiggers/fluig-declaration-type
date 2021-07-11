@@ -5230,6 +5230,13 @@ declare namespace java.text {
         /**
          * Cria um novo formatador de datas com o padrão indicado
          *
+         * Exemplos:
+         *
+         * - "dd/MM/yyyy" -> data no formato pt-BR
+         * - "yyyy-MM-dd" -> data no formato ISO
+         * - "HH:mm" -> Hora (24h) e minuto
+         * - "yyyy-MM-dd'T'HH:mm:ss.SSSZ" -> Data completa (Ex: 2021-07-04T12:08:56.235-0700)
+         *
          * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
          */
         constructor(formato: string);
