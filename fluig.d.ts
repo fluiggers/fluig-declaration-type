@@ -510,8 +510,8 @@ declare namespace com.fluig.sdk.service {
         /**
          * Cria um novo usuário
          */
-        create(vo: com.fluig.sdk.user.UserVO): void;
-        create(tenantId: number, vo: com.fluig.sdk.user.UserVO): void;
+        create(vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
+        create(tenantId: number, vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
 
         /**
          * Retorna o usuário pelo id
