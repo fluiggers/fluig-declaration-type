@@ -2099,7 +2099,7 @@ declare namespace com.totvs.technology.foundation.sdk.service.vo.common {
 }
 
 declare namespace java.util {
-    declare class Iterator<T> {
+    declare abstract class Iterator<T> {
         /**
          * Indica se ainda há elementos a percorrer
          */
@@ -2111,7 +2111,7 @@ declare namespace java.util {
         next(): T;
     }
 
-    declare class Set<T> {
+    declare abstract class Set<T> {
         /**
          * Adiciona um elemento ao conjunto
          */
@@ -2143,7 +2143,7 @@ declare namespace java.util {
         iterator(): java.util.Iterator<T>;
     }
 
-    declare class List<T> {
+    declare abstract class List<T> {
         /**
          * Pega o elemento no índice indicado
          */
@@ -2188,7 +2188,7 @@ declare namespace java.util {
     declare class ArrayList<T> extends List<T> {
     }
 
-    declare class Map<K, V> {
+    declare abstract class Map<K, V> {
         /**
          * Pega o elemento no índice indicado
          */
