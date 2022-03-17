@@ -3562,6 +3562,23 @@ enum DatasetFieldType {
 }
 
 /**
+ * Cria uma coluna no dataset sincronizado
+ */
+declare function addColumn(coluna: string, tipo?: DatasetFieldType);
+
+ /**
+  * Cria a chave principal do dataset sincronizado
+  *
+  * Para uso dos métodos updateRecord, deleteRecord e addOrUpdate do dataset sincronizado.
+  */
+declare function setKey(chaves: string[]): void;
+
+ /**
+  * Cria um ou mais índices para maior performance na consulta do dataset sincronizado
+  */
+declare function addIndex(indices: string[]): void;
+
+/**
  * Tipos de Filtros (constraint)
  *
  * Usado para criar os filtros que serão repassados ao método getDataset.
@@ -3691,31 +3708,6 @@ declare class Dataset {
      * dataset.deleteRow(["Valor coluna 1", "Valor coluna 2"]);
      */
     deleteRow(valores: string[]|object[]): void;
-
-    /**
-     * Cria a chave principal
-     *
-     * Para uso dos métodos updateRecord, deleteRecord e addOrUpdate do dataset
-     * sincronizado.
-     *
-     * @example
-     * var dataset = DatasetBuilder.newDataset();
-     * dataset.addColumn("Coluna1");
-     * dataset.addColumn("Coluna2");
-     * dataset.setKey(["Valor coluna 1", "Valor coluna 2"]);
-     */
-    setKey(valores: string[]|object[]): void;
-
-    /**
-     * Cria um ou mais índices para maior performance na consulta
-     *
-     * @example
-     * var dataset = DatasetBuilder.newDataset();
-     * dataset.addColumn("Coluna1");
-     * dataset.addColumn("Coluna2");
-     * dataset.addIndex(["Valor coluna 1", "Valor coluna 2"]);
-     */
-    addIndex(valores: string[]|object[]): void;
 }
 
 /**
