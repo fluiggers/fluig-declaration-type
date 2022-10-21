@@ -13,12 +13,12 @@ Sinta-se à vontade para ajudar a complementar o projeto com PR.
 
 ## Como instalar
 
-Baixe a [Última Release](https://github.com/brunogasparetto/fluig-declaration-type/releases/latest) e descompacte os arquivos `fluig.d.ts` e `jsconfig.json` para o diretório principal do seu projeto Fluig.
+Baixe a [Última Release](https://github.com/fluiggers/fluig-declaration-type/releases/latest) e descompacte os arquivos `fluig.d.ts` e `jsconfig.json` para o diretório principal do seu projeto Fluig.
 
 ## Fontes de Documentação do Fluig
 
 Os principais documentos utilizados para elaborar essas declarações de tipos vieram de:
 
-- [Documentação Oficial do Fluig](https://tdn.totvs.com/display/public/fluig/DEV+fluig/)
+- [Documentação Oficial do Fluig](https://tdn.totvs.com/display/public/fluig/TOTVS+FLUIG+PLATAFORMA)
 - [Style Guide](https://style.fluig.com/)
 - [Javadoc for Fluig - SDK - API 1.7.0](https://fluig.totvs.com/api/sdk/index.html?overview-summary.html)
