@@ -8,4 +8,4 @@ README.md export-ignore
 gulpfile.js export-ignore
 src export-ignore
 * linguist-vendored
-*.json linguist-vendored=false
+jsconfig.json linguist-vendored=false
