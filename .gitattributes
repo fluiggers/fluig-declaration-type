@@ -7,3 +7,4 @@ package.json export-ignore
 README.md export-ignore
 gulpfile.js export-ignore
 src export-ignore
+jsconfig.json linguist-detectable=false
