@@ -1,7 +1,698 @@
+declare namespace com.totvs.technology.foundation.sdk.service.vo.common {
+    declare class OrderParam {}
+}
+
+/**
+ * Tipos de campo de um Dataset
+ *
+ * Usado na criação do Dataset, na função defineStructure.
+ */
+enum DatasetFieldType {
+    NUMBER,
+    STRING,
+    TEXT,
+    DATE,
+    BOOLEAN,
+}
+
+/**
+ * Cria uma coluna no dataset sincronizado
+ */
+declare function addColumn(coluna: string, tipo?: DatasetFieldType);
+
+ /**
+  * Cria a chave principal do dataset sincronizado
+  *
+  * Para uso dos métodos updateRecord, deleteRecord e addOrUpdate do dataset sincronizado.
+  */
+declare function setKey(chaves: string[]): void;
+
+ /**
+  * Cria um ou mais índices para maior performance na consulta do dataset sincronizado
+  */
+declare function addIndex(indices: string[]): void;
+
+/**
+ * Tipos de Filtros (constraint)
+ *
+ * Usado para criar os filtros que serão repassados ao método getDataset.
+ * Usar nos eventos do Fluig ou na criação de Dataset customizado.
+ */
+enum ConstraintType {
+    /**
+     * Filtro: Deve Conter
+     *
+     * Interprete como o E lógico
+     */
+    MUST,
+
+    /**
+     * Filtro: Pode Conter
+     *
+     * Interprete como OU lógico
+     */
+    SHOULD,
+
+    /**
+     * Filtro: Não Deve Conter
+     */
+    MUST_NOT,
+}
+
+declare class Dataset {
+    const rowsCount: number;
+
+    /**
+     * Retorna o valor de uma coluna (campo) em determinada linha (índice)
+     */
+    getValue(linha: number, coluna: string): string;
+
+    /**
+     * Cria uma coluna no Dataset
+     *
+     * @example
+     * var dataset = DatasetBuilder().newDataset();
+     * dataset.addColumn("coluna1");
+     * dataset.addColumn("coluna2");
+     * dataset.addRow(["valor coluna 1", "valor coluna 2"]);
+     */
+    addColumn(coluna: string): void;
+
+    /**
+     * Adicionar uma linha ao Dataset
+     *
+     * @example
+     * var dataset = DatasetBuilder().newDataset();
+     * dataset.addColumn("coluna1");
+     * dataset.addColumn("coluna2");
+     * dataset.addRow(["valor coluna 1", "valor coluna 2"]);
+     */
+    addRow(valores: string[]|object[]): void;
+
+    /**
+     * Adiciona uma linha à coleção que será persistida no cache de sincronização.
+     *
+     * Através dos campos da chave principal do Dataset (setKey) os registros
+     * serão localizados e alterados conforme os dados enviados pela função.
+     *
+     * Esta função só funciona se implementado na função onSync.
+     *
+     * @example
+     * var dataset = DatasetBuilder.newDataset();
+     * dataset.addColumn("Coluna1");
+     * dataset.addColumn("Coluna2");
+     * dataset.updateRow(["Valor coluna 1", "Valor coluna 2"]);
+     */
+    updateRow(valores: string[]|object[]): void;
+
+    /**
+     * Adiciona uma linha à coleção que será persistida no cache de sincronização.
+     *
+     * Caso o registro não exista ele será criado na base, caso contrário será atualizado.
+     *
+     * Através dos campos da chave principal do Dataset (setKey) os registros
+     * serão localizados e alterados conforme os dados enviados pela função.
+     *
+     * Esta função só funciona se implementado na função onSync.
+     *
+     * @example
+     * var dataset = DatasetBuilder.newDataset();
+     * dataset.addColumn("Coluna1");
+     * dataset.addColumn("Coluna2");
+     * dataset.addOrUpdateRow(["Valor coluna 1", "Valor coluna 2"]);
+     */
+    addOrUpdateRow(valores: string[]|object[]): void;
+
+    /**
+     * Adiciona uma linha à coleção que eliminará esses registros no cache de sincronização.
+     *
+     * Através dos campos da chave principal do Dataset (setKey) os registros
+     * serão localizados e alterados conforme os dados enviados pela função.
+     *
+     * Esta função só funciona se implementado na função onSync.
+     *
+     * @example
+     * var dataset = DatasetBuilder.newDataset();
+     * dataset.addColumn("Coluna1");
+     * dataset.addColumn("Coluna2");
+     * dataset.deleteRow(["Valor coluna 1", "Valor coluna 2"]);
+     */
+    deleteRow(valores: string[]|object[]): void;
+}
+
+/**
+ * Resultado de uma consulta ao Dataset usando o WCM
+ *
+ * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
+ */
+interface DatasetWcmResult {
+    /**
+     * O nome das colunas
+     */
+    columns: string[];
+
+    /**
+     * As propriedades do objeto são os nomes das colunas
+     */
+    values: object[];
+}
+
+/**
+ * Indicativo das restrições ao sincronizar dados em Mobile
+ */
+interface DatasetMobileSync {
+    /**
+     * As colunas (em letras maiúsculas) a serem salvas no Mobile
+     */
+    fields: string[];
+
+    /**
+     * Os filtros adicionais
+     */
+    constraints: Constraint[];
+
+    /**
+     * Campos da ordenação
+     */
+    sortFields: string[];
+}
+
+/**
+ * Formato de Callback para consulta assíncrona ao Dataset usando o WCM
+ *
+ * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
+ */
+interface DatasetWcmCallback {
+    /**
+     * Função que será executada em caso de sucesso
+     */
+    success: function (DatasetWcmResult);
+
+    /**
+     * Função que será executada em caso de falha
+     *
+     * @param jqXHR Objeto da JQuery
+     * @param textStatus
+     * @param errorThrown
+     */
+    error: function (object, string, string): void;
+}
+
+declare class Constraint {
+    fieldName: string;
+    initialValue: string;
+    finalValue: string;
+    constraintType: ConstraintType;
+
+    /**
+     * Indica que a constraint fará uma busca usando LIKE ao invés de =
+     */
+    setLikeSearch(likeSearch: boolean): void;
+
+    getFieldName(): string;
+    getInitialValue(): string;
+    getFinalValue(): string;
+}
+
+/**
+ * Funções para manipulação de Dataset
+ */
+declare namespace DatasetFactory {
+    /**
+     * Retorna o nome dos datasets disponíveis
+     *
+     * Para usar no HTML de formulário o arquivo vcXMLRPC.js precisa ser declarado: <script src="/webdesk/vcXMLRPC.js"></script>
+     */
+    declare function getAvailableDatasets(): string[];
+
+    /**
+     * Cria uma constraint para ser usada no método getDataset
+     *
+     * Para usar no HTML de formulário o arquivo vcXMLRPC.js precisa ser declarado: <script src="/webdesk/vcXMLRPC.js"></script>
+     * Para fazer uma pesquisa usando LIKE pelo formulário deve-se passar true no parâmetro searchLike ao invés de usar o método
+     * setLikeSearch do objeto Constraint.
+     */
+    declare function createConstraint(fieldName: string, initialValue: string, finalValue: string, constraintType: ConstraintType): Constraint;
+    declare function createConstraint(fieldName: string, initialValue: string, finalValue: string, constraintType: ConstraintType, searchLike: boolean): Constraint;
+
+    /**
+     * Pesquisa os dados de um dataset
+     *
+     * Para usar no HTML de formulário o arquivo vcXMLRPC.js precisa ser declarado: <script src="/webdesk/vcXMLRPC.js"></script>
+     *
+     * @param nomeDataset O nome do Dataset.
+     * @param campos Os campos que serão retornados.
+     * @param constraints Os filtros aplicados ao dataset.
+     * @param ordem Os campos que farão a ordenação do resultado. Pode-se acrescentar ;desc ao nome do campo para ordenar de forma decrescente.
+     *
+     * @example
+     * var constraints = [
+     *     DatasetFactory.createConstraint("colleaguePK.colleagueId", "adm", "adm", ConstraintType.MUST_NOT),
+     *     DatasetFactory.createConstraint("valor", "100", "999", ConstraintType.MUST)
+     * ];
+     * var dataset = DatasetFactory.getDataset("colleague", ["colleagueName"], constraints);
+     */
+    declare function getDataset(nomeDataset: string, campos?: string[], constraints?: Constraint[], ordem?: string[]): Dataset;
+
+    /**
+     * Pesquisa os dados de um dataset de forma assíncrona
+     *
+     * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
+     *
+     * @example
+     * var constraints = [
+     *     DatasetFactory.createConstraint("colleaguePK.colleagueId", "adm", "adm", ConstraintType.MUST_NOT),
+     *     DatasetFactory.createConstraint("valor", "100", "999", ConstraintType.MUST)
+     * ];
+     * var dataset = DatasetFactory.getDataset("colleague", ["colleagueName"], constraints);
+     */
+    declare function getDataset(nomeDataset: string, campos?: string[], constraints?: Constraint[], ordem?: string[], callback: DatasetWcmCallback): void;
+}
+
+/**
+ * Funções para criação de Dataset
+ */
+declare namespace DatasetBuilder {
+    /**
+     * Cria um Dataset
+     *
+     * Usar somente ao criar datasets customizados.
+     */
+    declare function newDataset(): Dataset;
+}
+
+/**
+ * Tipos de Documento
+ *
+ * Esse enum não existe no Fluig e foi criado somente para
+ * facilitar a identificação dos tipos de documento.
+ *
+ * No Fluig utilize somente os valores ao fazer as comparações.
+ */
+enum DocumentTypeEnum {
+    PASTA_RAIZ = '0',
+    PASTA = '1',
+    DOCUMENTO_NORMAL = '2',
+    DOCUMENTO_EXTERNO = '3',
+    FORMULARIO = '4',
+    FICHA = '5',
+    ANEXO_WORKFLOW = '7',
+    NOVO_CONTEUDO = '8',
+    APLICATIVO = '9',
+    RELATORIO = '10',
+    PASTA_SOCIAL = '15',
+    SITE = 'portal',
+    PAGINA_DE_SITE = 'portalPage',
+}
+
+/**
+ * Entidade Documento Relacionado
+ */
+declare class RelatedDocumentDto {
+
+    /**
+     * Retorna o número do documento
+     *
+     * Usar em eventos do Fluig.
+     */
+    getDocumentId(): number;
+
+    /**
+     * Retorna o número do documento relacionado
+     *
+     * Usar em eventos do Fluig.
+     */
+    getRelatedDocumentId(): number;
+
+    /**
+     * Retorna a versão do documento
+     *
+     * Usar em eventos do Fluig.
+     */
+    getVersion(): number;
+
+    /**
+     * Retorna o código da empresa em que o documento foi publicado
+     *
+     * Usar em eventos do Fluig.
+     */
+    getCompanyId(): number;
+}
+
+/**
+ * Funções relacionadas a Documentos
+ *
+ * Usar em qualquer evento.
+ */
+declare namespace docAPI {
+    /**
+     * Copia os arquivos físicos de um documento existente para a área de upload do usuário logado
+     * @returns Nomes dos arquivos que foram disponibilizados na área de upload
+     */
+    declare function copyDocumentToUploadArea(documentId: number, version: number): string[];
+}
+
+/**
+ * Entidade Aprovador
+ */
+declare class ApproverDto {
+
+    /**
+     * Pega o número do aprovador
+     */
+    getapproverId(): number;
+
+    /**
+     * Pega a versão do aprovador
+     */
+    getVersion(): number;
+
+    /**
+     * Pega o código da empresa na qual o aprovador foi publicado
+     */
+    getCompanyId(): number;
+
+    /**
+     * Pega a matrícula do colaborador que criou o aprovador
+     */
+    getColleagueId(): number;
+
+    /**
+     * Pega o tipo de aprovação Pode ser 0 para Colaborador ou 1 para Grupo
+     */
+    getApproverType(): number;
+
+    /**
+     * Pega o nível de aprovação no caso de aprovação em níveis
+     */
+    getLevelId(): number;
+}
+
+/**
+ * Entidade Documento para usar nos Eventos
+ */
+declare class DocumentDto {
+
+    /**
+     * Pega o número do documento
+     */
+    getDocumentId(): number;
+
+    /**
+     * Pega a versão do documento
+     */
+    getVersion(): number;
+
+    /**
+     * Pega o código da empresa em que o documento foi publicado
+     */
+    getCompanyId(): number;
+
+    /**
+     * Pega o UUID do documento
+     */
+    getUUID(): string;
+
+    /**
+     * Pega o tipo do arquivo físico. Se retornar em branco ou nulo é um tipo desconhecido
+     */
+    getDocumentTypeId(): string;
+
+    /**
+     * Pega o código do idioma do documento
+     */
+    getLanguageId(): string;
+
+    /**
+     * Pega o código do ícone do documento
+     */
+    getIconId(): number;
+
+    /**
+     * Pega o código do assunto do documento
+     */
+    getTopicId(): number;
+
+    /**
+     * Pega a matrícula do colaborador que criou o documento
+     */
+    getColleagueId(): string;
+
+    /**
+     * Pega a descrição do documento
+     */
+    getDocumentDescription(): string;
+
+    /**
+     * Pega os comentários adicionais do documento
+     */
+    getAdditionalComments(): string;
+
+    /**
+     * Pega o caminho físico do documento
+     */
+    getPhisicalFile(): string;
+
+    /**
+     * Pega a data de criação do documento
+     */
+    getCreateDate(): Date;
+
+    /**
+     * Pega a data de aprovação do documento
+     */
+    getApprovedDate(): Date;
+
+    /**
+     * Pega a data da última modificação do documento
+     */
+    getLastModifiedDate(): Date;
+
+    /**
+     * Pega a data da última modificação do documento
+     */
+    getExpirationDate(): Date;
+
+    /**
+     * Pega o tipo do documento
+     */
+    getDocumentType(): DocumentTypeEnum;
+
+    /**
+     * Pega o número da pasta/formulário pai
+     */
+    getParentDocumentId(): number;
+
+    /**
+     * Pega o nome do arquivo físico principal e anexos
+     */
+    getRelatedFiles(): number;
+
+    /**
+     * Verifica se o documento está ativo
+     */
+    getActiveVersion(): boolean;
+
+    /**
+     * Pega a descrição da versão
+     */
+    getVersionDescription(): string;
+
+    /**
+     * Verifica se o documento permite download
+     */
+    getDownloadEnabled(): boolean;
+
+    /**
+     * Verifica se o documento está em aprovação
+     */
+    getApproved(): boolean;
+
+    /**
+     * Pega a data a partir que o documento poderá ser visualizado
+     */
+    getValidationStartDate(): Date
+
+    /**
+     * Pega a matrícula do colaborador que publicou o documento
+     */
+    getPublisherId(): string;
+
+    /**
+     * Pega a descrição da ficha para documento do tipo 5
+     */
+    getCardDescription(): string;
+
+    /**
+     * Pega o formulário que foi usado como base para criação da ficha.
+     *
+     * Utilizado somente com documento do tipo 5.
+     */
+    getDocumentPropertyNumber(): number;
+
+    /**
+     * Pega a versão do formulário em que a ficha foi criada
+     */
+    getDocumentPropertyVersion(): number;
+
+    /**
+     * Pega o código da empresa em que o documento foi publicado
+     */
+    getCompanyId(): number;
+
+    /**
+     * Verifica se o documento/pasta está abaixo de pasta particular
+     */
+    getPrivateDocument(): boolean;
+
+    /**
+     * Pega a matrícula do colaborador onde o documento particular está alocado
+     */
+    getPrivateColleagueId(): string;
+
+    /**
+     * Verifica se o arquivo foi indexado
+     */
+    getIndexed(): boolean;
+
+    /**
+     * Pega a prioridade do documento
+     */
+    getPriority(): number;
+
+    /**
+     * Verifica se notifica os usuários que tenham esse assunto de interesse
+     */
+    getUserNotify(): boolean;
+
+    /**
+     * Verifica se o documento está expirado
+     */
+    getExpires(): boolean;
+
+    /**
+     * Pega o volume onde o documento foi publicado. Se estiver em branco foi no volume pai.
+     */
+    getVolumeId(): string;
+
+    /**
+     * Verifica se herda segurança do pai
+     */
+    getInheritSecurity(): boolean;
+
+    /**
+     * Verifica se atualiza as propriedades da cópia controlada
+     */
+    getUpdateIsoProperties(): boolean;
+
+    /**
+     * Pega a hora da última modificação em milissegundos
+     */
+    getLastModifiedTime(): string;
+
+    /**
+     * Verifica se o documento está na lixeira
+     */
+    getDeleted(): boolean;
+
+    /**
+     * Pega o documento do dataset se o documento é um formulário
+     */
+    getDatasetName(): string;
+
+    /**
+     * Pega as palavras-chave do documento. Cada palavra é separada por vírgula.
+     */
+    getKeyWord(): string;
+
+    /**
+     * Verifica se a versão/revisão é inalterável
+     */
+    getImutable(): boolean;
+
+    /**
+     * Verifica se o documento está em edição, para documento do tipo "Novo Conteúdo"
+     */
+    getDraft(): boolean;
+
+    /**
+     * Verifica se utiliza visualizador interno
+     */
+    getInternalVisualizer(): boolean;
+
+    /**
+     * Pega o tamanho físico do documento principal e anexos
+     */
+    getPhisicalFileSize(): number;
+};
+
+/**
+ * Entidade Segurança do Documento
+ */
+declare class DocumentSecurityConfigDto {
+
+    /**
+     * Pega o número do documento
+     */
+    getDocumentId(): number;
+
+    /**
+     * Pega a versão do documento
+     */
+    getVersion(): number;
+
+    /**
+     * Pega o código da empresa em que o documento foi publicado
+     */
+    getCompanyId(): number;
+
+    /**
+     * Pega a matrícula de um colaborador ou o código do grupo que está na segurança do documento
+     *
+     * É possível saber se vai retornar um colaborador ou um grupo pelo tipo da segurança.
+     * Retorna em branco quando o tipo é todos os usuários
+     */
+    getAttributionValue(): string;
+
+    /**
+     * Verifica se é uma permissão
+     *
+     * Se não é uma permissão é uma restrição.
+     */
+    getPermission(): boolean;
+
+    /**
+     * Verifica se lista o conteúdo
+     */
+    getShowContent(): boolean;
+
+    /**
+     * Pega o nível de permissão/restrição.
+     *
+     * Tipos de permissão/restrição:
+     * - -1: Sem permissão/restrição (nega acesso)
+     * - 0: Leitura
+     * - 1: Gravação
+     * - 2: Modificação
+     * - 3: Total
+     */
+    getAttributionType(): number;
+
+    /**
+     * Pega a sequência da permissão/restrição
+     */
+    getSequence(): number;
+
+    /**
+     * Verifica se ele utiliza a segurança desta versão nas demais
+     */
+    getSecurityVersion(): boolean;
+};
+
 /**
  * Helper para acessar serviços do Fluig
  */
-declare namespace fluigAPI {
+ declare namespace fluigAPI {
     /**
      * Recupera serviço para tratar Notificações
      */
@@ -167,9 +858,2645 @@ declare namespace fluigAPI {
     declare function getWorkflowService(): com.fluig.sdk.service.WorkflowAPIService;
 }
 
+declare type ErrorCallback = (error: ErrorData, data: object) => void;
+declare type AutoCompleteOnTagCallback = (item: object, tag: object) => void;
+declare type SimpleCallback = () => void;
+declare type DataCallback = (data: object) => void;
+
+/**
+ * Callback de Modal
+ *
+ * @param error Indica se houve erro
+ * @param data Todo o conteúdo da propriedade content da modal
+ */
+declare type ModalCallback = (error: boolean, data: string) => void;
+
+/**
+ * Callback de Inicialização do Botão Switch
+ *
+ * @param event Evento disparado
+ * @this HTMLElement
+ */
+declare type SwitchInitCallback = (event: JQuery.Event) => void;
+
+ /**
+  * Callback de mudança de estado do Botão Switch
+  *
+  * @param event Evento disparado
+  * @param checked Indica se está selecionado
+  * @this HTMLElement
+  */
+declare type SwitchChangeCallback = (event: JQuery.Event, checked: boolean) => void;
+
+/**
+ * Callback da mensagem de Confirmação
+ *
+ * @param result Resultado da confirmação (True se clicou em Sim)
+ * @param element Botão clicado
+ * @param data Evento disparado
+ */
+declare type ConfirmCallback = (result: boolean, element: HTMLElement, event: Event) => void;
+
+/**
+ * Callback de mensagem
+ *
+ * @param element Botão clicado
+ * @param data Evento disparado
+ */
+declare type MessageCallback = (element: HTMLElement, event: Event) => void;
+
+interface AutoCompleteOptions {
+    /**
+     * Tipo do autocomplete
+     *
+     * Pode ser (padrão é tag):
+     * - autocomplete
+     * - tag
+     * - tagAutocomplete
+     */
+    type?: string;
+
+    /**
+     * Item exibido na sugestão
+     *
+     * Obrigatório para autocomplete e tagAutocomplete
+     */
+    displayKey?: string;
+
+    /**
+     * Nome do dataset
+     *
+     * Opcional para autocomplete e tagAutocomplete
+     */
+    name?: string;
+
+    /**
+     * Determina o serviço utilizado para buscar as sugestões
+     */
+    source: {
+        url: string;
+        limit: 10,
+        offset: 0,
+        limitKey: string;
+        patternKey: string;
+        root: string;
+    };
+
+    /**
+     * Coloca o texto em negrito quando efetua a busca
+     */
+    highlight?: boolean;
+
+    /**
+     * Mínimo de caracteres antes de iniciar a busca
+     */
+    minLength?: number;
+
+    /**
+     * Se falso não exibirá as opções retornadas da busca
+     */
+    hint?: boolean;
+
+    /**
+     * Tempo limite para obter um resultado da busca
+     */
+    searchTimeout?: number;
+
+    /**
+     * Nome da classe utilizada na tag
+     */
+    tagClass?: string;
+
+    /**
+     * Máximo de tags permitidas para selecionar
+     */
+    maxTags?: number;
+
+    /**
+     * Permite selecionar a mesma tag várias vezes
+     */
+    allowDuplicates?: boolean
+
+    /**
+     * Evento disparado quando tentar adicionar uma tag repetida
+     */
+    onTagExists?: AutoCompleteOnTagCallback;
+
+    /**
+     * Evento disparado ao atingir o limite de tags
+     */
+    onMaxTags?: AutoCompleteOnTagCallback;
+
+    /**
+     * Largura máxima da tag
+     */
+    tagMaxWidth?: number;
+
+    /**
+     * Template da dica
+     */
+    templates?: {
+        tag: string;
+        suggestion: string;
+    };
+    
+    /**
+     * Objeto com o CSS para formatar uma tag removida
+     */
+    tagRemoveCss?: {
+        [property: string]: string;
+    };
+
+}
+
+interface AutoCompleteTag {
+    description: string;
+}
+
+declare class AutoComplete {
+    /**
+     * Adiciona uma tag
+     *
+     * Método para os tipos tag e tagAutocomplete
+     */
+    add(tag: AutoCompleteTag): void;
+
+    /**
+     * Atualiza uma tag para o tipo tag ou tagAutocomplete
+     *
+     * Método para os tipos tag e tagAutocomplete
+     */
+    update(tag: AutoCompleteTag): void;
+
+    /**
+     * Remove uma tag para o tipo tag ou tagAutocomplete
+     *
+     * Método para os tipos tag e tagAutocomplete
+     */
+    remove(tag: AutoCompleteTag): void;
+
+    /**
+     * Remove todas as tags
+     *
+     * Método para os tipos tag e tagAutocomplete
+     */
+    removeAll(): void;
+
+    /**
+     * Retorna todas as tags
+     *
+     * Método para os tipos tag e tagAutocomplete
+     */
+    items(): AutoCompleteTag[];
+
+    /**
+     * Abre a caixa de seleção
+     *
+     * Método para o tipo autocomplete
+     */
+    open(): void;
+
+    /**
+     * Fecha a caixa de seleção
+     *
+     * Método para o tipo autocomplete
+     */
+    close(): void;
+
+    /**
+     * Pega o valor do elemento
+     *
+     * Método para o tipo autocomplete
+     */
+    val(): string;
+
+    /**
+     * Atribui um valor ao elemento
+     *
+     * Método para o tipo autocomplete
+     */
+    val(value: string): void;
+
+
+    /**
+     * Coloca o foco no autocomplete
+     */
+    focus(): void;
+
+    /**
+     * Pega o elemento input do autocomplete
+     */
+    input(): HTMLElement;
+
+    /**
+     * Atualiza o autocomplete
+     *
+     * Útil para quando fizer mudanças manuais no elemento.
+     */
+    refresh(): void;
+
+    /**
+     * Destrói o autocomplete
+     */
+    destroy(): void;
+}
+
+interface FilterSourceSettings {
+    /**
+     * URL que trará os dados
+     */
+    url: string,
+
+    /**
+     * Tipo do conteúdo retornado. Ex: application/json
+     */
+    contentType: string,
+    root: string,
+    pattern: string,
+    limit: number,
+    offset: number,
+    patternKey: string,
+    limitKey: string,
+    offsetKey: string
+}
+
+interface FilterStyleSettings {
+    /**
+     * The selector for the autocomplete tag template.
+     */
+    templateTag?: string,
+
+    /**
+     * The selector for the autocomplete suggestion template.
+     */
+    templateSuggestion?: string,
+
+    /**
+     * The selector for the autocomplete tip message template.
+     */
+    templateTipMessage?: string,
+
+    /**
+     * Class name for the tags. Padrão é tag-gray
+     */
+    autocompleteTagClass?: string,
+
+    /**
+     * CSS class used to table selected lines.
+     */
+    tableSelectedLineClass?: string,
+
+    /**
+     * Receives the waiting time to make the request. This is important not to open a request for each character typed.
+     */
+    tableStyle?: string,
+
+    /**
+     * Defines a CSS class to apply to the table. Padrão é fluigicon-zoom-in
+     *
+     * Ex .: 'table-hover table-bordered table-striped'.
+     */
+    filterIconClass?: string
+}
+
+interface FilterTableSettings {
+    header: FilterTableHeader[],
+
+    /**
+     * Pode ser um array de chaves do objeto ou a classe CSS do template mustache.
+     *
+     * A sequência do array deve ser a mesma de header.
+     */
+    renderContent: string|string[],
+    formatData?: function
+}
+
+interface FilterTableHeader {
+    /**
+     * Título da coluna
+     */
+    title?: string,
+
+    /**
+     * Atributo do objeto que será utilizado para ordenar essa coluna. Padrão é vazio.
+     *
+     * Caso não seja passado utilizará o conteúdo padrão da coluna que foi
+     * indicado em renderContent da tabela.
+     */
+    dataorder?: string,
+
+    /**
+     * Indica se será a coluna ordenada por padrão. Padrão é false.
+     */
+    standard?: boolean,
+
+    /**
+     * Tamanho visual da coluna. Utiliza uma das classes CSS col-
+     */
+    size?: string,
+
+    /**
+     * Indica se a coluna deverá ser exibida. Padrão é true
+     */
+    display?: boolean
+}
+
+interface FilterSettings {
+    /**
+     * Campo que será exibido ao selecionar um valor
+     */
+    displayKey: string,
+
+    /**
+     * Configuração da fonte de dados
+     */
+    source: FilterSourceSettings,
+
+    /**
+     * Configuração da Tabela de exibição dos itens
+     */
+    table: FilterTableSettings,
+
+    /**
+     * Configuração dos estilos
+     */
+    style?: FilterStyleSettings,
+
+    /**
+     * Altura da tabela (preferencialmente em px). Padrão: 260px
+     */
+    tableHeight?: string,
+
+    /**
+     * Permite múltiplas seleções? Padrão: false
+     */
+    multiSelect?: boolean,
+
+    /**
+     * Tempo limite (em ms) da busca na fonte de dados. Padrão 200ms
+     */
+    searchTimeout?: number,
+
+    /**
+     * Quantidade mínima de caracteres antes de iniciar a busca. Padrão 1
+     */
+    minLength?: number,
+
+    /**
+     * Limite de caracteres exibidos no item selecionado. Padrão: 200
+     */
+    tagMaxWidth?: number
+}
+
+interface ToastSettings {
+    /**
+     * Título do Toast. Diferença é que fica em negrito.
+     */
+    title?: string,
+
+    /**
+     * Mensagem repassada
+     */
+    message?: string,
+
+    /**
+     * Tipos possíveis: success, danger, info and warning
+     * Padrão: success
+     */
+    type?: string,
+
+    /**
+     * Tempo, em milissegundos, ou as strings slow ou fast.
+     *
+     * O tempo padrão são 4000 milissegundos.
+     * slow representa 2000 e fast representa 6000.
+     *
+     * O Toast do tipo danger ignora o timeout.
+     */
+    timeout?: number|string
+}
+
+declare class FluigcFilter {
+    getSelectedItems(): object[];
+    add(item: object): void;
+    removeAll(): void;
+
+    /**
+     * Escuta eventos do filtro.
+     *
+     * Importante: não coloque mais de um filtro em um mesmo pai, pois os eventos
+     * serão escutados por todos os filtros irmãos.
+     *
+     * O filtro dispara os seguintes eventos:
+     * - fluig.filter.load.complete => quando o filtro termina de carregar
+     * - fluig.filter.item.added => quando um item é selecionado/adicionado
+     *
+     * @param event
+     * @param callback
+     */
+    on(event: string, callback: SimpleCallback|DataCallback): void;
+}
+
+declare class FluigcModal {
+    /**
+     * Remove (fecha) a Modal
+     */
+    remove(): void;
+
+    /**
+     * Indica se a Modal está visível
+     */
+    isOpen(): boolean;
+}
+
+/**
+ * Configuração dos botões da Modal
+ */
+interface ModalActionSettings {
+    /**
+     * Rótulo exibido
+     */
+    label: string;
+
+    /**
+     * Evento ouvido em bindings.global da SuperWidget
+     *
+     * Precisa ter o prefixo data-
+     * Exemplo de valor: data-save-settings
+     */
+    bind?: string;
+
+    /**
+     * Estilo utilizado no botão
+     *
+     * Por padrão o primeiro botão recebe btn-primary
+     * e os demais recebem btn-default
+     */
+    classType?: string;
+
+    /**
+     * Indica se o botão fechará a Modal
+     *
+     * Por padrão é false.
+     *
+     * IMPORTANTE: se for true ele não executará o bind registrado.
+     */
+    autoClose?: boolean;
+}
+
+/**
+ * Configurações da Mensagem de Confirmação
+ */
+interface ConfirmSettings {
+    /**
+     * Título
+     */
+    title: string;
+
+    /**
+     * Mensagem
+     */
+    message: string;
+
+    /**
+     * Texto do Botão Sim
+     *
+     * Padrão: Sim
+     */
+    labelYes?: string;
+
+    /**
+     * Texto do Botão Não
+     *
+     * Padrão: Não
+     */
+    labelNo?: string;
+}
+
+/**
+ * Configurações da Mensagem de Alerta
+ */
+interface AlertSettings {
+    /**
+     * Título
+     */
+    title: string;
+
+    /**
+     * Mensagem
+     */
+    message: string;
+
+    /**
+     * Texto do Botão Ok
+     *
+     * Padrão: OK
+     */
+    label?: string;
+}
+
+/**
+ * Configurações da Mensagem de Erro
+ */
+interface ErrorSettings {
+    /**
+     * Título
+     */
+    title: string;
+
+    /**
+     * Mensagem
+     */
+    message: string;
+
+    /**
+     * Detalhes do erro
+     *
+     * Pode quebrar linha utilizando \n
+     */
+    details: string;
+}
+
+/**
+ * Configurações da Modal
+ */
+interface ModalSettings {
+    /**
+     * Título exibido na modal
+     */
+    title: string;
+
+    /**
+     * Conteúdo da Modal
+     *
+     * Pode ser uma string HTML, template Mustache
+     * ou retorno de uma chamada a WCMAPI.convertFtlAsync
+     */
+    content: string;
+
+    /**
+     * ID da Modal
+     *
+     * Por padrão é fluig-modal.
+     * A cada chamada o elemento HTML da modal é construído e
+     * então destruído quando a modal é fechada.
+     */
+    id?: string;
+
+    /**
+     * Tamanho da Modal
+     *
+     * Pode ser: small | large | full
+     */
+    size: string;
+
+    /**
+     * Botões da Modal
+     */
+    actions: ModalActionSettings[];
+}
+
+interface CalendarSettings {
+    /**
+     * Indica se exibirá a seleção de Data. Padrão true.
+     */
+    pickDate?: boolean;
+
+    /**
+     * Indica se exibirá a seleção de Tempo. Padrão false.
+     */
+    pickTime?: boolean;
+
+    /**
+     * Indica se usará minutos. Padrão true.
+     */
+    useMinutes?: boolean;
+
+    /**
+     * Indica se usará segundos. Padrão true.
+     */
+    useSeconds?: boolean;
+
+    /**
+     * Indica se selecionará automaticamente a data corrente. Padrão true
+     */
+    useCurrent?: boolean;
+
+    /**
+     * Valor a incrementar os minutos quando clicar nas setas de subir/descer
+     */
+    minuteStepping?: number;
+
+    /**
+     * Define uma data mínima selecionável
+     */
+    minDate?: string;
+
+    /**
+     * Define a data máxima selecionável
+     */
+    maxDate?: string;
+
+    /**
+     * Exibe o indicador do dia de hoje
+     */
+    showToday?: boolean;
+
+    /**
+     * Código do idioma. Padrão pt-br
+     */
+    language?: string;
+
+    /**
+     * Data padrão
+     *
+     * Aceita também data da Moment.js
+     */
+    defaultDate?: string|Date;
+
+    /**
+     * Datas que não podem ser selecionadas
+     *
+     * Aceita também data da Moment.js
+     */
+    disabledDates?: string[]|Date[];
+
+    /**
+     * Únicas datas que  podem ser selecionadas
+     *
+     * Aceita também data da Moment.js
+     */
+    enabledDates?: string[]|Date[];
+
+    /**
+     * Use "strict" quando validar datas. Padrão false
+     */
+    useStrict?: boolean;
+
+    /**
+     * Exibe a seleção de Tempo ao lado da seleção de Data. Padrão false.
+     */
+    sideBySide?: boolean;
+
+    /**
+     * Dias da semana que não pode ser selecionados
+     *
+     * Dia da semana inicia em 0, para domingo.
+     */
+    daysOfWeekDisabled?: number[];
+}
+
+declare class Calendar {
+    /**
+     * Configura a data mínima que pode ser selecionada
+     *
+     * @param date Data como string (formato pt-br), Date ou moment
+     */
+    setMinDate(date: string|Date): void;
+
+    /**
+     * Configura a data máxima que pode ser selecionada
+     *
+     * @param date Data como string (formato pt-br), Date ou moment
+     */
+    setMaxDate(date: string|Date): void;
+    show(): void;
+    disable(): void;
+    enable(): void;
+
+    /**
+     * Atribui a data selecionada
+     *
+     * @param date Data como string (formato pt-br), Date ou moment
+     */
+    setDate(date: string|Date): void;
+
+    /**
+     * Pega a data como objeto moment (da lib momentjs)
+     */
+    getDate(): any;
+}
+
+interface LoadingSettings {
+    /**
+     * Mensagem exibida
+     *
+     * Padrão: "Loading..."
+     */
+    textMessage?: string,
+
+    /**
+     * Título exibido quando theme == true
+     *
+     * Padrão: ""
+     */
+    title?: string,
+
+    /**
+     * Estilo para o bloco de carregamento
+     *
+     * Objeto CSS aceito pela JQuery.
+     *
+     * Padrão: null
+     */
+    css?: object,
+
+    /**
+     * Estilo para o overlay
+     *
+     * Objeto CSS aceito pela JQuery.
+     *
+     * Padrão: null
+     */
+    overlayCSS?: object,
+
+    /**
+     * Estilo para o cursor antes de bloquear
+     *
+     * Padrão: ""
+     */
+    cursorReset?: string,
+
+    /**
+     * Índice Z-Index
+     *
+     * Padrão: null
+     */
+    baseZ?: number,
+
+    /**
+     * Indica se será centralizado na tela
+     *
+     * Padrão: true
+     */
+    centerX?: boolean,
+
+    /**
+     * Indica se será centralizado na tela
+     *
+     * Padrão: true
+     */
+    centerZ?: boolean,
+
+    /**
+     * Desabilita eventos de teclado e mouse
+     *
+     * Padrão: true
+     */
+    bindEvents?: boolean,
+
+    /**
+     * Tempo, em ms, do efeito de transição no bloqueio
+     *
+     * Se for 0 não terá efeito de transição.
+     */
+    fadeIn?: number,
+
+    /**
+     * Tempo, em ms, do efeito de transição no desbloqueio
+     *
+     * Se for 0 não terá efeito de transição.
+     */
+    fadeOut?: number,
+
+    /**
+     * Tempo, em ms, para aguardar antes de desbloquear
+     *
+     * Se for 0 vai desabilitar o auto desbloqueio.
+     */
+    timeout?: number,
+
+    /**
+     * Indica se será exibido o overlay
+     *
+     * Padrão: true
+     */
+    showOverlay?: boolean,
+
+    /**
+     * Função para ser executado após o efeito de transição do bloqueio
+     */
+    onBlock?: SimpleCallback,
+
+    /**
+     * Função para ser executado após o efeito de transição do desbloqueio
+     *
+     * O elemento desbloqueado será passado à função.
+     */
+    onUnBlock?: DataCallback,
+
+    /**
+     * Indica se vai ignorar um bloqueio quando já está bloqueado
+     *
+     * Padrão: false
+     */
+    ignoreIfBlocked?: boolean
+}
+
+declare class Loading {
+    /**
+     * Exibe a tela de carregamento
+     */
+    show(): void;
+
+    /**
+     * Esconde a tela de carregamento
+     */
+    hide(): void;
+}
+
+declare namespace FLUIGC {
+    /**
+     * Cria um campo com auto-complete
+     *
+     * Eventos disponíveis para autocomplete:
+     * - fluig.autocomplete.cursorchanged
+     * - fluig.autocomplete.opened
+     * - fluig.autocomplete.closed
+     * - fluig.autocomplete.selected
+     * - fluig.autocomplete.autocompleted
+     * - fluig.autocomplete.beforeItemAdd
+     * - fluig.autocomplete.itemAdded
+     * - fluig.autocomplete.beforeItemUpdate
+     * - fluig.autocomplete.itemUpdated
+     * - fluig.autocomplete.beforeItemRemove
+     * - fluig.autocomplete.itemRemoved
+     *
+     * @param target Seletor utilizado na JQuery
+     * @param options Opções adicionais para o autocomplete
+     * @param callback Função executada após trazer as respostas para o auto-complete
+     */
+    declare function autocomplete(target: string, options: AutoCompleteOptions, callback: ErrorCallback): AutoComplete;
+
+    /**
+     * Cria um campo filter em um select (é o Zoom feito manualmente)
+     *
+     * Para usar em formulário deve-se incluir o css /style-guide/css/fluig-style-guide-filter.min.css
+     * e o script /style-guide/js/fluig-style-guide-filter.min.js
+     *
+     * Para usar em Widget deve-se incluir a instrução application.resource.component.1=fluigfilter
+     * (substituindo o 1 por um valor ainda não utilizado) no arquivo application.info
+     *
+     * @param target Seletor utilizado na JQuery
+     * @param settings Configurações do filtro
+     */
+    declare function filter(target: string, settings: FilterSettings): FluigcFilter;
+
+    /**
+     * Cria uma caixa de seleção para tratar data e horário
+     *
+     * @param target Seletor utilizado na JQuery
+     * @param settings Configurações do calendário
+     */
+    declare function calendar(target: string, settings: CalendarSettings): Calendar;
+
+    /**
+     * Exibe uma mensagem simples no topo da página.
+     *
+     * Muito utilizado para substituir alert do JS.
+     */
+    declare function toast(settings: ToastSettings): void;
+
+    /**
+     * Cria uma tela de carregamento em elemento específico ou na janela inteira
+     *
+     * Caso o objeto window seja passado a tela de carregamento ocupará a janela inteira.
+     *
+     * @param selector Uma string com seletor JQuery ou objeto window
+     * @param settings Configurações possíveis para o Loading
+     */
+    declare function loading(selector: string|Window, settings: LoadingSettings): Loading;
+
+    /**
+     * Cria uma Modal
+     *
+     * @param settings Configurações
+     * @param callback Função para executar após a criação da modal
+     */
+    declare function modal(settings: ModalSettings, callback: ModalCallback): FluigcModal;
+}
+
+/**
+ * Botão Switch
+ *
+ * @see https://style.fluig.com/javascript.html#switch-button
+ */
+declare namespace FLUIGC.switcher {
+
+    /**
+     * Transforma um checkbox ou radio em um botão switch
+     *
+     * Ao inicializar o botão switch será feita a leitura das opções
+     * do elemento HTML (os atributos do checkbox ou radio) para orientar
+     * como o botão deve ser.
+     *
+     * As opções no checkbox/radio são:
+     *
+     * | Atributo | Valores | Padrão |
+     * |----------|---------|--------|
+     * | checked | true, false | false |
+     * | data-size | null, 'mini', 'small', 'normal', 'large' | null|
+     * | data-animate | true, false | true|
+     * | disabled | true, false | false|
+     * | readonly | true, false | false|
+     * | data-on-color | 'primary', 'info', 'success', 'warning', 'danger', 'default' | 'primary'|
+     * | data-off-color | 'primary', 'info', 'success', 'warning', 'danger', 'default' | 'default'|
+     * | data-on-text |  | 'ON'|
+     * | data-off-text |  | 'OFF'|
+     *
+     * @tutorial https://style.fluig.com/javascript.html#switch-button
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function init(element: string|JQuery): void;
+
+    /**
+     * Transforma todos os checkbox e radio de um container em botões switch
+     *
+     * Ao inicializar o botão switch será feita a leitura das opções
+     * do elemento HTML (os atributos do checkbox ou radio) para orientar
+     * como o botão deve ser.
+     *
+     * As opções no checkbox/radio são:
+     *
+     * | Atributo | Valores | Padrão |
+     * |----------|---------|--------|
+     * | checked | true, false | false |
+     * | data-size | null, 'mini', 'small', 'normal', 'large' | null|
+     * | data-animate | true, false | true|
+     * | disabled | true, false | false|
+     * | readonly | true, false | false|
+     * | data-on-color | 'primary', 'info', 'success', 'warning', 'danger', 'default' | 'primary'|
+     * | data-off-color | 'primary', 'info', 'success', 'warning', 'danger', 'default' | 'default'|
+     * | data-on-text |  | 'ON'|
+     * | data-off-text |  | 'OFF'|
+     *
+     * @tutorial https://style.fluig.com/javascript.html#switch-button
+     *
+     * @param parentElement Seletor JQuery, ou Objeto, do elemento pai
+     * @param fieldName Nome do input deve iniciar com o valor indicado
+     */
+    declare function initAll(parentElement: string|JQuery, fieldName?: string): void;
+
+    /**
+     * Pega o estado do botão
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function getState(element: string|JQuery): boolean;
+
+    /**
+     * Configura o estado como checked
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function setTrue(element: string|JQuery): void;
+
+    /**
+     * Configura o estado como false (não selecionado)
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function setFalse(element: string|JQuery): void;
+
+    /**
+     * Alterna o estado do botão
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function toggleState(element: string|JQuery): void;
+
+    /**
+     * Habilita o botão (remove disabled do checkbox/radio)
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function enable(element: string|JQuery): void;
+
+    /**
+     * Desabilita o botão (coloca disabled no checkbox/radio)
+     *
+     * Cuidado: inputs desabilitados não são enviados pelo formulário.
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function disable(element: string|JQuery): void;
+
+    /**
+     * Indica se é para o botão ser somente leitura
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function isReadOnly(element: string|JQuery, readOnly: boolean): void;
+
+    /**
+     * Remove o botão switch
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     */
+    declare function destroy(element: string|JQuery): void;
+
+    /**
+     * Evento disparado quando iniciar um botão Switch
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     * @param callback Função executada ao disparar o evento
+     */
+    declare function onInit(element: string|JQuery, callback: SwitchInitCallback): void;
+
+    /**
+     * Evento disparado houver mudança de estado do botão Switch
+     *
+     * @param element Seletor JQuery ou Objeto JQuery
+     * @param callback Função executada ao disparar o evento
+     */
+    declare function onChange(element: string|JQuery, callback: SwitchChangeCallback): void;
+}
+
+declare namespace FLUIGC.message {
+    /**
+     * Cria uma Mensagem de Confirmação
+     *
+     * @param settings Configurações
+     * @param callback Função para executar após o usuário responder a confirmação
+     */
+    declare function confirm(settings: ConfirmSettings, callback: ConfirmCallback): void;
+
+    /**
+     * Cria uma Mensagem de Alerta
+     *
+     * @param settings Configurações
+     * @param callback Função para executar após o usuário fechar o alerta
+     */
+    declare function alert(settings: AlertSettings, callback: MessageCallback): void;
+
+    /**
+     * Cria uma Mensagem de Erro
+     *
+     * @param settings Configurações
+     * @param callback Função para executar após o usuário fechar o erro
+     */
+    declare function error(settings: ErrorSettings, callback: MessageCallback): void;
+}
+
+declare namespace FLUIGC.calendar {
+    /**
+     * Formata uma data em uma string de acordo com a formatação indicada.
+     *
+     * @see https://style.fluig.com/javascript.html#fluig-calendar
+     *
+     * @param date Data a ser formatada
+     * @param format Formatação
+     * @param language Idioma (padrão pt-br)
+     */
+    declare function formatDate(date: Date, format: string, language?: string): string;
+}
+
+/**
+ * Adiciona um Filho ao Pai
+ *
+ * @param {String} tableName Nome da tabela
+ * @returns {Number} Id do filho criado
+*/
+declare function wdkAddChild(tableName: string): number;
+
+/**
+ * Disponibiliza diversas funções para manipulação do formulário
+ *
+ * Usar em eventos do formulário (que recebem form como parâmetro).
+ */
+declare class FormController {
+
+    /**
+     * Retorna o ID da empresa
+     */
+    getCompanyId(): number;
+
+    /**
+     * Retorna o ID do documento (registro de formulário)
+     */
+    getDocumentId(): number;
+
+    /**
+     * Retorna a versão do documento (registro do formulário)
+     */
+    getVersion(): number;
+
+    /**
+     * Retorna o ID do formulário
+     */
+    getCardIndex(): number
+
+    /**
+     * Habilita/Desabilita a edição de um campo do formulário
+     */
+    setEnabled(nomeCampo: string, habilita: boolean, protegido: boolean): void;
+
+    /**
+     * Verifica se o campo do formulário está habilitado para edição
+     */
+    getEnabled(nomeCampo: string): boolean;
+
+    /**
+     * Atribui valor a um campo do formulário
+     */
+    setValue(nomeCampo: string, valor: string): string;
+
+    /**
+     * Pega o valor de um campo do formulário
+     */
+    getValue(nomeCampo: string): string;
+
+    /**
+     * Deixa o campo invisível buscando pelo nome do campo
+     */
+    setVisible(nomeCampo: string, visible: boolean): void;
+
+    /**
+     * Deixa o campo invisível buscando pelo ID do campo
+     */
+    setVisibleById(idDoCampo: string, visible: boolean): void;
+
+    /**
+     * Se habilitado os campos são exibidos como input readonly
+     */
+    setShowDisabledFields(habilita: boolean): void;
+
+    /**
+     * Se habilitado o link "imprimir" é ocultado
+     */
+    setHidePrintLink(habilita: boolean): void;
+
+    /**
+     * Se habilitado o botão "excluir" é ocultado
+     */
+    setHideDeleteButton(habilita: boolean): void;
+
+    /**
+     * Se definido como true todos os campos desabilitados não terão seus valores salvos
+     */
+    setEnhancedSecurityHiddenInputs(proteger: boolean): void;
+
+    /**
+     * Retorna o Modo do formulário.
+     *
+     * Tipos possíveis:
+     * - ADD: Criação
+     * - MOD: Edição
+     * - VIEW: Visualização
+     * - NONE: Não há comunicação com formulário. Ocorre no momento da validação dos campos, por exemplo.
+     */
+    getFormMode(): string;
+
+    /**
+     * Desabilita o botão de imprimir
+     */
+    setHidePrintLink(hide: boolean): void;
+
+    /**
+     * Retorna se o botão de imprimir está oculto
+     */
+    isHidePrintLink(): boolean;
+
+    /**
+     * Retorna os campos filhos, e seus valores, de uma tabela pai.
+     *
+     * Retorna um objeto com a propriedade sendo o nome do campo e seus valores.
+     */
+    getChildrenFromTable(tableName: string): object;
+
+    /**
+     * Retorna os índices dos campos filhos de uma tabela pai.
+     *
+     * @see https://tdn.totvs.com/pages/releaseview.action?pageId=270924158#EventosdeFormul%C3%A1rio-getChildrenIndexes
+     */
+    getChildrenIndexes(tableName: string): number[];
+
+    /**
+     * Oculta o botão de apagar registro
+     */
+    setHideDeleteButton(hide: boolean): void;
+
+    /**
+     * Informa se o botão de apagar está oculto
+     */
+    isHideDeleteButton(): boolean;
+
+    /**
+     * Indica se está em mobile
+     */
+    getMobile(): boolean;
+
+    /**
+     * Indica se o campo está visível buscando pelo nome do campo
+     */
+    isVisible(nomeCampo: string): boolean;
+
+    /**
+     * Indica se o campo está visível buscando pelo ID do campo
+     */
+    isVisibleById(id: string): boolean;
+};
+
+/**
+ * Disponibiliza funções para incluir conteúdo HTML no formulário
+ */
+declare class customHTML {
+
+    /**
+     * Adiciona conteúdo no final do HTML do formulário
+     * @param html Conteúdo HTML a ser incluído
+     */
+    append(html: string): void;
+};
+
+interface ErrorData {
+    message?: string;
+    responseText: object;
+}
+
+/**
+ * Constantes globais para usar no HTML de Processo / Formulário.
+ *
+ * O arquivo vcXMLRPC.js precisa ser declarado: <script src="/webdesk/vcXMLRPC.js"></script>
+ */
+declare namespace Global {
+    /**
+     * Último ID de um Filho (Cadastro Pai/Filho)
+     *
+     * Disponível quando o formulário possui um Pai/Filho padrão.
+     */
+    const newId: number;
+
+    /**
+     * Versão do Workflow.
+     *
+     * Só é preenchida em Processo
+     */
+    const WKVersDef: string;
+
+    /**
+     * ID da atividade atual do Workflow
+     *
+     * Só é preenchida em Processo
+     */
+    const WKNumState: string;
+}
+
+/**
+ * Permite a passagem de parâmetros entre os eventos do Workflow
+ */
+declare namespace globalVars {
+
+    /**
+     * Insere um valor nos parâmetros gerais
+     */
+    declare function put(name: string, value: object): void;
+
+    /**
+     * Pega um valor dos parâmetros gerais
+     */
+    declare function get(name: string): object
+};
+
+
+/**
+ * Pega o valor das propriedades do Processo.
+ *
+ * Usar em eventos do processo e eventos de formulários de processo.
+ * @see https://tdn.totvs.com/pages/releaseview.action?pageId=270919174
+ *
+ * Propriedades:
+ * - WKDef: Código do processo
+ * - WKVersDef: Versão do processo
+ * - WKNumProces: Número do processo
+ * - WKNumState: Número da atividade
+ * - WKCompany: Número da Empresa
+ * - WKUser: Usuário Corrente
+ * - WKUserComment: Texto com as observações feitas pelos usuários na atividade corrente
+ * - WKCompletTask: Indica se a tarefa foi completada ("true" / "false")
+ * - WKNextState: Número da próxima atividade (destino)
+ * - WKCardId: Código do registro de formulário do processo
+ * - WKFormId: Código do formulário do processo
+ * - WKIdentityCompany: Identificador da empresa selecionada para Experiências de uso TOTVS
+ * - WKMobile: Identifica se a ação foi realizada através de um dispositivo mobile
+ * - WKIsService: Identifica se a solicitação de cancelamento foi realizada através de um serviço. Esta variável só pode ser consultada nos eventos beforeCancelProcess e afterCancelProcess
+ * - WKUserLocale: Identifica o idioma corrente do usuário
+ * - WKManagerMode: Identifica se o processo está sendo movimentado pela visão do gestor do processo ou não. Só funciona no Workflow
+ * - WKReplacement: Código do usuário substituto
+ * - WKIsTransfer: Permite verificar se o usuário está ou não transferindo uma tarefa
+ * -
+ */
+declare function getValue(nomePropriedade: string): string;
+
+/**
+ * Funções para o envio de e-mail
+ */
+declare namespace notifier {
+
+    /**
+     * Envia um e-mail personalizado
+     *
+     * @example
+     * var parameters = new java.util.HashMap();
+     * parameters.put("subject", "Assunto");
+     * parameters.put("NAME", "João");
+     * parameters.put("CODE", "01");
+     *
+     * var users = new java.util.ArrayList();
+     * users.add("adm");
+     *
+     * notifier.notify("adm", "mail1", parameters, users, "text/html");
+     *
+     * @param fromId Matrícula do usuário que está enviando o e-mail
+     * @param templateId Código do template de e-mail
+     * @param parameters java.util.HashMap<string, string> com os parâmetros do e-mail
+     * @param to java.util.ArrayList<string> com os destinatários do e-mail
+     * @param mimeType Tipo do conteúdo do e-mail. Pode ser text/html ou text/plain
+     *
+     */
+    declare function notify(fromId: string, templateId: string, parameters: java.util.HashMap<string, string>, to: java.util.ArrayList<string>, mimeType: string): void;
+};
+
+
+/**
+ * Funções para o uso dos serviços (Progress)
+ *
+ * Usar em qualquer evento.
+ */
+declare namespace ServiceManager {
+
+    /**
+     * Obtém o serviço especificado
+     *
+     * Normalmente utilizado para pegar o serviceHelper do serviço.
+     *
+     * @example
+     * var service = ServiceManager.getService("ems2_v10");
+     * var serviceHelper = service.getBean();
+     */
+    declare function getService(serviceId: string): object;
+};
+
+interface Task {
+    name: string;
+
+    /**
+     * ID do usuário responsável
+     */
+    responsible: string;
+
+    /**
+     * Data no formato dd/mm/yyyy
+     */
+    dueDate: string;
+}
+
+/**
+ * Indica a Data e Hora de um prazo
+ */
+interface DeadLineDate {
+    /**
+     * Data no formato dd/mm/yyyy
+     */
+    0: string;
+
+    /**
+     * Quantidade de segundos, a partir de 00:00:00, para alcançar determinada hora
+     */
+    1: number;
+}
+
+/**
+ * Disponibiliza diversas funções para manipulação do processo
+ *
+ * Usar nos eventos do Processo.
+ */
+declare namespace hAPI {
+    /**
+     * Pega o valor de um campo do formulário
+     */
+    declare function getCardValue(nomeCampo: string): string;
+
+    /**
+     * Atribui valor a um campo do formulário
+     */
+    declare function setCardValue(nomeCampo: string, valor: string): string;
+
+    /**
+     * Adiciona um filho no formulário pai e filho do processo
+     *
+     * @param tableName Nome da tabela pai-filho
+     * @param cardData Mapa com os campos e valores
+     */
+    declare function addCardChild(tableName: string, cardData: java.util.HashMap<string, string>): void;
+
+    /**
+     * Encaminha o processo para uma determinada atividade
+     *
+     * Deve ser usado para tomar decisões em atividades automáticas de listener (AutomaticTasks).
+     *
+     * @example
+     * var colaboradores = new java.util.ArrayList();
+     * colaboradores.add("adm");
+     * hAPI.setAutomaticDecision(2, colaboradores, "Decisão Automática");
+     */
+    declare function setAutomaticDecision(taskNumber: number, responsible: java.util.ArrayList<string>, comment: string): void;
+
+    /**
+     * Pega todas as threads em execução de um processo
+     *
+     * @example
+     * var threads = hAPI.getActiveStates();
+     * log.info(threads.get(0));
+     */
+    declare function getActiveStates(): java.util.ArrayList<object>;
+
+    /**
+     * Pega o ID do processo Pai (caso de subprocesso)
+     *
+     * @param processInstanceId ID do processo
+     */
+    declare function getParentInstance(processInstanceId: number): number;
+
+    /**
+     * Pega uma lista dos processos que são filhos do processo indicado (subprocessos)
+     *
+     * @param processInstanceId ID do processo
+     */
+    declare function getChildrenInstances(processInstanceId: number): java.util.List<number>;
+
+    /**
+     * Altera o prazo de uma atividade do processo
+     *
+     * @example
+     * var processo = new java.lang.Integer(getValue("WKNumProces"));
+     * var data = new java.text.SimpleDateFormat("dd/MM/yyyy").parse("10/10/2010");
+     * hAPI.setDueDate(processo, 0, "adm", data, 0);
+     * // Define o prazo para Hoje ao meio dia
+     * hAPI.setDueDate(1, 0, "adm", new java.util.Date(), 12 * 60 * 60);
+     *
+     * @param processId ID do Processo
+     * @param numThread ID da Thread (geralmente 0). Usado para processos que possuem FORK
+     * @param userId ID do responsável pela atividade
+     * @param dueDate Data do prazo de encerramento
+     * @param tempoSegundos Quantidade de segundos, a partir de 00:00:00, para alcançar determinada hora
+     */
+    declare function setDueDate(processId: number, numThread: number, userId: string, dueDate: Date, timeInSeconds: number): void;
+
+    /**
+     * Transfere o processo atual para outro(s) colaborador(es).
+     * Usar em eventos do Processo.
+     *
+     * @example
+     *  var colaboradores = new java.util.ArrayList();
+     *  colaboradores.add("adm");
+     *  hAPI.transferTask(colaboradores, "Tarefa Transferida", 0);
+     *
+     * @param users IDs dos usuários
+     * @param comment
+     * @param numThread ID da Thread. Normalmente 0
+     */
+    declare function transferTask(users: java.util.ArrayList<string>, comment: string, numThread?: number = 0): void;
+
+    /**
+     * Define uma observação para a atividade atual do processo.
+     * Usar em eventos do Processo.
+     *
+     * @param userId Matrícula do Colaborador
+     * @param processId ID do Processo
+     * @param threadId ID da Thread (geralmente 0). Usado para processos que possuem FORK.
+     * @param comment Comentário do processo para a atividade corrente
+     */
+    declare function setTaskComments(userId: string, processId: number, threadId: number, comment: string): void;
+
+    /**
+     * Retorna o valor de uma propriedade avançada do Processo.
+     * Usar em eventos do Processo.
+     */
+    declare function getAdvancedProperty(nomePropriedade: string): string;
+
+
+    /**
+     * Retorna o HashMap com os valores do formulário do processo.
+     * Usar em eventos do Processo.
+     *
+     * Para um formulário Pai e Filho os campos são identificados da seguinte forma:
+     *  campo1___1, sendo campo1 o nome atribuído ao campo através da tag do campo HTML
+     * +___(3 underlines) + número sequencial do registro.
+     *
+     * @example
+     *  var card = declare function getCardData(getValue("WKNumProces"));
+     *  log.info(card.get("campo1"));
+     */
+    declare function getCardData(numProcesso: number): java.util.HashMap<string, string>;
+
+    /**
+     * Inicia uma nova instância de um processo.
+     * Usar em eventos do Processo.
+     *
+     * @example
+     * var colaboradores = new java.util.ArrayList();
+     * colaboradores.add("adm");
+     * var formData = new java.util.HashMap();
+     * formData.put("nome_do_campo_1", "valor_do_campo_1");
+     * var resposta = startProcess("Processo", 0, colaboradores, "Iniciado automaticamente", false, formData, false);
+     * var numProcessoCriado = resposta.get("iProcess");
+     *
+     * @param processId Código do processo cadastrado no Fluig.
+     * @param taskNumber Número da atividade de inicio do processo. Pode ser informado 0.
+     * @param users Matrícula dos usuários que receberão a atividade.
+     * @param comment Comentário para a atividade do processo.
+     * @param taskFinished indica se a tarefa sera finalizada apás a criação do processo.
+     * @param form HashMap representando propriedade/valor dos campos do formulário do processo.
+     * @param managerMode indica se a tarefa sera inicializada com o modo gestor do Fluig ativo.
+     * @returns HashMap com informações referentes ao processo criado
+     */
+    declare function startProcess(processId: string, taskNumber: number, users: java.util.ArrayList<string>, comment?: string, taskFinished?: boolean, form?: java.util.HashMap<string, string>, managerMode?: boolean): java.util.HashMap<string, string>;
+
+    /**
+     * Calcula um prazo
+     *
+     * Cálculo feito a partir de uma data, com base no expediente e feriados cadastrados no produto,
+     * passando o prazo em horas.
+     *
+     * Importante: a Data retornada é formatada no padrão dd/mm/yyyy
+     *
+     * @example
+     * var data = new Date();
+     * var deadlineDate = hAPI.calculateDeadLineHours(data, 50000, 2, "Default");
+     * var processo = getValue("WKNumProces");
+     * hAPI.setDueDate(processo, 0, 'adm', deadlineDate[0], deadlineDate[1]);
+     */
+    declare function calculateDeadLineHours(deadlineDate: Date, seconds: number, deadlineInHours: number, periodId: string): DeadLineDate;
+
+    /**
+     * Calcula um prazo
+     *
+     * Cálculo feito a partir de uma data, com base no expediente e feriados cadastrados no produto,
+     * passando o prazo em segundos.
+     *
+     * Importante: a Data retornada é formatada no padrão dd/mm/yyyy
+     *
+     * @example
+     * var data = new Date();
+     * var deadlineDate = hAPI.calculateDeadLineHours(data, 50000, 2, "Default");
+     * var processo = getValue("WKNumProces");
+     * hAPI.setDueDate(processo, 0, 'adm', deadlineDate[0], deadlineDate[1]);
+     */
+    declare function calculateDeadLineTime(deadlineDate: Date, seconds: number, deadlineInHours: number, periodId: string): DeadLineDate;
+
+    /**
+     * Atribui um usuário substituto para a atividade atual do processo.
+     *
+     * Usar em eventos do Processo.
+     */
+    declare function setColleagueReplacement(responsible: string): void;
+
+    /**
+     * Retorna o link para movimentação da solicitação.
+     *
+     * Usar em eventos do Processo.
+     */
+    declare function getUserTaskLink(numAtividade: number): string;
+
+    /**
+     * Pega o ID da Thread atual
+     */
+    declare function getActualThread(companyNumber, processNumber, activityNumber): number;
+
+    /**
+     * Permite a criação de atividades adhoc dentro dos eventos do Fluig
+     *
+     * @param processoId Número da Solicitação
+     * @param sequenceId Código processstate da atividade que tem o processo ad-hoc
+     * @param assunto Assunto
+     * @param detalhamento Detalhamento
+     * @param tarefas Lista de tarefas
+     */
+    declare function createAdHocTasks(processoId: number, sequenciaId: number, assunto: string, detalhamento: string, tarefas: Task[]): void;
+
+    /**
+     * Retorna a lista de anexos do processo
+     *
+     * Somente anexos do tipo GED e Workflow são retornados.
+     */
+    declare function listAttachments(): java.util.List<DocumentDto>;
+
+    /**
+     * Permite publicar anexo workflow da solicitação no GED
+     *
+     * É obrigatório informar a pasta destino através do método setParentDocumentId
+     */
+    declare function publishWorkflowAttachment(documentDto: DocumentDto): void;
+
+    /**
+     * Permite anexar documentos do GED à solicitação workflow
+     *
+     * @throws {Error}
+     */
+    declare function attachDocument(documentId: number): void;
+
+    /**
+     * Retorna os campos filhos, e seus valores, de uma tabela pai.
+     *
+     * Retorna um objeto com a propriedade sendo o nome do campo e seus valores.
+     */
+    declare function getChildrenFromTable(tableName: string): object;
+
+    /**
+     * Retorna os índices dos campos filhos de uma tabela pai.
+     *
+     * @see https://tdn.totvs.com/display/public/fluig/Eventos+de+Processos#EventosdeProcessos-EventosdeFormul%C3%A1rioPaiFilho
+     */
+    declare function getChildrenIndexes(tableName: string): number[];
+
+    /**
+     *
+     */
+    declare function getAvailableStatesDetail(companyId: number, userId: string, processId: number, processInstanceId: number, threadSequenceId: number = 0);
+};
+
+/**
+ * Envia mensagens ao Log do ECM Server
+ */
+declare namespace log {
+
+    /**
+     * Log com "criticidade" INFO
+     */
+    declare function info(message: string): void;
+
+    /**
+     * Log com "criticidade" WARNING
+     */
+    declare function warn(message: string): void;
+
+    /**
+     * Log com "criticidade" ERROR
+     */
+    declare function error(message: string): void;
+
+    /**
+     * Log com "criticidade" FATAL
+     */
+    declare function fatal(message: string): void;
+};
+
+/**
+ * Configuração para uma requisição efetuada pelo método WCMAPI.Create
+ */
+interface WcmApiRequestSettings {
+    url?: string;
+
+    /**
+     * Verbo HTTP utilizado na requisição (padrão é GET)
+     */
+    method?: string;
+
+    /**
+     * Tipo do envio.
+     *
+     * Pode ser:
+     * - application/x-www-form-urlencoded (padrão)
+     * - multipart/form-data (quando quer fazer envio de arquivos)
+     * - text/plain
+     */
+    contentType?: string;
+
+    /**
+     * Tipo do resultado esperado da requisição.
+     *
+     * O resultado da requisição será convertido para o tipo especificado e então
+     * enviado ao método success.
+     *
+     * Os tipos possíveis são:
+     * - xml
+     * - html
+     * - script
+     * - json
+     * - jsonp
+     * - text
+     */
+    dataType?: string;
+
+    /**
+     * Dados para enviar
+     */
+    data?: string|object;
+
+    /**
+     * Função que será executada em caso de sucesso
+     *
+     * @param data
+     * @param textStatus
+     * @param jqXHR Objeto da JQuery
+     */
+    success?: function (string|object, string, object): void;
+
+    /**
+     * Função que será executada em caso de falha
+     *
+     * @param jqXHR Objeto da JQuery
+     * @param textStatus
+     * @param errorThrown
+     */
+    error?: function (object, string, string): void;
+
+    /**
+     * Converter os dados para o padrão application/x-www-form-urlencoded
+     *
+     * Por padrão os dados são convertidos para application/x-www-form-urlencoded,
+     * mas você pode desabilitar essa conversão para poder enviar um DOMDocument
+     * ou outro tido de dado sem a conversão.
+     */
+    processData?: boolean;
+}
+
+
+/**
+ * Consultar dados do ambiente da sessão via JS (Client Side)
+ */
+declare namespace WCMAPI {
+    /**
+     * Endereço do servidor (incluindo protocolo e porta)
+     */
+    const serverURL: string;
+
+    /**
+     * ID do tenant ao qual o usuário está conectado
+     */
+    const organizationId: string;
+
+    /**
+     * Indica se usuário está logado
+     */
+    const userIsLogged: boolean;
+
+    /**
+     * Nome do usuário logado
+     */
+    const user: string;
+
+    /**
+     * Login do usuário logado
+     */
+    const userLogin: string;
+
+    /**
+     * Código (matrícula) do usuário logado
+     */
+    const userCode: string;
+
+    /**
+     * E-mail do usuário logado
+     */
+    const userEmail: string;
+
+    /**
+     * Indica se a sessão está expirada
+     */
+    const sessExpired: boolean;
+
+    /**
+     * Versão do fluig
+     */
+    const version: string;
+
+    /**
+     * Código do tenant ao qual o usuário está conectado
+     */
+    const tenantCode: string;
+
+    /**
+     * Raíz da URL do portal da plataforma
+     */
+    const serverContextURL: string;
+
+    /**
+     * Pega o endereço do servidor (incluindo protocolo e porta)
+     */
+    declare function getServerURL(): string;
+
+    /**
+     * Pega o ID do tenant ao qual o usuário está conectado
+     */
+    declare function getOrganizationId(): string;
+
+    /**
+     * Pega o código do tenant ao qual o usuário está conectado
+     */
+    declare function getTenantCode(): string;
+
+    /**
+     * Retorna a raíz da URL do portal da plataforma
+     */
+    declare function getServerContextURL(): string;
+
+    /**
+     * Envia uma requisição ao servidor do Fluig
+     *
+     * A requisição é feita pela JQuery.
+     * @see https://tdn.totvs.com/display/public/fluig/Consumo+de+um+WS+SOAP+de+um+Widget#ConsumodeumWSSOAPdeumWidget-ConsumirumWSSOAPdeumWidget
+     */
+    declare function Create(settings: WcmApiRequestSettings): void;
+
+    /**
+     * Encerra a sessão do usuário
+     */
+    declare function logoff(): void;
+}
+
+interface WidgetUpdatePreferences {
+    /**
+     * Indica se será uma chamada assíncrona
+     */
+    async: boolean;
+
+    /**
+     * Função executada em caso de sucesso
+     *
+     * @param data
+     */
+    success?: function (object): void;
+
+    /**
+     * Função executada em caso de falha
+     *
+     * @param jqXHR Objeto da JQuery
+     * @param message Mensagem do erro
+     * @param errorData Objeto retornado pelo erro
+     */
+    fail?: function (object, string, errorData): void;
+}
+
+declare namespace WCMSpaceAPI.PageService {
+    declare function UPDATEPREFERENCES(settings: WidgetUpdatePreferences, instanceId: number, preferences: object): void;
+}
+
+declare namespace java.lang {
+    declare class Object {
+        /**
+         * Retorna o valor do objeto como uma string
+         */
+        toString(): string;
+    }
+}
+
+declare namespace javax.naming {
+    /**
+     * Inicia um Contexto
+     */
+    declare class InitialContext {
+
+        /**
+         * Recupera o DataSource do Banco de Dados
+         *
+         * @param {string} dataSource O nome do dataSource. Ex: /jdbc/PostgreSqlDS
+         * @throws Exception
+         */
+        lookup(dataSource: string): javax.sql.DataSource;
+
+        /**
+         * Fecha o contexto ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+}
+
+declare namespace javax.sql {
+    declare class DataSource {
+        /**
+         * Recupera a Conexão com o Banco de Dados
+         *
+         * @throws Exception
+         */
+        getConnection(): Connection;
+    }
+
+    /**
+     * Conexão com o Banco de Dados
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html
+     */
+    declare class Connection {
+        /**
+         * Cria o objeto que executará o SQL
+         *
+         * @throws Exception
+         */
+        createStatement(): Statement;
+
+        /**
+         * Encerra a conexão ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+
+    /**
+     * Objeto que executa uma instrução SQL
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html
+     */
+    declare class Statement {
+        /**
+         * Executa um SQL que deve ser uma consulta (SELECT)
+         *
+         * @throws Exception
+         */
+        executeQuery(sql: string): ResultSet;
+
+        /**
+         * Executa um SQL que modifica algo no banco (INSERT, UPDATE ou DELETE)
+         *
+         * @returns {number} Quantidade de registros afetados
+         * @throws Exception
+         */
+        executeUpdate(sql: string): number;
+
+        /**
+         * Libera os recursos da execução imediatamente ao invés de aguardar o coletor de lixo
+         */
+         close(): void;
+    }
+
+    /**
+     * Representa o resultado de uma consulta SQL
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
+     */
+    declare class ResultSet {
+
+        /**
+         * Move o cursor para o primeiro resultado da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        first(): boolean;
+
+        /**
+         * Move o cursor para o último resultado da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        last(): boolean;
+
+        /**
+         * Move o cursor para o próximo resultado da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        next(): boolean;
+
+        /**
+         * Move o cursor para o resultado anterior da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        previous(): boolean;
+
+        /**
+         * Pega o número, tipos e propriedades das colunas retornadas na consulta
+         */
+        getMetaData(): ResultSetMetaData;
+
+        /**
+         * Retorna o valor da coluna como um Objeto Java
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
+         */
+        getObject(columnIndex: number): java.lang.Object;
+        getObject(columnLabel: string): java.lang.Object;
+
+        /**
+         * Retorna o valor da coluna como uma string
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
+         */
+        getString(columnIndex: number): string;
+        getString(columnLabel: string): string;
+
+        /**
+         * Retorna o valor da coluna como um boolean
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
+         */
+        getBoolean(columnIndex: number): boolean;
+        getBoolean(columnLabel: string): boolean;
+
+        /**
+         * Retorna o valor da coluna como objeto Date
+         *
+         * Esse método retorna um java.sql.Date que herda de java.util.Date.
+         * Para evitar retrabalho deixei como java.util.Date mesmo.
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como byte, java.sql.Blob etc.
+         */
+        getDate(columnIndex: number): java.util.Date;
+        getDate(columnLabel: string): java.util.Date;
+
+        /**
+         * Libera o resultado da consulta imediatamente ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+
+    declare class ResultSetMetaData {
+        /**
+         * Pega o total de colunas da consulta
+         */
+        getColumnCount(): number;
+
+        /**
+         * Pega o Nome da Coluna (label)
+         */
+        getColumnName(column: number): string;
+    }
+}
+
+declare namespace java.text {
+
+    /**
+     * Formatador de Datas
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+     */
+    declare class SimpleDateFormat {
+        /**
+         * Cria um novo formatador de datas com o padrão indicado
+         *
+         * Exemplos:
+         *
+         * - "dd/MM/yyyy" -> data no formato pt-BR
+         * - "yyyy-MM-dd" -> data no formato ISO
+         * - "HH:mm" -> Hora (24h) e minuto
+         * - "yyyy-MM-dd'T'HH:mm:ss.SSSZ" -> Data completa (Ex: 2021-07-04T12:08:56.235-0700)
+         *
+         * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+         */
+        constructor(formato: string);
+
+        /**
+         * Retorna a data formatada conforme o padrão da formatação
+         */
+        format(data: java.util.Date): string;
+
+        /**
+         * Converte uma string, formatada como indicado no construtor, em um objeto Date
+         */
+        parse(dataFormatada: string): java.util.Date;
+    }
+}
+
+declare namespace java.util {
+    declare abstract class Iterator<T> {
+        /**
+         * Indica se ainda há elementos a percorrer
+         */
+        hasNext(): boolean;
+
+        /**
+         * Pega o próximo elemento
+         */
+        next(): T;
+    }
+
+    declare abstract class Set<T> {
+        /**
+         * Adiciona um elemento ao conjunto
+         */
+        add(value: T): boolean;
+
+        /**
+         * Indica se o conjunto está vazio
+         */
+        isEmpty(): boolean;
+
+        /**
+         * Pega a quantidade de elementos do conjunto
+         */
+        size(): number;
+
+        /**
+         * Remove todos os elementos
+         */
+        clear(): void;
+
+        /**
+        * Verifica se existe o elemento
+        */
+        contains(value: T): boolean;
+
+        /**
+         * Pega um iterator para percorrer o conjunto
+         */
+        iterator(): java.util.Iterator<T>;
+    }
+
+    declare abstract class List<T> {
+        /**
+         * Pega o elemento no índice indicado
+         */
+        get(index: number): T;
+
+        /**
+         * Adiciona um elemento à lista
+         */
+        add(value: T): void;
+
+        /**
+         * Adiciona todos os elementos da lista indicada para esta lista
+         */
+        addAll(l: java.util.List<T>): void;
+
+        /**
+         * Indica o tamanho da lista
+         */
+        size(): number;
+
+        /**
+         * Remove todos os elementos
+         */
+        clear(): void;
+
+        /**
+         * Verifica se existe o elemento
+         */
+        contains(value: T): boolean;
+
+        /**
+         * Indica se a lista está vazia
+         */
+         isEmpty(): boolean;
+
+        /**
+         * Pega um iterator para percorrer a lista
+         */
+        iterator(): java.util.Iterator<T>
+    }
+
+    declare class ArrayList<T> extends List<T> {
+    }
+
+    declare abstract class Map<K, V> {
+        /**
+         * Pega o elemento no índice indicado
+         */
+        get(name: K): T;
+
+        /**
+         * Adiciona um elemento
+         */
+        put(name: K, value: T): void;
+
+        /**
+         * Indica o tamanho da lista
+         */
+        size(): number;
+
+        /**
+         * Remove todos os elementos
+         */
+         clear(): void;
+
+        /**
+         * Copia todos os elementos do mapa indicado para este mapa
+         */
+        putAll(m: java.util.Map<K, V>): void;
+
+        /**
+         * Retorna um conjunto com as chaves do Mapa
+         */
+        keySet(): java.util.Set<K>;
+    }
+
+    declare class HashMap<K, V> extends java.util.Map<K, V> {
+    }
+
+    declare class LinkedHashSet<T> extends java.util.Set<T> {
+    }
+
+    declare class LinkedHashMap<K, V> extends java.util.HashMap<K, V> {
+    }
+
+    declare class Date {
+
+        /**
+         * Inicializa com a data do momento que o objeto foi criado
+         */
+        constructor();
+
+        /**
+         * Inicializa com a data em milisegundos decorridos desde 1970-01-01 00:00:00 GMT
+         */
+        constructor(date: number);
+
+        /**
+         * Compara se essa data é posterior à data indicada
+         */
+        after(when: Date): boolean;
+
+        /**
+         * Compara se essa data é anterior à data indicada
+         */
+        before(when: Date): boolean;
+
+        /**
+         * Retorna o dia do mês
+         *
+         * @deprecated Usar Calendar.get(Calendar.DAY_OF_MONTH)
+         */
+        getDate(): number;
+
+        /**
+         * Retorna o dia da semana
+         *
+         * @deprecated Usar Calendar.get(Calendar.DAY_OF_WEEK)
+         */
+        getDay(): number;
+
+        /**
+         * Retorna a hora
+         *
+         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY)
+         */
+        getHours(): number;
+
+        /**
+         * Retorna os minutos
+         *
+         * @deprecated Usar Calendar.get(Calendar.MINUTE)
+         */
+        getMinutes(): number;
+
+        /**
+         * Retorna o mês
+         *
+         * @deprecated Usar Calendar.get(Calendar.MONTH)
+         */
+        getMonth(): number;
+
+        /**
+         * Retorna os segundos
+         *
+         * @deprecated Usar Calendar.get(Calendar.SECOND)
+         */
+        getSeconds(): number;
+
+        /**
+         * Retorna o ano
+         *
+         * @deprecated Usar Calendar.get(Calendar.YEAR) - 1900
+         */
+        getYear(): number;
+
+        /**
+         * Atribui o dia do mês
+         *
+         * @deprecated Usar Calendar.set(Calendar.DAY_OF_MONTH, dia)
+         */
+        setDate(): number;
+
+        /**
+         * Atribui a hora
+         *
+         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY, hora)
+         */
+        setHours(): number;
+
+        /**
+         * Atribui os minutos
+         *
+         * @deprecated Usar Calendar.set(Calendar.MINUTE, minutos)
+         */
+        setMinutes(): number;
+
+        /**
+         * Atribui o mês
+         *
+         * @deprecated Usar Calendar.set(Calendar.MONTH, mes)
+         */
+        setMonth(): number;
+
+        /**
+         * Atribui os segundos
+         *
+         * @deprecated Usar Calendar.set(Calendar.SECOND, segundos)
+         */
+        setSeconds(): number;
+
+        /**
+         * Atribui o ano
+         *
+         * @deprecated Usar Calendar.set(Calendar.YEAR, ano + 1900)
+         */
+        setYear(): number;
+    }
+
+    /**
+     * A Classe Calendar não deve ser instanciada com operador new. Use sempre o método getInstance().
+     *
+     * Essa classe á abstrata e o Java normalmente vai instanciar um GregorianCalendar quando chamada a getInstance().
+     */
+    declare abstract class Calendar {
+        /**
+         * Cria uma instância de Calendário
+         *
+         * Essa classe é abstrata, por isso não é possível instanciá-la diretamente.
+         */
+        static getInstance(): Calendar;
+
+        // Constantes indicando os valores dos meses
+
+        /**
+         * Indica o valor de Janeiro
+         */
+        static const JANUARY: number;
+
+        /**
+         * Indica o valor de Fevereiro
+         */
+        static const FEBRUARY: number;
+
+        /**
+         * Indica o valor de Março
+         */
+        static const MARCH: number;
+
+        /**
+         * Indica o valor de Abril
+         */
+        static const APRIL: number;
+
+        /**
+         * Indica o valor de Maio
+         */
+        static const MAY: number;
+
+        /**
+         * Indica o valor de Junho
+         */
+        static const JUNE: number;
+
+        /**
+         * Indica o valor de Julho
+         */
+        static const JULY: number;
+
+        /**
+         * Indica o valor de Agosto
+         */
+        static const AUGUST: number;
+
+        /**
+         * Indica o valor de Setembro
+         */
+        static const SEPTEMBER: number;
+
+        /**
+         * Indica o valor de Outubro
+         */
+        static const OCTOBER: number;
+
+        /**
+         * Indica o valor de Novembro
+         */
+        static const NOVEMBER: number;
+
+        /**
+         * Indica o valor de Dezembro
+         */
+        static const DECEMBER: number;
+
+        // Constantes de horário
+
+        /**
+         * Indica que a hora é antes de meio dia
+         */
+        static const AM: number;
+
+        /**
+         * Indica que a hora é após meio dia
+         */
+        static const PM: number;
+
+        // Constantes de dia da semana
+
+        /**
+         * Indica que é Domingo
+         */
+        static const SUNDAY: number;
+
+        /**
+         * Indica que é segunda-feira
+         */
+        static const MONDAY: number;
+
+        /**
+         * Indica que é terça-feira
+         */
+        static const TUESDAY: number;
+
+        /**
+         * Indica que é quarta-feira
+         */
+        static const WEDNESDAY: number;
+
+        /**
+         * Indica que é quinta-feira
+         */
+         static const THURSDAY: number;
+
+        /**
+         * Indica que é sexta-feira
+         */
+        static const FRIDAY: number;
+
+        /**
+         * Indica que é Sábado
+         */
+        static const SATURDAY: number;
+
+
+        // Constantes de campo
+
+        /**
+         * Campo que indica se horário é antes ou depois do meio dia
+         */
+        static const AM_PM: number;
+
+        /**
+         * Campo que indica o dia do mês
+         */
+        static const DATE: number;
+
+        /**
+         * Campo que indica o dia do mês
+         */
+        static const DAY_OF_MONTH: number;
+
+        /**
+         * Campo que indica o dia da semana
+         */
+        static const DAY_OF_WEEK: number;
+
+        /**
+         * Campo que indica o dia do ano
+         */
+        static const DAY_OF_YEAR: number;
+
+        /**
+         * Campo que indica a hora antes ou depois do meio dia (12h)
+         */
+        static const HOUR: number;
+
+        /**
+         * Campo que indica a hora do dia (24h)
+         */
+        static const HOUR_OF_DAY: number;
+
+        /**
+         * Campo que indica os milissegundos
+         */
+        static const MILLISECOND: number;
+
+        /**
+         * Campo que indica os minutos
+         */
+        static const MINUTE: number;
+
+        /**
+         * Campo que indica o mês
+         */
+        static const MONTH: number;
+
+        /**
+         * Campo que indica os segundos
+         */
+        static const SECOND: number;
+
+        /**
+         * Campo que indica a semana do mês
+         */
+        static const WEEK_OF_MONTH: number;
+
+        /**
+         * Campo que indica a semana do ano
+         */
+        static const WEEK_OF_YEAR: number;
+
+        /**
+         * Campo que indica o ano
+         */
+        static const YEAR: number;
+
+        /**
+         * Retorna o valor do campo indicado
+         *
+         * @param {number} campo Uma das constantes da classe indicando o campo
+         */
+        get(campo: number): number;
+
+        /**
+         * Atribui o valor ao campo indicado
+         *
+         * @param {number} campo Uma das constantes da classe indicando o campo
+         * @param {number} valor O valor que será atribuído ao campo
+         */
+        set(campo: number, valor: number): void;
+
+        /**
+         * Retorna o calendário como um objeto Date
+         */
+        getTime(): Date;
+
+        /**
+         * Configura o calendário usando um objeto Date
+         */
+        setTime(data: Date): void;
+
+        /**
+         * Compara se essa data é posterior à data indicada
+         */
+        after(data: Calendar): boolean;
+
+        /**
+         * Compara se essa data é anterior à data indicada
+         */
+        before(data: Calendar): boolean;
+
+        /**
+         * Configura o calendário com o Ano, Mês e Dia
+         */
+        set(ano: number, mes: number, dia: number): void;
+
+        /**
+         * Configura o calendário com o Ano, Mês, Dia, Hora e Minutos
+         */
+        set(ano: number, mes: number, dia: number, hora: number, minutos: number): void;
+
+        /**
+         * Configura o calendário com o Ano, Mês, Dia, Hora, Minutos e Segundos
+         */
+        set(ano: number, mes: number, dia: number, hora: number, minutos: number, segundos: number): void;
+
+        /**
+         * Adiciona ou Subtrai 1 unidade do campo indicado
+         *
+         * @param {number} campo Uma das constantes de campo
+         * @param {boolean} aumentaValor Se for true aumentará o campo, senão ele será diminuído
+         */
+        roll(campo: number, aumentaValor: boolean): void;
+
+        /**
+         * Adiciona ou Subtrai unidades do campo indicado
+         *
+         * @param {number} campo Uma das constantes de campo
+         * @param {boolean} valor Valor que será utilizado no cálculo. Se positivo aumentará, se negativo diminuirá
+         */
+        roll(campo: number, valor: number): void;
+    }
+}
+
+interface IwsConsultaSQL {
+    /**
+     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
+     *
+     * @param {string} sql Código (ID) do SQL cadastrado no RM
+     * @param {number} coligadaNumber
+     * @param {string} systemCode
+     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
+     */
+    realizarConsultaSQL(sql:string, coligadaNumber:number, systemCode:string, parameters:string): string;
+}
+
+declare namespace com.fluig.sdk.filter {
+    declare class FilterFieldVO {}
+    declare class FilterGroupResultVO {}
+    declare class FilterGroupVO {}
+    declare class FilterOrderVO {}
+    declare class FilterResultVO {}
+    declare class FilterVO {}
+}
+
+declare namespace com.fluig.sdk.identity {
+    declare class UserAuthTokenSessionVO {}
+}
+
+declare namespace com.fluig.sdk.page {
+    declare class PageMobileApiVO {}
+    declare class PageWidgetMobileApiVO {}
+    declare class PublicApiPageVO {}
+}
+
 /**
  * Serviços do Fluig
  */
+
 declare namespace com.fluig.sdk.service {
     /**
      * Fornece acesso aos serviços de notificações
@@ -235,6 +3562,7 @@ declare namespace com.fluig.sdk.service {
          */
         sendNotification(eventKey: string, loginSender: string, loginReceiver: string, object: com.fluig.sdk.api.alert.AlertVO, place: com.fluig.sdk.api.alert.AlertVO, actions: java.util.List<com.fluig.sdk.api.alert.AlertActionVO>, metadata: java.util.HashMap<string, string>): void;
     }
+
     declare class ArticleService {}
 
     /**
@@ -714,6 +4042,200 @@ declare namespace com.fluig.sdk.service {
     }
 }
 
+declare namespace com.fluig.sdk.tenant {
+    declare class AdminUserVO {}
+    declare class TenantVO {}
+}
+
+declare namespace com.fluig.sdk.user {
+    declare class ColleagueVO {}
+    declare class UserPasswordVO {}
+
+    /**
+     * Representa um Usuário
+     */
+    declare class UserVO {
+        /**
+         * Pega o e-mail
+         */
+        getEmail(): string
+
+        /**
+         * Pega o nome completo
+         */
+        getFullName(): string
+
+        /**
+         * Pega o primeiro nome
+         */
+        getFirstName(): string;
+
+        /**
+         * Pega o sobrenome
+         */
+        getLastName(): string;
+
+        /**
+         * Pega o login
+         */
+        getLogin(): string;
+
+        /**
+         * Pega o código
+         */
+        getCode(): string
+
+        /**
+         * Pega todos os dados extras
+         */
+        getExtData(): java.util.HashMap<string, object>;
+
+        /**
+         * Pega um dado extra
+         */
+        getExtraData(key: string): object;
+
+        /**
+         * Pega os grupos
+         */
+        getGroups(): java.util.List<string>;
+
+        /**
+         * Pega o ID
+         */
+        getId(): number;
+
+        /**
+         * Informa se é um usuário Ativo
+         */
+        getIsActive(): boolean;
+
+        /**
+         * Pega a senha
+         */
+        getPassword(): string;
+
+        /**
+         * Pega o fuso horário
+         */
+        getTimezone(): string;
+
+        /**
+         * Pega os papéis
+         */
+        getRoles(): java.util.List<string>;
+
+        /**
+         * Pega o token de acesso
+         */
+        getTokenAccess(): string;
+
+        /**
+         * Pega a senha do token
+         */
+        getTokenSecret(): string;
+
+        /**
+         * Pega o UUID
+         */
+        getUserUUID(): string;
+
+        /**
+         * Retorna objeto no mapa
+         */
+        getValueExtData(key: string): object;
+
+                /**
+         * Adiciona dados extras
+         */
+        addExtData(key: string, value: object): void;
+
+        /**
+         * Atribui o código
+         */
+        setCode(code: string): void;
+
+        /**
+         * Atribui o e-mail
+         */
+        setEmail(email: string): void;
+
+        /**
+         * Atribui os dados extras
+         */
+        setExtData(extData: java.util.HashMap<string, object>): void;
+
+        /**
+         * Atribui um valor para um dado extra
+         */
+        setExtraData(key: string, value: object): void;
+
+        /**
+         * Atribui o primeiro nome
+         */
+        setFirstName(firstName: string): void;
+
+        /**
+         * Atribui o sobrenome
+         */
+        setLastName(lastName: string): void;
+
+        /**
+         * Atribui o nome completo
+         */
+        setFullName(fullName: string): void;
+
+        /**
+         * Atribui os grupos
+         */
+        setGroups(groups: java.util.List<string>): void;
+
+        /**
+         * Atribui o ID
+         */
+        setId(id: number): void;
+
+        /**
+         * Atribui o status de Ativo
+         */
+        setIsActive(isActive: boolean): void;
+
+        /**
+         * Atribui o login
+         */
+        setLogin(login: string): void;
+
+        /**
+         * Atribui a senha
+         */
+        setPassword(password: string): void;
+
+        /**
+         * Atribui os papéis
+         */
+        setRoles(roles: java.util.List<string>): void;
+
+        /**
+         * Atribui o fuso horário
+         */
+        setTimezone(timezone: string): void;
+
+        /**
+         * Atribui o token de acesso
+         */
+        setTokenAccess(token: string): void;
+
+        /**
+         * Atribui a senha do token
+         */
+        setTokenSecret(tokenSecret: string): void;
+
+        /**
+         * Atribui o UUID
+         */
+        setUserUUID(userUUID: string): void;
+    }
+}
 
 declare namespace com.fluig.sdk.api.alert {
     declare class AlertActionVO {}
@@ -752,6 +4274,7 @@ declare namespace com.fluig.sdk.api.alert {
         setSenders(senders: java.util.List<com.fluig.sdk.api.alert.AlertSenderVO>): void;
     }
 }
+
 
 declare namespace com.fluig.sdk.api.authorizeclient {
     declare class AuthorizeClientSdkServiceVO {
@@ -1766,6 +5289,7 @@ declare namespace com.fluig.sdk.api.permission {
         setPageCode(pageCode: string): void;
         setTypeCode(typeCode: string): void;
     }
+
     declare class PermissionVO {
         getCategory(): string;
         getCategoryCode(): string;
@@ -1878,3544 +5402,4 @@ declare namespace com.fluig.sdk.api.workflow {
     declare class ResumeProcessTaskVO {}
     declare class ResumeRequestsSLAVO {}
     declare class WorkflowVO {}
-}
-
-declare namespace com.fluig.sdk.filter {
-    declare class FilterFieldVO {}
-    declare class FilterGroupResultVO {}
-    declare class FilterGroupVO {}
-    declare class FilterOrderVO {}
-    declare class FilterResultVO {}
-    declare class FilterVO {}
-}
-
-declare namespace com.fluig.sdk.identity {
-    declare class UserAuthTokenSessionVO {}
-}
-
-declare namespace com.fluig.sdk.page {
-    declare class PageMobileApiVO {}
-    declare class PageWidgetMobileApiVO {}
-    declare class PublicApiPageVO {}
-}
-
-declare namespace com.fluig.sdk.tenant {
-    declare class AdminUserVO {}
-    declare class TenantVO {}
-}
-
-declare namespace com.fluig.sdk.user {
-    declare class ColleagueVO {}
-    declare class UserPasswordVO {}
-
-    /**
-     * Representa um Usuário
-     */
-    declare class UserVO {
-        /**
-         * Pega o e-mail
-         */
-        getEmail(): string
-
-        /**
-         * Pega o nome completo
-         */
-        getFullName(): string
-
-        /**
-         * Pega o primeiro nome
-         */
-        getFirstName(): string;
-
-        /**
-         * Pega o sobrenome
-         */
-        getLastName(): string;
-
-        /**
-         * Pega o login
-         */
-        getLogin(): string;
-
-        /**
-         * Pega o código
-         */
-        getCode(): string
-
-        /**
-         * Pega todos os dados extras
-         */
-        getExtData(): java.util.HashMap<string, object>;
-
-        /**
-         * Pega um dado extra
-         */
-        getExtraData(key: string): object;
-
-        /**
-         * Pega os grupos
-         */
-        getGroups(): java.util.List<string>;
-
-        /**
-         * Pega o ID
-         */
-        getId(): number;
-
-        /**
-         * Informa se é um usuário Ativo
-         */
-        getIsActive(): boolean;
-
-        /**
-         * Pega a senha
-         */
-        getPassword(): string;
-
-        /**
-         * Pega o fuso horário
-         */
-        getTimezone(): string;
-
-        /**
-         * Pega os papéis
-         */
-        getRoles(): java.util.List<string>;
-
-        /**
-         * Pega o token de acesso
-         */
-        getTokenAccess(): string;
-
-        /**
-         * Pega a senha do token
-         */
-        getTokenSecret(): string;
-
-        /**
-         * Pega o UUID
-         */
-        getUserUUID(): string;
-
-        /**
-         * Retorna objeto no mapa
-         */
-        getValueExtData(key: string): object;
-
-                /**
-         * Adiciona dados extras
-         */
-        addExtData(key: string, value: object): void;
-
-        /**
-         * Atribui o código
-         */
-        setCode(code: string): void;
-
-        /**
-         * Atribui o e-mail
-         */
-        setEmail(email: string): void;
-
-        /**
-         * Atribui os dados extras
-         */
-        setExtData(extData: java.util.HashMap<string, object>): void;
-
-        /**
-         * Atribui um valor para um dado extra
-         */
-        setExtraData(key: string, value: object): void;
-
-        /**
-         * Atribui o primeiro nome
-         */
-        setFirstName(firstName: string): void;
-
-        /**
-         * Atribui o sobrenome
-         */
-        setLastName(lastName: string): void;
-
-        /**
-         * Atribui o nome completo
-         */
-        setFullName(fullName: string): void;
-
-        /**
-         * Atribui os grupos
-         */
-        setGroups(groups: java.util.List<string>): void;
-
-        /**
-         * Atribui o ID
-         */
-        setId(id: number): void;
-
-        /**
-         * Atribui o status de Ativo
-         */
-        setIsActive(isActive: boolean): void;
-
-        /**
-         * Atribui o login
-         */
-        setLogin(login: string): void;
-
-        /**
-         * Atribui a senha
-         */
-        setPassword(password: string): void;
-
-        /**
-         * Atribui os papéis
-         */
-        setRoles(roles: java.util.List<string>): void;
-
-        /**
-         * Atribui o fuso horário
-         */
-        setTimezone(timezone: string): void;
-
-        /**
-         * Atribui o token de acesso
-         */
-        setTokenAccess(token: string): void;
-
-        /**
-         * Atribui a senha do token
-         */
-        setTokenSecret(tokenSecret: string): void;
-
-        /**
-         * Atribui o UUID
-         */
-        setUserUUID(userUUID: string): void;
-    }
-}
-
-declare namespace com.totvs.technology.foundation.sdk.service.vo.common {
-    declare class OrderParam {}
-}
-
-declare namespace java.util {
-    declare abstract class Iterator<T> {
-        /**
-         * Indica se ainda há elementos a percorrer
-         */
-        hasNext(): boolean;
-
-        /**
-         * Pega o próximo elemento
-         */
-        next(): T;
-    }
-
-    declare abstract class Set<T> {
-        /**
-         * Adiciona um elemento ao conjunto
-         */
-        add(value: T): boolean;
-
-        /**
-         * Indica se o conjunto está vazio
-         */
-        isEmpty(): boolean;
-
-        /**
-         * Pega a quantidade de elementos do conjunto
-         */
-        size(): number;
-
-        /**
-         * Remove todos os elementos
-         */
-        clear(): void;
-
-        /**
-        * Verifica se existe o elemento
-        */
-        contains(value: T): boolean;
-
-        /**
-         * Pega um iterator para percorrer o conjunto
-         */
-        iterator(): java.util.Iterator<T>;
-    }
-
-    declare abstract class List<T> {
-        /**
-         * Pega o elemento no índice indicado
-         */
-        get(index: number): T;
-
-        /**
-         * Adiciona um elemento à lista
-         */
-        add(value: T): void;
-
-        /**
-         * Adiciona todos os elementos da lista indicada para esta lista
-         */
-        addAll(l: java.util.List<T>): void;
-
-        /**
-         * Indica o tamanho da lista
-         */
-        size(): number;
-
-        /**
-         * Remove todos os elementos
-         */
-        clear(): void;
-
-        /**
-         * Verifica se existe o elemento
-         */
-        contains(value: T): boolean;
-
-        /**
-         * Indica se a lista está vazia
-         */
-         isEmpty(): boolean;
-
-        /**
-         * Pega um iterator para percorrer a lista
-         */
-        iterator(): java.util.Iterator<T>
-    }
-
-    declare class ArrayList<T> extends List<T> {
-    }
-
-    declare abstract class Map<K, V> {
-        /**
-         * Pega o elemento no índice indicado
-         */
-        get(name: K): T;
-
-        /**
-         * Adiciona um elemento
-         */
-        put(name: K, value: T): void;
-
-        /**
-         * Indica o tamanho da lista
-         */
-        size(): number;
-
-        /**
-         * Remove todos os elementos
-         */
-         clear(): void;
-
-        /**
-         * Copia todos os elementos do mapa indicado para este mapa
-         */
-        putAll(m: java.util.Map<K, V>): void;
-
-        /**
-         * Retorna um conjunto com as chaves do Mapa
-         */
-        keySet(): java.util.Set<K>;
-    }
-
-    declare class HashMap<K, V> extends java.util.Map<K, V> {
-    }
-
-    declare class LinkedHashSet<T> extends java.util.Set<T> {
-    }
-
-    declare class LinkedHashMap<K, V> extends java.util.HashMap<K, V> {
-    }
-
-    declare class Date {
-
-        /**
-         * Inicializa com a data do momento que o objeto foi criado
-         */
-        constructor();
-
-        /**
-         * Inicializa com a data em milisegundos decorridos desde 1970-01-01 00:00:00 GMT
-         */
-        constructor(date: number);
-
-        /**
-         * Compara se essa data é posterior à data indicada
-         */
-        after(when: Date): boolean;
-
-        /**
-         * Compara se essa data é anterior à data indicada
-         */
-        before(when: Date): boolean;
-
-        /**
-         * Retorna o dia do mês
-         *
-         * @deprecated Usar Calendar.get(Calendar.DAY_OF_MONTH)
-         */
-        getDate(): number;
-
-        /**
-         * Retorna o dia da semana
-         *
-         * @deprecated Usar Calendar.get(Calendar.DAY_OF_WEEK)
-         */
-        getDay(): number;
-
-        /**
-         * Retorna a hora
-         *
-         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY)
-         */
-        getHours(): number;
-
-        /**
-         * Retorna os minutos
-         *
-         * @deprecated Usar Calendar.get(Calendar.MINUTE)
-         */
-        getMinutes(): number;
-
-        /**
-         * Retorna o mês
-         *
-         * @deprecated Usar Calendar.get(Calendar.MONTH)
-         */
-        getMonth(): number;
-
-        /**
-         * Retorna os segundos
-         *
-         * @deprecated Usar Calendar.get(Calendar.SECOND)
-         */
-        getSeconds(): number;
-
-        /**
-         * Retorna o ano
-         *
-         * @deprecated Usar Calendar.get(Calendar.YEAR) - 1900
-         */
-        getYear(): number;
-
-        /**
-         * Atribui o dia do mês
-         *
-         * @deprecated Usar Calendar.set(Calendar.DAY_OF_MONTH, dia)
-         */
-        setDate(): number;
-
-        /**
-         * Atribui a hora
-         *
-         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY, hora)
-         */
-        setHours(): number;
-
-        /**
-         * Atribui os minutos
-         *
-         * @deprecated Usar Calendar.set(Calendar.MINUTE, minutos)
-         */
-        setMinutes(): number;
-
-        /**
-         * Atribui o mês
-         *
-         * @deprecated Usar Calendar.set(Calendar.MONTH, mes)
-         */
-        setMonth(): number;
-
-        /**
-         * Atribui os segundos
-         *
-         * @deprecated Usar Calendar.set(Calendar.SECOND, segundos)
-         */
-        setSeconds(): number;
-
-        /**
-         * Atribui o ano
-         *
-         * @deprecated Usar Calendar.set(Calendar.YEAR, ano + 1900)
-         */
-        setYear(): number;
-    }
-
-    /**
-     * A Classe Calendar não deve ser instanciada com operador new. Use sempre o método getInstance().
-     *
-     * Essa classe á abstrata e o Java normalmente vai instanciar um GregorianCalendar quando chamada a getInstance().
-     */
-    declare abstract class Calendar {
-        /**
-         * Cria uma instância de Calendário
-         *
-         * Essa classe é abstrata, por isso não é possível instanciá-la diretamente.
-         */
-        static getInstance(): Calendar;
-
-        // Constantes indicando os valores dos meses
-
-        /**
-         * Indica o valor de Janeiro
-         */
-        static const JANUARY: number;
-
-        /**
-         * Indica o valor de Fevereiro
-         */
-        static const FEBRUARY: number;
-
-        /**
-         * Indica o valor de Março
-         */
-        static const MARCH: number;
-
-        /**
-         * Indica o valor de Abril
-         */
-        static const APRIL: number;
-
-        /**
-         * Indica o valor de Maio
-         */
-        static const MAY: number;
-
-        /**
-         * Indica o valor de Junho
-         */
-        static const JUNE: number;
-
-        /**
-         * Indica o valor de Julho
-         */
-        static const JULY: number;
-
-        /**
-         * Indica o valor de Agosto
-         */
-        static const AUGUST: number;
-
-        /**
-         * Indica o valor de Setembro
-         */
-        static const SEPTEMBER: number;
-
-        /**
-         * Indica o valor de Outubro
-         */
-        static const OCTOBER: number;
-
-        /**
-         * Indica o valor de Novembro
-         */
-        static const NOVEMBER: number;
-
-        /**
-         * Indica o valor de Dezembro
-         */
-        static const DECEMBER: number;
-
-        // Constantes de horário
-
-        /**
-         * Indica que a hora é antes de meio dia
-         */
-        static const AM: number;
-
-        /**
-         * Indica que a hora é após meio dia
-         */
-        static const PM: number;
-
-        // Constantes de dia da semana
-
-        /**
-         * Indica que é Domingo
-         */
-        static const SUNDAY: number;
-
-        /**
-         * Indica que é segunda-feira
-         */
-        static const MONDAY: number;
-
-        /**
-         * Indica que é terça-feira
-         */
-        static const TUESDAY: number;
-
-        /**
-         * Indica que é quarta-feira
-         */
-        static const WEDNESDAY: number;
-
-        /**
-         * Indica que é quinta-feira
-         */
-         static const THURSDAY: number;
-
-        /**
-         * Indica que é sexta-feira
-         */
-        static const FRIDAY: number;
-
-        /**
-         * Indica que é Sábado
-         */
-        static const SATURDAY: number;
-
-
-        // Constantes de campo
-
-        /**
-         * Campo que indica se horário é antes ou depois do meio dia
-         */
-        static const AM_PM: number;
-
-        /**
-         * Campo que indica o dia do mês
-         */
-        static const DATE: number;
-
-        /**
-         * Campo que indica o dia do mês
-         */
-        static const DAY_OF_MONTH: number;
-
-        /**
-         * Campo que indica o dia da semana
-         */
-        static const DAY_OF_WEEK: number;
-
-        /**
-         * Campo que indica o dia do ano
-         */
-        static const DAY_OF_YEAR: number;
-
-        /**
-         * Campo que indica a hora antes ou depois do meio dia (12h)
-         */
-        static const HOUR: number;
-
-        /**
-         * Campo que indica a hora do dia (24h)
-         */
-        static const HOUR_OF_DAY: number;
-
-        /**
-         * Campo que indica os milissegundos
-         */
-        static const MILLISECOND: number;
-
-        /**
-         * Campo que indica os minutos
-         */
-        static const MINUTE: number;
-
-        /**
-         * Campo que indica o mês
-         */
-        static const MONTH: number;
-
-        /**
-         * Campo que indica os segundos
-         */
-        static const SECOND: number;
-
-        /**
-         * Campo que indica a semana do mês
-         */
-        static const WEEK_OF_MONTH: number;
-
-        /**
-         * Campo que indica a semana do ano
-         */
-        static const WEEK_OF_YEAR: number;
-
-        /**
-         * Campo que indica o ano
-         */
-        static const YEAR: number;
-
-        /**
-         * Retorna o valor do campo indicado
-         *
-         * @param {number} campo Uma das constantes da classe indicando o campo
-         */
-        get(campo: number): number;
-
-        /**
-         * Retorna o valor do campo indicado
-         *
-         * @param {number} campo Uma das constantes da classe indicando o campo
-         * @param {number} valor O valor que será atribuído ao campo
-         */
-        set(campo: number, valor: number): void;
-
-        /**
-         * Retorna o calendário como um objeto Date
-         */
-        getTime(): Date;
-
-        /**
-         * Configura o calendário usando um objeto Date
-         */
-        setTime(data: Date): void;
-
-        /**
-         * Compara se essa data é posterior à data indicada
-         */
-        after(data: Calendar): boolean;
-
-        /**
-         * Compara se essa data é anterior à data indicada
-         */
-        before(data: Calendar): boolean;
-
-        /**
-         * Configura o calendário com o Ano, Mês e Dia
-         */
-        set(ano: number, mes: number, dia: number): void;
-
-        /**
-         * Configura o calendário com o Ano, Mês, Dia, Hora e Minutos
-         */
-        set(ano: number, mes: number, dia: number, hora: number, minutos: number): void;
-
-        /**
-         * Configura o calendário com o Ano, Mês, Dia, Hora, Minutos e Segundos
-         */
-        set(ano: number, mes: number, dia: number, hora: number, minutos: number, segundos: number): void;
-
-        /**
-         * Adiciona ou Subtrai 1 unidade do campo indicado
-         *
-         * @param {number} campo Uma das constantes de campo
-         * @param {boolean} aumentaValor Se for true aumentará o campo, senão ele será diminuído
-         */
-        roll(campo: number, aumentaValor: boolean): void;
-
-        /**
-         * Adiciona ou Subtrai unidades do campo indicado
-         *
-         * @param {number} campo Uma das constantes de campo
-         * @param {boolean} valor Valor que será utilizado no cálculo. Se positivo aumentará, se negativo diminuirá
-         */
-        roll(campo: number, valor: number): void;
-    }
-}
-
-
-/**
- * Entidade Aprovador
- */
-declare class ApproverDto {
-
-    /**
-     * Pega o número do aprovador
-     */
-    getapproverId(): number;
-
-    /**
-     * Pega a versão do aprovador
-     */
-    getVersion(): number;
-
-    /**
-     * Pega o código da empresa na qual o aprovador foi publicado
-     */
-    getCompanyId(): number;
-
-    /**
-     * Pega a matrícula do colaborador que criou o aprovador
-     */
-    getColleagueId(): number;
-
-    /**
-     * Pega o tipo de aprovação Pode ser 0 para Colaborador ou 1 para Grupo
-     */
-    getApproverType(): number;
-
-    /**
-     * Pega o nível de aprovação no caso de aprovação em níveis
-     */
-    getLevelId(): number;
-}
-
-/**
- * Entidade Documento para usar nos Eventos
- */
-declare class DocumentDto {
-
-    /**
-     * Pega o número do documento
-     */
-    getDocumentId(): number;
-
-    /**
-     * Pega a versão do documento
-     */
-    getVersion(): number;
-
-    /**
-     * Pega o código da empresa em que o documento foi publicado
-     */
-    getCompanyId(): number;
-
-    /**
-     * Pega o UUID do documento
-     */
-    getUUID(): string;
-
-    /**
-     * Pega o tipo do arquivo físico. Se retornar em branco ou nulo é um tipo desconhecido
-     */
-    getDocumentTypeId(): string;
-
-    /**
-     * Pega o código do idioma do documento
-     */
-    getLanguageId(): string;
-
-    /**
-     * Pega o código do ícone do documento
-     */
-    getIconId(): number;
-
-    /**
-     * Pega o código do assunto do documento
-     */
-    getTopicId(): number;
-
-    /**
-     * Pega a matrícula do colaborador que criou o documento
-     */
-    getColleagueId(): string;
-
-    /**
-     * Pega a descrição do documento
-     */
-    getDocumentDescription(): string;
-
-    /**
-     * Pega os comentários adicionais do documento
-     */
-    getAdditionalComments(): string;
-
-    /**
-     * Pega o caminho físico do documento
-     */
-    getPhisicalFile(): string;
-
-    /**
-     * Pega a data de criação do documento
-     */
-    getCreateDate(): Date;
-
-    /**
-     * Pega a data de aprovação do documento
-     */
-    getApprovedDate(): Date;
-
-    /**
-     * Pega a data da última modificação do documento
-     */
-    getLastModifiedDate(): Date;
-
-    /**
-     * Pega a data da última modificação do documento
-     */
-    getExpirationDate(): Date;
-
-    /**
-     * Pega o tipo do documento
-     */
-    getDocumentType(): DocumentTypeEnum;
-
-    /**
-     * Pega o número da pasta/formulário pai
-     */
-    getParentDocumentId(): number;
-
-    /**
-     * Pega o nome do arquivo físico principal e anexos
-     */
-    getRelatedFiles(): number;
-
-    /**
-     * Verifica se o documento está ativo
-     */
-    getActiveVersion(): boolean;
-
-    /**
-     * Pega a descrição da versão
-     */
-    getVersionDescription(): string;
-
-    /**
-     * Verifica se o documento permite download
-     */
-    getDownloadEnabled(): boolean;
-
-    /**
-     * Verifica se o documento está em aprovação
-     */
-    getApproved(): boolean;
-
-    /**
-     * Pega a data a partir que o documento poderá ser visualizado
-     */
-    getValidationStartDate(): Date
-
-    /**
-     * Pega a matrícula do colaborador que publicou o documento
-     */
-    getPublisherId(): string;
-
-    /**
-     * Pega a descrição da ficha para documento do tipo 5
-     */
-    getCardDescription(): string;
-
-    /**
-     * Pega o formulário que foi usado como base para criação da ficha.
-     *
-     * Utilizado somente com documento do tipo 5.
-     */
-    getDocumentPropertyNumber(): number;
-
-    /**
-     * Pega a versão do formulário em que a ficha foi criada
-     */
-    getDocumentPropertyVersion(): number;
-
-    /**
-     * Pega o código da empresa em que o documento foi publicado
-     */
-    getCompanyId(): number;
-
-    /**
-     * Verifica se o documento/pasta está abaixo de pasta particular
-     */
-    getPrivateDocument(): boolean;
-
-    /**
-     * Pega a matrícula do colaborador onde o documento particular está alocado
-     */
-    getPrivateColleagueId(): string;
-
-    /**
-     * Verifica se o arquivo foi indexado
-     */
-    getIndexed(): boolean;
-
-    /**
-     * Pega a prioridade do documento
-     */
-    getPriority(): number;
-
-    /**
-     * Verifica se notifica os usuários que tenham esse assunto de interesse
-     */
-    getUserNotify(): boolean;
-
-    /**
-     * Verifica se o documento está expirado
-     */
-    getExpires(): boolean;
-
-    /**
-     * Pega o volume onde o documento foi publicado. Se estiver em branco foi no volume pai.
-     */
-    getVolumeId(): string;
-
-    /**
-     * Verifica se herda segurança do pai
-     */
-    getInheritSecurity(): boolean;
-
-    /**
-     * Verifica se atualiza as propriedades da cópia controlada
-     */
-    getUpdateIsoProperties(): boolean;
-
-    /**
-     * Pega a hora da última modificação em milissegundos
-     */
-    getLastModifiedTime(): string;
-
-    /**
-     * Verifica se o documento está na lixeira
-     */
-    getDeleted(): boolean;
-
-    /**
-     * Pega o documento do dataset se o documento é um formulário
-     */
-    getDatasetName(): string;
-
-    /**
-     * Pega as palavras-chave do documento. Cada palavra é separada por vírgula.
-     */
-    getKeyWord(): string;
-
-    /**
-     * Verifica se a versão/revisão é inalterável
-     */
-    getImutable(): boolean;
-
-    /**
-     * Verifica se o documento está em edição, para documento do tipo "Novo Conteúdo"
-     */
-    getDraft(): boolean;
-
-    /**
-     * Verifica se utiliza visualizador interno
-     */
-    getInternalVisualizer(): boolean;
-
-    /**
-     * Pega o tamanho físico do documento principal e anexos
-     */
-    getPhisicalFileSize(): number;
-};
-
-/**
- * Entidade Segurança do Documento
- */
-declare class DocumentSecurityConfigDto {
-
-    /**
-     * Pega o número do documento
-     */
-    getDocumentId(): number;
-
-    /**
-     * Pega a versão do documento
-     */
-    getVersion(): number;
-
-    /**
-     * Pega o código da empresa em que o documento foi publicado
-     */
-    getCompanyId(): number;
-
-    /**
-     * Pega a matrícula de um colaborador ou o código do grupo que está na segurança do documento
-     *
-     * É possível saber se vai retornar um colaborador ou um grupo pelo tipo da segurança.
-     * Retorna em branco quando o tipo é todos os usuários
-     */
-    getAttributionValue(): string;
-
-    /**
-     * Verifica se é uma permissão
-     *
-     * Se não é uma permissão é uma restrição.
-     */
-    getPermission(): boolean;
-
-    /**
-     * Verifica se lista o conteúdo
-     */
-    getShowContent(): boolean;
-
-    /**
-     * Pega o nível de permissão/restrição.
-     *
-     * Tipos de permissão/restrição:
-     * - -1: Sem permissão/restrição (nega acesso)
-     * - 0: Leitura
-     * - 1: Gravação
-     * - 2: Modificação
-     * - 3: Total
-     */
-    getAttributionType(): number;
-
-    /**
-     * Pega a sequência da permissão/restrição
-     */
-    getSequence(): number;
-
-    /**
-     * Verifica se ele utiliza a segurança desta versão nas demais
-     */
-    getSecurityVersion(): boolean;
-};
-
-
-/**
- * Permite a passagem de parâmetros entre os eventos do Workflow
- */
-declare namespace globalVars {
-
-    /**
-     * Insere um valor nos parâmetros gerais
-     */
-    declare function put(name: string, value: object): void;
-
-    /**
-     * Pega um valor dos parâmetros gerais
-     */
-    declare function get(name: string): object
-};
-
-
-/**
- * Envia mensagens ao Log do ECM Server
- */
-declare namespace log {
-
-    /**
-     * Log com "criticidade" INFO
-     */
-    declare function info(message: string): void;
-
-    /**
-     * Log com "criticidade" WARNING
-     */
-    declare function warn(message: string): void;
-
-    /**
-     * Log com "criticidade" ERROR
-     */
-    declare function error(message: string): void;
-
-    /**
-     * Log com "criticidade" FATAL
-     */
-    declare function fatal(message: string): void;
-};
-
-
-/**
- * Funções para o envio de e-mail
- */
-declare namespace notifier {
-
-    /**
-     * Envia um e-mail personalizado
-     *
-     * Usar em eventos do Processo.
-     *
-     * @example
-     * var parameters = new java.util.HashMap();
-     * parameters.put("subject", "Assunto");
-     * parameters.put("NAME", "João");
-     * parameters.put("CODE", "01");
-     *
-     * var users = new java.util.ArrayList();
-     * users.add("adm");
-     *
-     * notifier.notify("adm", "mail1", parameters, users, "text/html");
-     *
-     * @param fromId Matrícula do usuário que está enviando o e-mail
-     * @param templateId Código do template de e-mail
-     * @param parameters java.util.HashMap<string, string> com os parâmetros do e-mail
-     * @param to java.util.ArrayList<string> com os destinatários do e-mail
-     * @param mimeType Tipo do conteúdo do e-mail. Pode ser text/html ou text/plain
-     *
-     */
-    declare function notify(fromId: string, templateId: string, parameters: java.util.HashMap<string, string>, to: java.util.ArrayList<string>, mimeType: string): void;
-};
-
-
-/**
- * Funções para o uso dos serviços (Progress)
- *
- * Usar em qualquer evento.
- */
-declare namespace ServiceManager {
-
-    /**
-     * Obtém o serviço especificado
-     *
-     * Normalmente utilizado para pegar o serviceHelper do serviço.
-     *
-     * @example
-     * var service = ServiceManager.getService("ems2_v10");
-     * var serviceHelper = service.getBean();
-     */
-    declare function getService(serviceId: string): object;
-};
-
-/**
- * Pega o valor das propriedades do Processo.
- *
- * Usar em eventos do processo e eventos de formulários de processo.
- * @see https://tdn.totvs.com/pages/releaseview.action?pageId=270919174
- *
- * Propriedades:
- * - WKDef: Código do processo
- * - WKVersDef: Versão do processo
- * - WKNumProces: Número do processo
- * - WKNumState: Número da atividade
- * - WKCompany: Número da Empresa
- * - WKUser: Usuário Corrente
- * - WKUserComment: Texto com as observações feitas pelos usuários na atividade corrente
- * - WKCompletTask: Indica se a tarefa foi completada ("true" / "false")
- * - WKNextState: Número da próxima atividade (destino)
- * - WKCardId: Código do registro de formulário do processo
- * - WKFormId: Código do formulário do processo
- * - WKIdentityCompany: Identificador da empresa selecionada para Experiências de uso TOTVS
- * - WKMobile: Identifica se a ação foi realizada através de um dispositivo mobile
- * - WKIsService: Identifica se a solicitação de cancelamento foi realizada através de um serviço. Esta variável só pode ser consultada nos eventos beforeCancelProcess e afterCancelProcess
- * - WKUserLocale: Identifica o idioma corrente do usuário
- * - WKManagerMode: Identifica se o processo está sendo movimentado pela visão do gestor do processo ou não. Só funciona no Workflow
- * - WKReplacement: Código do usuário substituto
- * - WKIsTransfer: Permite verificar se o usuário está ou não transferindo uma tarefa
- * -
- */
-declare function getValue(nomePropriedade: string): string;
-
-/**
- * Disponibiliza diversas funções para manipulação do formulário
- *
- * Usar em eventos do formulário (que recebem form como parâmetro).
- */
-declare class FormController {
-
-    /**
-     * Retorna o ID da empresa
-     */
-    getCompanyId(): number;
-
-    /**
-     * Retorna o ID do documento (registro de formulário)
-     */
-    getDocumentId(): number;
-
-    /**
-     * Retorna a versão do documento (registro do formulário)
-     */
-    getVersion(): number;
-
-    /**
-     * Retorna o ID do formulário
-     */
-    getCardIndex(): number
-
-    /**
-     * Habilita/Desabilita a edição de um campo do formulário
-     */
-    setEnabled(nomeCampo: string, habilita: boolean, protegido: boolean): void;
-
-    /**
-     * Verifica se o campo do formulário está habilitado para edição
-     */
-    getEnabled(nomeCampo: string): boolean;
-
-    /**
-     * Atribui valor a um campo do formulário
-     */
-    setValue(nomeCampo: string, valor: string): string;
-
-    /**
-     * Pega o valor de um campo do formulário
-     */
-    getValue(nomeCampo: string): string;
-
-    /**
-     * Deixa o campo invisível buscando pelo nome do campo
-     */
-    setVisible(nomeCampo: string, visible: boolean): void;
-
-    /**
-     * Deixa o campo invisível buscando pelo ID do campo
-     */
-    setVisibleById(idDoCampo: string, visible: boolean): void;
-
-    /**
-     * Se habilitado os campos são exibidos como input readonly
-     */
-    setShowDisabledFields(habilita: boolean): void;
-
-    /**
-     * Se habilitado o link "imprimir" é ocultado
-     */
-    setHidePrintLink(habilita: boolean): void;
-
-    /**
-     * Se habilitado o botão "excluir" é ocultado
-     */
-    setHideDeleteButton(habilita: boolean): void;
-
-    /**
-     * Se definido como true todos os campos desabilitados não terão seus valores salvos
-     */
-    setEnhancedSecurityHiddenInputs(proteger: boolean): void;
-
-    /**
-     * Retorna o Modo do formulário.
-     *
-     * Tipos possíveis:
-     * - ADD: Criação
-     * - MOD: Edição
-     * - VIEW: Visualização
-     * - NONE: Não há comunicação com formulário. Ocorre no momento da validação dos campos, por exemplo.
-     */
-    getFormMode(): string;
-
-    /**
-     * Desabilita o botão de imprimir
-     */
-    setHidePrintLink(hide: boolean): void;
-
-    /**
-     * Retorna se o botão de imprimir está oculto
-     */
-    isHidePrintLink(): boolean;
-
-    /**
-     * Retorna os campos filhos, e seus valores, de uma tabela pai.
-     *
-     * Retorna um objeto com a propriedade sendo o nome do campo e seus valores.
-     */
-    getChildrenFromTable(tableName: string): object;
-
-    /**
-     * Retorna os índices dos campos filhos de uma tabela pai.
-     *
-     * @see https://tdn.totvs.com/pages/releaseview.action?pageId=270924158#EventosdeFormul%C3%A1rio-getChildrenIndexes
-     */
-    getChildrenIndexes(tableName: string): number[];
-
-    /**
-     * Oculta o botão de apagar registro
-     */
-    setHideDeleteButton(hide: boolean): void;
-
-    /**
-     * Informa se o botão de apagar está oculto
-     */
-    isHideDeleteButton(): boolean;
-
-    /**
-     * Indica se está em mobile
-     */
-    getMobile(): boolean;
-
-    /**
-     * Indica se o campo está visível buscando pelo nome do campo
-     */
-    isVisible(nomeCampo: string): boolean;
-
-    /**
-     * Indica se o campo está visível buscando pelo ID do campo
-     */
-    isVisibleById(id: string): boolean;
-};
-
-/**
- * Disponibiliza funções para incluir conteúdo HTML no formulário
- */
-declare class customHTML {
-
-    /**
-     * Adiciona conteúdo no final do HTML do formulário
-     * @param html Conteúdo HTML a ser incluído
-     */
-    append(html: string): void;
-};
-
-/**
- * Indica a Data e Hora de um prazo
- */
-interface DeadLineDate {
-    /**
-     * Data no formato dd/mm/yyyy
-     */
-    0: string;
-
-    /**
-     * Quantidade de segundos, a partir de 00:00:00, para alcançar determinada hora
-     */
-    1: number;
-}
-
-interface Task {
-    name: string;
-
-    /**
-     * ID do usuário responsável
-     */
-    responsible: string;
-
-    /**
-     * Data no formato dd/mm/yyyy
-     */
-    dueDate: string;
-}
-
-/**
- * Disponibiliza diversas funções para manipulação do processo
- *
- * Usar nos eventos do Processo.
- */
-declare namespace hAPI {
-    /**
-     * Pega o valor de um campo do formulário
-     */
-    declare function getCardValue(nomeCampo: string): string;
-
-    /**
-     * Atribui valor a um campo do formulário
-     */
-    declare function setCardValue(nomeCampo: string, valor: string): string;
-
-    /**
-     * Adiciona um filho no formulário pai e filho do processo
-     *
-     * @param tableName Nome da tabela pai-filho
-     * @param cardData Mapa com os campos e valores
-     */
-    declare function addCardChild(tableName: string, cardData: java.util.HashMap<string, string>): void;
-
-    /**
-     * Encaminha o processo para uma determinada atividade
-     *
-     * Deve ser usado para tomar decisões em atividades automáticas de listener (AutomaticTasks).
-     *
-     * @example
-     * var colaboradores = new java.util.ArrayList();
-     * colaboradores.add("adm");
-     * hAPI.setAutomaticDecision(2, colaboradores, "Decisão Automática");
-     */
-    declare function setAutomaticDecision(taskNumber: number, responsible: java.util.ArrayList<string>, comment: string): void;
-
-    /**
-     * Pega todas as threads em execução de um processo
-     *
-     * @example
-     * var threads = hAPI.getActiveStates();
-     * log.info(threads.get(0));
-     */
-    declare function getActiveStates(): java.util.ArrayList<object>;
-
-    /**
-     * Pega o ID do processo Pai (caso de subprocesso)
-     *
-     * @param processInstanceId ID do processo
-     */
-    declare function getParentInstance(processInstanceId: number): number;
-
-    /**
-     * Pega uma lista dos processos que são filhos do processo indicado (subprocessos)
-     *
-     * @param processInstanceId ID do processo
-     */
-    declare function getChildrenInstances(processInstanceId: number): java.util.List<number>;
-
-    /**
-     * Altera o prazo de uma atividade do processo
-     *
-     * @example
-     * var processo = new java.lang.Integer(getValue("WKNumProces"));
-     * var data = new java.text.SimpleDateFormat("dd/MM/yyyy").parse("10/10/2010");
-     * hAPI.setDueDate(processo, 0, "adm", data, 0);
-     * // Define o prazo para Hoje ao meio dia
-     * hAPI.setDueDate(1, 0, "adm", new java.util.Date(), 12 * 60 * 60);
-     *
-     * @param processId ID do Processo
-     * @param numThread ID da Thread (geralmente 0). Usado para processos que possuem FORK
-     * @param userId ID do responsável pela atividade
-     * @param dueDate Data do prazo de encerramento
-     * @param tempoSegundos Quantidade de segundos, a partir de 00:00:00, para alcançar determinada hora
-     */
-    declare function setDueDate(processId: number, numThread: number, userId: string, dueDate: Date, timeInSeconds: number): void;
-
-    /**
-     * Transfere o processo atual para outro(s) colaborador(es).
-     * Usar em eventos do Processo.
-     *
-     * @example
-     *  var colaboradores = new java.util.ArrayList();
-     *  colaboradores.add("adm");
-     *  hAPI.transferTask(colaboradores, "Tarefa Transferida", 0);
-     *
-     * @param users IDs dos usuários
-     * @param comment
-     * @param numThread ID da Thread. Normalmente 0
-     */
-    declare function transferTask(users: java.util.ArrayList<string>, comment: string, numThread?: number = 0): void;
-
-    /**
-     * Define uma observação para a atividade atual do processo.
-     * Usar em eventos do Processo.
-     *
-     * @param userId Matrícula do Colaborador
-     * @param processId ID do Processo
-     * @param threadId ID da Thread (geralmente 0). Usado para processos que possuem FORK.
-     * @param comment Comentário do processo para a atividade corrente
-     */
-    declare function setTaskComments(userId: string, processId: number, threadId: number, comment: string): void;
-
-    /**
-     * Retorna o valor de uma propriedade avançada do Processo.
-     * Usar em eventos do Processo.
-     */
-    declare function getAdvancedProperty(nomePropriedade: string): string;
-
-
-    /**
-     * Retorna o HashMap com os valores do formulário do processo.
-     * Usar em eventos do Processo.
-     *
-     * Para um formulário Pai e Filho os campos são identificados da seguinte forma:
-     *  campo1___1, sendo campo1 o nome atribuído ao campo através da tag do campo HTML
-     * +___(3 underlines) + número sequencial do registro.
-     *
-     * @example
-     *  var card = declare function getCardData(getValue("WKNumProces"));
-     *  log.info(card.get("campo1"));
-     */
-    declare function getCardData(numProcesso: number): java.util.HashMap<string, string>;
-
-    /**
-     * Inicia uma nova instância de um processo.
-     * Usar em eventos do Processo.
-     *
-     * @example
-     * var colaboradores = new java.util.ArrayList();
-     * colaboradores.add("adm");
-     * var formData = new java.util.HashMap();
-     * formData.put("nome_do_campo_1", "valor_do_campo_1");
-     * var resposta = startProcess("Processo", 0, colaboradores, "Iniciado automaticamente", false, formData, false);
-     * var numProcessoCriado = resposta.get("iProcess");
-     *
-     * @param processId Código do processo cadastrado no Fluig.
-     * @param taskNumber Número da atividade de inicio do processo. Pode ser informado 0.
-     * @param users Matrícula dos usuários que receberão a atividade.
-     * @param comment Comentário para a atividade do processo.
-     * @param taskFinished indica se a tarefa sera finalizada apás a criação do processo.
-     * @param form HashMap representando propriedade/valor dos campos do formulário do processo.
-     * @param managerMode indica se a tarefa sera inicializada com o modo gestor do Fluig ativo.
-     * @returns HashMap com informações referentes ao processo criado
-     */
-    declare function startProcess(processId: string, taskNumber: number, users: java.util.ArrayList<string>, comment?: string, taskFinished?: boolean, form?: java.util.HashMap<string, string>, managerMode?: boolean): java.util.HashMap<string, string>;
-
-    /**
-     * Calcula um prazo
-     *
-     * Cálculo feito a partir de uma data, com base no expediente e feriados cadastrados no produto,
-     * passando o prazo em horas.
-     *
-     * Importante: a Data retornada é formatada no padrão dd/mm/yyyy
-     *
-     * @example
-     * var data = new Date();
-     * var deadlineDate = hAPI.calculateDeadLineHours(data, 50000, 2, "Default");
-     * var processo = getValue("WKNumProces");
-     * hAPI.setDueDate(processo, 0, 'adm', deadlineDate[0], deadlineDate[1]);
-     */
-    declare function calculateDeadLineHours(deadlineDate: Date, seconds: number, deadlineInHours: number, periodId: string): DeadLineDate;
-
-    /**
-     * Calcula um prazo
-     *
-     * Cálculo feito a partir de uma data, com base no expediente e feriados cadastrados no produto,
-     * passando o prazo em segundos.
-     *
-     * Importante: a Data retornada é formatada no padrão dd/mm/yyyy
-     *
-     * @example
-     * var data = new Date();
-     * var deadlineDate = hAPI.calculateDeadLineHours(data, 50000, 2, "Default");
-     * var processo = getValue("WKNumProces");
-     * hAPI.setDueDate(processo, 0, 'adm', deadlineDate[0], deadlineDate[1]);
-     */
-    declare function calculateDeadLineTime(deadlineDate: Date, seconds: number, deadlineInHours: number, periodId: string): DeadLineDate;
-
-    /**
-     * Atribui um usuário substituto para a atividade atual do processo.
-     *
-     * Usar em eventos do Processo.
-     */
-    declare function setColleagueReplacement(responsible: string): void;
-
-    /**
-     * Retorna o link para movimentação da solicitação.
-     *
-     * Usar em eventos do Processo.
-     */
-    declare function getUserTaskLink(numAtividade: number): string;
-
-    /**
-     * Pega o ID da Thread atual
-     */
-    declare function getActualThread(companyNumber, processNumber, activityNumber): number;
-
-    /**
-     * Permite a criação de atividades adhoc dentro dos eventos do Fluig
-     *
-     * @param processoId Número da Solicitação
-     * @param sequenceId Código processstate da atividade que tem o processo ad-hoc
-     * @param assunto Assunto
-     * @param detalhamento Detalhamento
-     * @param tarefas Lista de tarefas
-     */
-    declare function createAdHocTasks(processoId: number, sequenciaId: number, assunto: string, detalhamento: string, tarefas: Task[]): void;
-
-    /**
-     * Retorna a lista de anexos do processo
-     *
-     * Somente anexos do tipo GED e Workflow são retornados.
-     */
-    declare function listAttachments(): java.util.List<DocumentDto>;
-
-    /**
-     * Permite publicar anexo workflow da solicitação no GED
-     *
-     * É obrigatório informar a pasta destino através do método setParentDocumentId
-     */
-    declare function publishWorkflowAttachment(documentDto: DocumentDto): void;
-
-    /**
-     * Permite anexar documentos do GED à solicitação workflow
-     *
-     * @throws {Error}
-     */
-    declare function attachDocument(documentId: number): void;
-
-    /**
-     * Retorna os campos filhos, e seus valores, de uma tabela pai.
-     *
-     * Retorna um objeto com a propriedade sendo o nome do campo e seus valores.
-     */
-    declare function getChildrenFromTable(tableName: string): object;
-
-    /**
-     * Retorna os índices dos campos filhos de uma tabela pai.
-     *
-     * @see https://tdn.totvs.com/display/public/fluig/Eventos+de+Processos#EventosdeProcessos-EventosdeFormul%C3%A1rioPaiFilho
-     */
-    declare function getChildrenIndexes(tableName: string): number[];
-
-    /**
-     *
-     */
-    declare function getAvailableStatesDetail(companyId: number, userId: string, processId: number, processInstanceId: number, threadSequenceId: number = 0);
-};
-
-/**
- * Constantes globais para usar no HTML de Processo / Formulário.
- *
- * O arquivo vcXMLRPC.js precisa ser declarado: <script src="/webdesk/vcXMLRPC.js"></script>
- */
-declare namespace Global {
-    /**
-     * Último ID de um Filho (Cadastro Pai/Filho)
-     *
-     * Disponível quando o formulário possui um Pai/Filho padrão.
-     */
-    const newId: number;
-
-    /**
-     * Versão do Workflow.
-     *
-     * Só é preenchida em Processo
-     */
-    const WKVersDef: string;
-
-    /**
-     * ID da atividade atual do Workflow
-     *
-     * Só é preenchida em Processo
-     */
-    const WKNumState: string;
-}
-
-/**
- * Adiciona um Filho ao Pai
- *
- * @param {String} tableName Nome da tabela
- * @returns {Number} Id do filho criado
-*/
-declare function wdkAddChild(tableName: string): number;
-
-/**
- * Pega os dados de um determinado Dataset ou Formulário
- *
- * Usar no HTML de qualquer formulário.
- *
- * @example
- * let filtro = {'colleaguePK.colleagueId': 'adm'};
- * let colaboradores = getDatasetValues('colleague', filtro);
- * console.log(colaboradores[0].colleagueName);
- */
-declare function getDatasetValues(dataset: string, filtro: object[]): object[];
-
-/**
- * Tipos de campo de um Dataset
- *
- * Usado na criação do Dataset, na função defineStructure.
- */
-enum DatasetFieldType {
-    NUMBER,
-    STRING,
-    TEXT,
-    DATE,
-    BOOLEAN,
-}
-
-/**
- * Cria uma coluna no dataset sincronizado
- */
-declare function addColumn(coluna: string, tipo?: DatasetFieldType);
-
- /**
-  * Cria a chave principal do dataset sincronizado
-  *
-  * Para uso dos métodos updateRecord, deleteRecord e addOrUpdate do dataset sincronizado.
-  */
-declare function setKey(chaves: string[]): void;
-
- /**
-  * Cria um ou mais índices para maior performance na consulta do dataset sincronizado
-  */
-declare function addIndex(indices: string[]): void;
-
-/**
- * Tipos de Filtros (constraint)
- *
- * Usado para criar os filtros que serão repassados ao método getDataset.
- * Usar nos eventos do Fluig ou na criação de Dataset customizado.
- */
-enum ConstraintType {
-    /**
-     * Filtro: Deve Conter
-     *
-     * Interprete como o E lógico
-     */
-    MUST,
-
-    /**
-     * Filtro: Pode Conter
-     *
-     * Interprete como OU lógico
-     */
-    SHOULD,
-
-    /**
-     * Filtro: Não Deve Conter
-     */
-    MUST_NOT,
-}
-
-/**
- * Tipos de Documento
- *
- * Esse enum não existe no Fluig e foi criado somente para
- * facilitar a identificação dos tipos de documento.
- *
- * No Fluig utilize somente os valores ao fazer as comparações.
- */
-enum DocumentTypeEnum {
-    PASTA_RAIZ = '0',
-    PASTA = '1',
-    DOCUMENTO_NORMAL = '2',
-    DOCUMENTO_EXTERNO = '3',
-    FORMULARIO = '4',
-    FICHA = '5',
-    ANEXO_WORKFLOW = '7',
-    NOVO_CONTEUDO = '8',
-    APLICATIVO = '9',
-    RELATORIO = '10',
-    PASTA_SOCIAL = '15',
-    SITE = 'portal',
-    PAGINA_DE_SITE = 'portalPage',
-}
-
-declare class Dataset {
-    const rowsCount: number;
-
-    /**
-     * Retorna o valor de uma coluna (campo) em determinada linha (índice)
-     */
-    getValue(linha: number, coluna: string): string;
-
-    /**
-     * Cria uma coluna no Dataset
-     *
-     * @example
-     * var dataset = DatasetBuilder().newDataset();
-     * dataset.addColumn("coluna1");
-     * dataset.addColumn("coluna2");
-     * dataset.addRow(["valor coluna 1", "valor coluna 2"]);
-     */
-    addColumn(coluna: string): void;
-
-    /**
-     * Adicionar uma linha ao Dataset
-     *
-     * @example
-     * var dataset = DatasetBuilder().newDataset();
-     * dataset.addColumn("coluna1");
-     * dataset.addColumn("coluna2");
-     * dataset.addRow(["valor coluna 1", "valor coluna 2"]);
-     */
-    addRow(valores: string[]|object[]): void;
-
-    /**
-     * Adiciona uma linha à coleção que será persistida no cache de sincronização.
-     *
-     * Através dos campos da chave principal do Dataset (setKey) os registros
-     * serão localizados e alterados conforme os dados enviados pela função.
-     *
-     * Esta função só funciona se implementado na função onSync.
-     *
-     * @example
-     * var dataset = DatasetBuilder.newDataset();
-     * dataset.addColumn("Coluna1");
-     * dataset.addColumn("Coluna2");
-     * dataset.updateRow(["Valor coluna 1", "Valor coluna 2"]);
-     */
-    updateRow(valores: string[]|object[]): void;
-
-    /**
-     * Adiciona uma linha à coleção que será persistida no cache de sincronização.
-     *
-     * Caso o registro não exista ele será criado na base, caso contrário será atualizado.
-     *
-     * Através dos campos da chave principal do Dataset (setKey) os registros
-     * serão localizados e alterados conforme os dados enviados pela função.
-     *
-     * Esta função só funciona se implementado na função onSync.
-     *
-     * @example
-     * var dataset = DatasetBuilder.newDataset();
-     * dataset.addColumn("Coluna1");
-     * dataset.addColumn("Coluna2");
-     * dataset.addOrUpdateRow(["Valor coluna 1", "Valor coluna 2"]);
-     */
-    addOrUpdateRow(valores: string[]|object[]): void;
-
-    /**
-     * Adiciona uma linha à coleção que eliminará esses registros no cache de sincronização.
-     *
-     * Através dos campos da chave principal do Dataset (setKey) os registros
-     * serão localizados e alterados conforme os dados enviados pela função.
-     *
-     * Esta função só funciona se implementado na função onSync.
-     *
-     * @example
-     * var dataset = DatasetBuilder.newDataset();
-     * dataset.addColumn("Coluna1");
-     * dataset.addColumn("Coluna2");
-     * dataset.deleteRow(["Valor coluna 1", "Valor coluna 2"]);
-     */
-    deleteRow(valores: string[]|object[]): void;
-}
-
-/**
- * Resultado de uma consulta ao Dataset usando o WCM
- *
- * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
- */
-interface DatasetWcmResult {
-    /**
-     * O nome das colunas
-     */
-    columns: string[];
-
-    /**
-     * As propriedades do objeto são os nomes das colunas
-     */
-    values: object[];
-}
-
-/**
- * Indicativo das restrições ao sincronizar dados em Mobile
- */
-interface DatasetMobileSync {
-    /**
-     * As colunas (em letras maiúsculas) a serem salvas no Mobile
-     */
-    fields: string[];
-
-    /**
-     * Os filtros adicionais
-     */
-    constraints: Constraint[];
-
-    /**
-     * Campos da ordenação
-     */
-    sortFields: string[];
-}
-
-/**
- * Formato de Callback para consulta assíncrona ao Dataset usando o WCM
- *
- * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
- */
-interface DatasetWcmCallback {
-    /**
-     * Função que será executada em caso de sucesso
-     */
-    success: function (DatasetWcmResult);
-
-    /**
-     * Função que será executada em caso de falha
-     *
-     * @param jqXHR Objeto da JQuery
-     * @param textStatus
-     * @param errorThrown
-     */
-    error: function (object, string, string): void;
-}
-
-declare class Constraint {
-    fieldName: string;
-    initialValue: string;
-    finalValue: string;
-    constraintType: ConstraintType;
-
-    /**
-     * Indica que a constraint fará uma busca usando LIKE ao invés de =
-     */
-    setLikeSearch(likeSearch: boolean): void;
-
-    getFieldName(): string;
-    getInitialValue(): string;
-    getFinalValue(): string;
-}
-
-/**
- * Funções para manipulação de Dataset
- */
-declare namespace DatasetFactory {
-    /**
-     * Retorna o nome dos datasets disponíveis
-     *
-     * Para usar no HTML de formulário o arquivo vcXMLRPC.js precisa ser declarado: <script src="/webdesk/vcXMLRPC.js"></script>
-     */
-    declare function getAvailableDatasets(): string[];
-
-    /**
-     * Cria uma constraint para ser usada no método getDataset
-     *
-     * Para usar no HTML de formulário o arquivo vcXMLRPC.js precisa ser declarado: <script src="/webdesk/vcXMLRPC.js"></script>
-     * Para fazer uma pesquisa usando LIKE pelo formulário deve-se passar true no parâmetro searchLike ao invés de usar o método
-     * setLikeSearch do objeto Constraint.
-     */
-    declare function createConstraint(fieldName: string, initialValue: string, finalValue: string, constraintType: ConstraintType): Constraint;
-    declare function createConstraint(fieldName: string, initialValue: string, finalValue: string, constraintType: ConstraintType, searchLike: boolean): Constraint;
-
-    /**
-     * Pesquisa os dados de um dataset
-     *
-     * Para usar no HTML de formulário o arquivo vcXMLRPC.js precisa ser declarado: <script src="/webdesk/vcXMLRPC.js"></script>
-     *
-     * @param nomeDataset O nome do Dataset.
-     * @param campos Os campos que serão retornados.
-     * @param constraints Os filtros aplicados ao dataset.
-     * @param ordem Os campos que farão a ordenação do resultado. Pode-se acrescentar ;desc ao nome do campo para ordenar de forma decrescente.
-     *
-     * @example
-     * var constraints = [
-     *     DatasetFactory.createConstraint("colleaguePK.colleagueId", "adm", "adm", ConstraintType.MUST_NOT),
-     *     DatasetFactory.createConstraint("valor", "100", "999", ConstraintType.MUST)
-     * ];
-     * var dataset = DatasetFactory.getDataset("colleague", ["colleagueName"], constraints);
-     */
-    declare function getDataset(nomeDataset: string, campos?: string[], constraints?: Constraint[], ordem?: string[]): Dataset;
-
-    /**
-     * Pesquisa os dados de um dataset de forma assíncrona
-     *
-     * Disponível somente nas páginas que usam o arquivo /webdesk/vcXMLRPC.js.
-     *
-     * @example
-     * var constraints = [
-     *     DatasetFactory.createConstraint("colleaguePK.colleagueId", "adm", "adm", ConstraintType.MUST_NOT),
-     *     DatasetFactory.createConstraint("valor", "100", "999", ConstraintType.MUST)
-     * ];
-     * var dataset = DatasetFactory.getDataset("colleague", ["colleagueName"], constraints);
-     */
-    declare function getDataset(nomeDataset: string, campos?: string[], constraints?: Constraint[], ordem?: string[], callback: DatasetWcmCallback): void;
-}
-
-/**
- * Funções para criação de Dataset
- */
-declare namespace DatasetBuilder {
-    /**
-     * Cria um Dataset
-     *
-     * Usar somente ao criar datasets customizados.
-     */
-    declare function newDataset(): Dataset;
-}
-
-/**
- * Entidade Documento Relacionado
- */
-declare class RelatedDocumentDto {
-
-    /**
-     * Retorna o número do documento
-     *
-     * Usar em eventos do Fluig.
-     */
-    getDocumentId(): number;
-
-    /**
-     * Retorna o número do documento relacionado
-     *
-     * Usar em eventos do Fluig.
-     */
-    getRelatedDocumentId(): number;
-
-    /**
-     * Retorna a versão do documento
-     *
-     * Usar em eventos do Fluig.
-     */
-    getVersion(): number;
-
-    /**
-     * Retorna o código da empresa em que o documento foi publicado
-     *
-     * Usar em eventos do Fluig.
-     */
-    getCompanyId(): number;
-}
-
-/**
- * Configuração para uma requisição efetuada pelo método WCMAPI.Create
- */
-interface WcmApiRequestSettings {
-    url?: string;
-
-    /**
-     * Verbo HTTP utilizado na requisição (padrão é GET)
-     */
-    method?: string;
-
-    /**
-     * Tipo do envio.
-     *
-     * Pode ser:
-     * - application/x-www-form-urlencoded (padrão)
-     * - multipart/form-data (quando quer fazer envio de arquivos)
-     * - text/plain
-     */
-    contentType?: string;
-
-    /**
-     * Tipo do resultado esperado da requisição.
-     *
-     * O resultado da requisição será convertido para o tipo especificado e então
-     * enviado ao método success.
-     *
-     * Os tipos possíveis são:
-     * - xml
-     * - html
-     * - script
-     * - json
-     * - jsonp
-     * - text
-     */
-    dataType?: string;
-
-    /**
-     * Dados para enviar
-     */
-    data?: string|object;
-
-    /**
-     * Função que será executada em caso de sucesso
-     *
-     * @param data
-     * @param textStatus
-     * @param jqXHR Objeto da JQuery
-     */
-    success?: function (string|object, string, object): void;
-
-    /**
-     * Função que será executada em caso de falha
-     *
-     * @param jqXHR Objeto da JQuery
-     * @param textStatus
-     * @param errorThrown
-     */
-    error?: function (object, string, string): void;
-
-    /**
-     * Converter os dados para o padrão application/x-www-form-urlencoded
-     *
-     * Por padrão os dados são convertidos para application/x-www-form-urlencoded,
-     * mas você pode desabilitar essa conversão para poder enviar um DOMDocument
-     * ou outro tido de dado sem a conversão.
-     */
-    processData?: boolean;
-}
-
-
-/**
- * Consultar dados do ambiente da sessão via JS (Client Side)
- */
-declare namespace WCMAPI {
-    /**
-     * Endereço do servidor (incluindo protocolo e porta)
-     */
-    const serverURL: string;
-
-    /**
-     * ID do tenant ao qual o usuário está conectado
-     */
-    const organizationId: string;
-
-    /**
-     * Indica se usuário está logado
-     */
-    const userIsLogged: boolean;
-
-    /**
-     * Nome do usuário logado
-     */
-    const user: string;
-
-    /**
-     * Login do usuário logado
-     */
-    const userLogin: string;
-
-    /**
-     * Código (matrícula) do usuário logado
-     */
-    const userCode: string;
-
-    /**
-     * E-mail do usuário logado
-     */
-    const userEmail: string;
-
-    /**
-     * Indica se a sessão está expirada
-     */
-    const sessExpired: boolean;
-
-    /**
-     * Versão do fluig
-     */
-    const version: string;
-
-    /**
-     * Código do tenant ao qual o usuário está conectado
-     */
-    const tenantCode: string;
-
-    /**
-     * Raíz da URL do portal da plataforma
-     */
-    const serverContextURL: string;
-
-    /**
-     * Pega o endereço do servidor (incluindo protocolo e porta)
-     */
-    declare function getServerURL(): string;
-
-    /**
-     * Pega o ID do tenant ao qual o usuário está conectado
-     */
-    declare function getOrganizationId(): string;
-
-    /**
-     * Pega o código do tenant ao qual o usuário está conectado
-     */
-    declare function getTenantCode(): string;
-
-    /**
-     * Retorna a raíz da URL do portal da plataforma
-     */
-    declare function getServerContextURL(): string;
-
-    /**
-     * Envia uma requisição ao servidor do Fluig
-     *
-     * A requisição é feita pela JQuery.
-     * @see https://tdn.totvs.com/display/public/fluig/Consumo+de+um+WS+SOAP+de+um+Widget#ConsumodeumWSSOAPdeumWidget-ConsumirumWSSOAPdeumWidget
-     */
-    declare function Create(settings: WcmApiRequestSettings): void;
-
-    /**
-     * Encerra a sessão do usuário
-     */
-    declare function logoff(): void;
-}
-
-/**
- * Funções relacionadas a Documentos
- *
- * Usar em qualquer evento.
- */
-declare namespace docAPI {
-    /**
-     * Copia os arquivos físicos de um documento existente para a área de upload do usuário logado
-     * @returns Nomes dos arquivos que foram disponibilizados na área de upload
-     */
-    declare function copyDocumentToUploadArea(documentId: number, version: number): string[];
-}
-
-declare type ErrorCallback = (error: ErrorData, data: object) => void;
-declare type SimpleCallback = () => void;
-declare type DataCallback = (data: object) => void;
-
-declare type AutoCompleteOnTagCallback = (item: object, tag: object) => void;
-
-/**
- * Callback de Modal
- *
- * @param error Indica se houve erro
- * @param data Todo o conteúdo da propriedade content da modal
- */
-declare type ModalCallback = (error: boolean, data: string) => void;
-
-/**
- * Callback da mensagem de Confirmação
- *
- * @param result Resultado da confirmação (True se clicou em Sim)
- * @param element Botão clicado
- * @param data Evento disparado
- */
-declare type ConfirmCallback = (result: boolean, element: HTMLElement, event: Event) => void;
-
-/**
- * Callback de mensagem
- *
- * @param element Botão clicado
- * @param data Evento disparado
- */
-declare type MessageCallback = (element: HTMLElement, event: Event) => void;
-
-
-interface ErrorData {
-    message?: string;
-    responseText: object;
-}
-
-interface AutoCompleteOptions {
-    /**
-     * Tipo do autocomplete
-     *
-     * Pode ser (padrão é tag):
-     * - autocomplete
-     * - tag
-     * - tagAutocomplete
-     */
-    type?: string;
-
-    /**
-     * Item exibido na sugestão
-     *
-     * Obrigatório para autocomplete e tagAutocomplete
-     */
-    displayKey?: string;
-
-    /**
-     * Nome do dataset
-     *
-     * Opcional para autocomplete e tagAutocomplete
-     */
-    name?: string;
-
-    /**
-     * Determina o serviço utilizado para buscar as sugestões
-     */
-    source: {
-        url: string;
-        limit: 10,
-        offset: 0,
-        limitKey: string;
-        patternKey: string;
-        root: string;
-    };
-
-    /**
-     * Coloca o texto em negrito quando efetua a busca
-     */
-    highlight?: boolean;
-
-    /**
-     * Mínimo de caracteres antes de iniciar a busca
-     */
-    minLength?: number;
-
-    /**
-     * Se falso não exibirá as opções retornadas da busca
-     */
-    hint?: boolean;
-
-    /**
-     * Tempo limite para obter um resultado da busca
-     */
-    searchTimeout?: number;
-
-    /**
-     * Nome da classe utilizada na tag
-     */
-    tagClass?: string;
-
-    /**
-     * Máximo de tags permitidas para selecionar
-     */
-    maxTags?: number;
-
-    /**
-     * Permite selecionar a mesma tag várias vezes
-     */
-    allowDuplicates?: boolean
-
-    /**
-     * Evento disparado quando tentar adicionar uma tag repetida
-     */
-    onTagExists?: AutoCompleteOnTagCallback;
-
-    /**
-     * Evento disparado ao atingir o limite de tags
-     */
-    onMaxTags?: AutoCompleteOnTagCallback;
-
-    /**
-     * Largura máxima da tag
-     */
-    tagMaxWidth?: number;
-
-    /**
-     * Template da dica
-     */
-    templates?: {
-        tag: string;
-        suggestion: string;
-    };
-    
-    /**
-     * Objeto com o CSS para formatar uma tag removida
-     */
-    tagRemoveCss?: {
-        [property: string]: string;
-    };
-
-}
-
-interface AutoCompleteTag {
-    description: string;
-}
-
-declare class AutoComplete {
-    /**
-     * Adiciona uma tag
-     *
-     * Método para os tipos tag e tagAutocomplete
-     */
-    add(tag: AutoCompleteTag): void;
-
-    /**
-     * Atualiza uma tag para o tipo tag ou tagAutocomplete
-     *
-     * Método para os tipos tag e tagAutocomplete
-     */
-    update(tag: AutoCompleteTag): void;
-
-    /**
-     * Remove uma tag para o tipo tag ou tagAutocomplete
-     *
-     * Método para os tipos tag e tagAutocomplete
-     */
-    remove(tag: AutoCompleteTag): void;
-
-    /**
-     * Remove todas as tags
-     *
-     * Método para os tipos tag e tagAutocomplete
-     */
-    removeAll(): void;
-
-    /**
-     * Retorna todas as tags
-     *
-     * Método para os tipos tag e tagAutocomplete
-     */
-    items(): AutoCompleteTag[];
-
-    /**
-     * Abre a caixa de seleção
-     *
-     * Método para o tipo autocomplete
-     */
-    open(): void;
-
-    /**
-     * Fecha a caixa de seleção
-     *
-     * Método para o tipo autocomplete
-     */
-    close(): void;
-
-    /**
-     * Pega o valor do elemento
-     *
-     * Método para o tipo autocomplete
-     */
-    val(): string;
-
-    /**
-     * Atribui um valor ao elemento
-     *
-     * Método para o tipo autocomplete
-     */
-    val(value: string): void;
-
-
-    /**
-     * Coloca o foco no autocomplete
-     */
-    focus(): void;
-
-    /**
-     * Pega o elemento input do autocomplete
-     */
-    input(): HTMLElement;
-
-    /**
-     * Atualiza o autocomplete
-     *
-     * Útil para quando fizer mudanças manuais no elemento.
-     */
-    refresh(): void;
-
-    /**
-     * Destrói o autocomplete
-     */
-    destroy(): void;
-}
-
-interface LoadingSettings {
-    /**
-     * Mensagem exibida
-     *
-     * Padrão: "Loading..."
-     */
-    textMessage?: string,
-
-    /**
-     * Título exibido quando theme == true
-     *
-     * Padrão: ""
-     */
-    title?: string,
-
-    /**
-     * Estilo para o bloco de carregamento
-     *
-     * Objeto CSS aceito pela JQuery.
-     *
-     * Padrão: null
-     */
-    css?: object,
-
-    /**
-     * Estilo para o overlay
-     *
-     * Objeto CSS aceito pela JQuery.
-     *
-     * Padrão: null
-     */
-    overlayCSS?: object,
-
-    /**
-     * Estilo para o cursor antes de bloquear
-     *
-     * Padrão: ""
-     */
-    cursorReset?: string,
-
-    /**
-     * Índice Z-Index
-     *
-     * Padrão: null
-     */
-    baseZ?: number,
-
-    /**
-     * Indica se será centralizado na tela
-     *
-     * Padrão: true
-     */
-    centerX?: boolean,
-
-    /**
-     * Indica se será centralizado na tela
-     *
-     * Padrão: true
-     */
-    centerZ?: boolean,
-
-    /**
-     * Desabilita eventos de teclado e mouse
-     *
-     * Padrão: true
-     */
-    bindEvents?: boolean,
-
-    /**
-     * Tempo, em ms, do efeito de transição no bloqueio
-     *
-     * Se for 0 não terá efeito de transição.
-     */
-    fadeIn?: number,
-
-    /**
-     * Tempo, em ms, do efeito de transição no desbloqueio
-     *
-     * Se for 0 não terá efeito de transição.
-     */
-    fadeOut?: number,
-
-    /**
-     * Tempo, em ms, para aguardar antes de desbloquear
-     *
-     * Se for 0 vai desabilitar o auto desbloqueio.
-     */
-    timeout?: number,
-
-    /**
-     * Indica se será exibido o overlay
-     *
-     * Padrão: true
-     */
-    showOverlay?: boolean,
-
-    /**
-     * Função para ser executado após o efeito de transição do bloqueio
-     */
-    onBlock?: SimpleCallback,
-
-    /**
-     * Função para ser executado após o efeito de transição do desbloqueio
-     *
-     * O elemento desbloqueado será passado à função.
-     */
-    onUnBlock?: DataCallback,
-
-    /**
-     * Indica se vai ignorar um bloqueio quando já está bloqueado
-     *
-     * Padrão: false
-     */
-    ignoreIfBlocked?: boolean
-}
-
-declare class Loading {
-    /**
-     * Exibe a tela de carregamento
-     */
-    show(): void;
-
-    /**
-     * Esconde a tela de carregamento
-     */
-    hide(): void;
-}
-
-interface FilterSourceSettings {
-    /**
-     * URL que trará os dados
-     */
-    url: string,
-
-    /**
-     * Tipo do conteúdo retornado. Ex: application/json
-     */
-    contentType: string,
-    root: string,
-    pattern: string,
-    limit: number,
-    offset: number,
-    patternKey: string,
-    limitKey: string,
-    offsetKey: string
-}
-
-interface FilterStyleSettings {
-    /**
-     * The selector for the autocomplete tag template.
-     */
-    templateTag?: string,
-
-    /**
-     * The selector for the autocomplete suggestion template.
-     */
-    templateSuggestion?: string,
-
-    /**
-     * The selector for the autocomplete tip message template.
-     */
-    templateTipMessage?: string,
-
-    /**
-     * Class name for the tags. Padrão é tag-gray
-     */
-    autocompleteTagClass?: string,
-
-    /**
-     * CSS class used to table selected lines.
-     */
-    tableSelectedLineClass?: string,
-
-    /**
-     * Receives the waiting time to make the request. This is important not to open a request for each character typed.
-     */
-    tableStyle?: string,
-
-    /**
-     * Defines a CSS class to apply to the table. Padrão é fluigicon-zoom-in
-     *
-     * Ex .: 'table-hover table-bordered table-striped'.
-     */
-    filterIconClass?: string
-}
-
-interface FilterTableSettings {
-    header: FilterTableHeader[],
-
-    /**
-     * Pode ser um array de chaves do objeto ou a classe CSS do template mustache.
-     *
-     * A sequência do array deve ser a mesma de header.
-     */
-    renderContent: string|string[],
-    formatData?: function
-}
-
-interface FilterTableHeader {
-    /**
-     * Título da coluna
-     */
-    title?: string,
-
-    /**
-     * Atributo do objeto que será utilizado para ordenar essa coluna. Padrão é vazio.
-     *
-     * Caso não seja passado utilizará o conteúdo padrão da coluna que foi
-     * indicado em renderContent da tabela.
-     */
-    dataorder?: string,
-
-    /**
-     * Indica se será a coluna ordenada por padrão. Padrão é false.
-     */
-    standard?: boolean,
-
-    /**
-     * Tamanho visual da coluna. Utiliza uma das classes CSS col-
-     */
-    size?: string,
-
-    /**
-     * Indica se a coluna deverá ser exibida. Padrão é true
-     */
-    display?: boolean
-}
-
-interface FilterSettings {
-    /**
-     * Campo que será exibido ao selecionar um valor
-     */
-    displayKey: string,
-
-    /**
-     * Configuração da fonte de dados
-     */
-    source: FilterSourceSettings,
-
-    /**
-     * Configuração da Tabela de exibição dos itens
-     */
-    table: FilterTableSettings,
-
-    /**
-     * Configuração dos estilos
-     */
-    style?: FilterStyleSettings,
-
-    /**
-     * Altura da tabela (preferencialmente em px). Padrão: 260px
-     */
-    tableHeight?: string,
-
-    /**
-     * Permite múltiplas seleções? Padrão: false
-     */
-    multiSelect?: boolean,
-
-    /**
-     * Tempo limite (em ms) da busca na fonte de dados. Padrão 200ms
-     */
-    searchTimeout?: number,
-
-    /**
-     * Quantidade mínima de caracteres antes de iniciar a busca. Padrão 1
-     */
-    minLength?: number,
-
-    /**
-     * Limite de caracteres exibidos no item selecionado. Padrão: 200
-     */
-    tagMaxWidth?: number
-}
-
-interface ToastSettings {
-    /**
-     * Título do Toast. Diferença é que fica em negrito.
-     */
-    title?: string,
-
-    /**
-     * Mensagem repassada
-     */
-    message?: string,
-
-    /**
-     * Tipos possíveis: success, danger, info and warning
-     * Padrão: success
-     */
-    type?: string,
-
-    /**
-     * Tempo, em milissegundos, ou as strings slow ou fast.
-     *
-     * O tempo padrão são 4000 milissegundos.
-     * slow representa 2000 e fast representa 6000.
-     *
-     * O Toast do tipo danger ignora o timeout.
-     */
-    timeout?: number|string
-}
-
-declare class FluigcFilter {
-    getSelectedItems(): object[];
-    add(item: object): void;
-    removeAll(): void;
-
-    /**
-     * Escuta eventos do filtro.
-     *
-     * Importante: não coloque mais de um filtro em um mesmo pai, pois os eventos
-     * serão escutados por todos os filtros irmãos.
-     *
-     * O filtro dispara os seguintes eventos:
-     * - fluig.filter.load.complete => quando o filtro termina de carregar
-     * - fluig.filter.item.added => quando um item é selecionado/adicionado
-     *
-     * @param event
-     * @param callback
-     */
-    on(event: string, callback: SimpleCallback|DataCallback): void;
-}
-
-declare class FluigcModal {
-    /**
-     * Remove (fecha) a Modal
-     */
-    remove(): void;
-
-    /**
-     * Indica se a Modal está visível
-     */
-    isOpen(): boolean;
-}
-
-/**
- * Configuração dos botões da Modal
- */
-interface ModalActionSettings {
-    /**
-     * Rótulo exibido
-     */
-    label: string;
-
-    /**
-     * Evento ouvido em bindings.global da SuperWidget
-     *
-     * Precisa ter o prefixo data-
-     * Exemplo de valor: data-save-settings
-     */
-    bind?: string;
-
-    /**
-     * Estilo utilizado no botão
-     *
-     * Por padrão o primeiro botão recebe btn-primary
-     * e os demais recebem btn-default
-     */
-    classType?: string;
-
-    /**
-     * Indica se o botão fechará a Modal
-     *
-     * Por padrão é false.
-     *
-     * IMPORTANTE: se for true ele não executará o bind registrado.
-     */
-    autoClose?: boolean;
-}
-
-/**
- * Configurações da Mensagem de Confirmação
- */
-interface ConfirmSettings {
-    /**
-     * Título
-     */
-    title: string;
-
-    /**
-     * Mensagem
-     */
-    message: string;
-
-    /**
-     * Texto do Botão Sim
-     *
-     * Padrão: Sim
-     */
-    labelYes?: string;
-
-    /**
-     * Texto do Botão Não
-     *
-     * Padrão: Não
-     */
-    labelNo?: string;
-}
-
-/**
- * Configurações da Mensagem de Alerta
- */
-interface AlertSettings {
-    /**
-     * Título
-     */
-    title: string;
-
-    /**
-     * Mensagem
-     */
-    message: string;
-
-    /**
-     * Texto do Botão Ok
-     *
-     * Padrão: OK
-     */
-    label?: string;
-}
-
-/**
- * Configurações da Mensagem de Erro
- */
-interface ErrorSettings {
-    /**
-     * Título
-     */
-    title: string;
-
-    /**
-     * Mensagem
-     */
-    message: string;
-
-    /**
-     * Detalhes do erro
-     *
-     * Pode quebrar linha utilizando \n
-     */
-    details: string;
-}
-
-/**
- * Configurações da Modal
- */
-interface ModalSettings {
-    /**
-     * Título exibido na modal
-     */
-    title: string;
-
-    /**
-     * Conteúdo da Modal
-     *
-     * Pode ser uma string HTML, template Mustache
-     * ou retorno de uma chamada a WCMAPI.convertFtlAsync
-     */
-    content: string;
-
-    /**
-     * ID da Modal
-     *
-     * Por padrão é fluig-modal.
-     * A cada chamada o elemento HTML da modal é construído e
-     * então destruído quando a modal é fechada.
-     */
-    id?: string;
-
-    /**
-     * Tamanho da Modal
-     *
-     * Pode ser: small | large | full
-     */
-    size: string;
-
-    /**
-     * Botões da Modal
-     */
-    actions: ModalActionSettings[];
-}
-
-interface CalendarSettings {
-    /**
-     * Indica se exibirá a seleção de Data. Padrão true.
-     */
-    pickDate?: boolean;
-
-    /**
-     * Indica se exibirá a seleção de Tempo. Padrão false.
-     */
-    pickTime?: boolean;
-
-    /**
-     * Indica se usará minutos. Padrão true.
-     */
-    useMinutes?: boolean;
-
-    /**
-     * Indica se usará segundos. Padrão true.
-     */
-    useSeconds?: boolean;
-
-    /**
-     * Indica se selecionará automaticamente a data corrente. Padrão true
-     */
-    useCurrent?: boolean;
-
-    /**
-     * Valor a incrementar os minutos quando clicar nas setas de subir/descer
-     */
-    minuteStepping?: number;
-
-    /**
-     * Define uma data mínima selecionável
-     */
-    minDate?: string;
-
-    /**
-     * Define a data máxima selecionável
-     */
-    maxDate?: string;
-
-    /**
-     * Exibe o indicador do dia de hoje
-     */
-    showToday?: boolean;
-
-    /**
-     * Código do idioma. Padrão pt-br
-     */
-    language?: string;
-
-    /**
-     * Data padrão
-     *
-     * Aceita também data da Moment.js
-     */
-    defaultDate?: string|Date;
-
-    /**
-     * Datas que não podem ser selecionadas
-     *
-     * Aceita também data da Moment.js
-     */
-    disabledDates?: string[]|Date[];
-
-    /**
-     * Únicas datas que  podem ser selecionadas
-     *
-     * Aceita também data da Moment.js
-     */
-    enabledDates?: string[]|Date[];
-
-    /**
-     * Use "strict" quando validar datas. Padrão false
-     */
-    useStrict?: boolean;
-
-    /**
-     * Exibe a seleção de Tempo ao lado da seleção de Data. Padrão false.
-     */
-    sideBySide?: boolean;
-
-    /**
-     * Dias da semana que não pode ser selecionados
-     *
-     * Dia da semana inicia em 0, para domingo.
-     */
-    daysOfWeekDisabled?: number[];
-}
-
-declare class Calendar {
-    /**
-     * Configura a data mínima que pode ser selecionada
-     *
-     * @param date Data como string (formato pt-br), Date ou moment
-     */
-    setMinDate(date: string|Date): void;
-
-    /**
-     * Configura a data máxima que pode ser selecionada
-     *
-     * @param date Data como string (formato pt-br), Date ou moment
-     */
-    setMaxDate(date: string|Date): void;
-    show(): void;
-    disable(): void;
-    enable(): void;
-
-    /**
-     * Atribui a data selecionada
-     *
-     * @param date Data como string (formato pt-br), Date ou moment
-     */
-    setDate(date: string|Date): void;
-
-    /**
-     * Pega a data como objeto moment (da lib momentjs)
-     */
-    getDate(): any;
-}
-
-interface WidgetUpdatePreferences {
-    /**
-     * Indica se será uma chamada assíncrona
-     */
-    async: boolean;
-
-    /**
-     * Função executada em caso de sucesso
-     *
-     * @param data
-     */
-    success?: function (object): void;
-
-    /**
-     * Função executada em caso de falha
-     *
-     * @param jqXHR Objeto da JQuery
-     * @param message Mensagem do erro
-     * @param errorData Objeto retornado pelo erro
-     */
-    fail?: function (object, string, errorData): void;
-}
-
-declare namespace WCMSpaceAPI.PageService {
-    declare function UPDATEPREFERENCES(settings: WidgetUpdatePreferences, instanceId: number, preferences: object): void;
-}
-
-declare namespace FLUIGC {
-    /**
-     * Cria um campo com auto-complete
-     *
-     * Eventos disponíveis para autocomplete:
-     * - fluig.autocomplete.cursorchanged
-     * - fluig.autocomplete.opened
-     * - fluig.autocomplete.closed
-     * - fluig.autocomplete.selected
-     * - fluig.autocomplete.autocompleted
-     * - fluig.autocomplete.beforeItemAdd
-     * - fluig.autocomplete.itemAdded
-     * - fluig.autocomplete.beforeItemUpdate
-     * - fluig.autocomplete.itemUpdated
-     * - fluig.autocomplete.beforeItemRemove
-     * - fluig.autocomplete.itemRemoved
-     *
-     * @param target Seletor utilizado na JQuery
-     * @param options Opções adicionais para o autocomplete
-     * @param callback Função executada após trazer as respostas para o auto-complete
-     */
-    declare function autocomplete(target: string, options: AutoCompleteOptions, callback: ErrorCallback): AutoComplete;
-
-    /**
-     * Cria um campo filter em um select (é o Zoom feito manualmente)
-     *
-     * Para usar em formulário deve-se incluir o css /style-guide/css/fluig-style-guide-filter.min.css
-     * e o script /style-guide/js/fluig-style-guide-filter.min.js
-     *
-     * Para usar em Widget deve-se incluir a instrução application.resource.component.1=fluigfilter
-     * (substituindo o 1 por um valor ainda não utilizado) no arquivo application.info
-     *
-     * @param target Seletor utilizado na JQuery
-     * @param settings Configurações do filtro
-     */
-    declare function filter(target: string, settings: FilterSettings): FluigcFilter;
-
-    /**
-     * Cria uma caixa de seleção para tratar data e horário
-     *
-     * @param target Seletor utilizado na JQuery
-     * @param settings Configurações do calendário
-     */
-    declare function calendar(target: string, settings: CalendarSettings): Calendar;
-
-    /**
-     * Exibe uma mensagem simples no topo da página.
-     *
-     * Muito utilizado para substituir alert do JS.
-     */
-    declare function toast(settings: ToastSettings): void;
-
-    /**
-     * Cria uma tela de carregamento em elemento específico ou na janela inteira
-     *
-     * Caso o objeto window seja passado a tela de carregamento ocupará a janela inteira.
-     *
-     * @param selector Uma string com seletor JQuery ou objeto window
-     * @param settings Configurações possíveis para o Loading
-     */
-    declare function loading(selector: string|Window, settings: LoadingSettings): Loading;
-
-    /**
-     * Cria uma Modal
-     *
-     * @param settings Configurações
-     * @param callback Função para executar após a criação da modal
-     */
-    declare function modal(settings: ModalSettings, callback: ModalCallback): FluigcModal;
-}
-
-declare namespace FLUIGC.message {
-    /**
-     * Cria uma Mensagem de Confirmação
-     *
-     * @param settings Configurações
-     * @param callback Função para executar após o usuário responder a confirmação
-     */
-    declare function confirm(settings: ConfirmSettings, callback: ConfirmCallback): void;
-
-    /**
-     * Cria uma Mensagem de Alerta
-     *
-     * @param settings Configurações
-     * @param callback Função para executar após o usuário fechar o alerta
-     */
-    declare function alert(settings: AlertSettings, callback: MessageCallback): void;
-
-    /**
-     * Cria uma Mensagem de Erro
-     *
-     * @param settings Configurações
-     * @param callback Função para executar após o usuário fechar o erro
-     */
-    declare function error(settings: ErrorSettings, callback: MessageCallback): void;
-}
-
-declare namespace FLUIGC.calendar {
-    /**
-     * Formata uma data em uma string de acordo com a formatação indicada.
-     *
-     * @see https://style.fluig.com/javascript.html#fluig-calendar
-     *
-     * @param date Data a ser formatada
-     * @param format Formatação
-     * @param language Idioma (padrão pt-br)
-     */
-    declare function formatDate(date: Date, format: string, language?: string): string;
-}
-
-/**
- * Callback de Inicialização do Botão Switch
- *
- * @param event Evento disparado
- * @this HTMLElement
- */
-declare type SwitchInitCallback = (event: JQuery.Event) => void;
-
-/**
- * Callback de mudança de estado do Botão Switch
- *
- * @param event Evento disparado
- * @param checked Indica se está selecionado
- * @this HTMLElement
- */
-declare type SwitchChangeCallback = (event: JQuery.Event, checked: boolean) => void;
-
-/**
- * Botão Switch
- *
- * @see https://style.fluig.com/javascript.html#switch-button
- */
-declare namespace FLUIGC.switcher {
-
-    /**
-     * Transforma um checkbox ou radio em um botão switch
-     *
-     * Ao inicializar o botão switch será feita a leitura das opções
-     * do elemento HTML (os atributos do checkbox ou radio) para orientar
-     * como o botão deve ser.
-     *
-     * As opções no checkbox/radio são:
-     *
-     * | Atributo | Valores | Padrão |
-     * |----------|---------|--------|
-     * | checked | true, false | false |
-     * | data-size | null, 'mini', 'small', 'normal', 'large' | null|
-     * | data-animate | true, false | true|
-     * | disabled | true, false | false|
-     * | readonly | true, false | false|
-     * | data-on-color | 'primary', 'info', 'success', 'warning', 'danger', 'default' | 'primary'|
-     * | data-off-color | 'primary', 'info', 'success', 'warning', 'danger', 'default' | 'default'|
-     * | data-on-text |  | 'ON'|
-     * | data-off-text |  | 'OFF'|
-     *
-     * @tutorial https://style.fluig.com/javascript.html#switch-button
-     *
-     * @param element Seletor JQuery ou Objeto JQuery
-     */
-    declare function init(element: string|JQuery): void;
-
-    /**
-     * Transforma todos os checkbox e radio de um container em botões switch
-     *
-     * Ao inicializar o botão switch será feita a leitura das opções
-     * do elemento HTML (os atributos do checkbox ou radio) para orientar
-     * como o botão deve ser.
-     *
-     * As opções no checkbox/radio são:
-     *
-     * | Atributo | Valores | Padrão |
-     * |----------|---------|--------|
-     * | checked | true, false | false |
-     * | data-size | null, 'mini', 'small', 'normal', 'large' | null|
-     * | data-animate | true, false | true|
-     * | disabled | true, false | false|
-     * | readonly | true, false | false|
-     * | data-on-color | 'primary', 'info', 'success', 'warning', 'danger', 'default' | 'primary'|
-     * | data-off-color | 'primary', 'info', 'success', 'warning', 'danger', 'default' | 'default'|
-     * | data-on-text |  | 'ON'|
-     * | data-off-text |  | 'OFF'|
-     *
-     * @tutorial https://style.fluig.com/javascript.html#switch-button
-     *
-     * @param parentElement Seletor JQuery, ou Objeto, do elemento pai
-     * @param fieldName Nome do input deve iniciar com o valor indicado
-     */
-    declare function initAll(parentElement: string|JQuery, fieldName?: string): void;
-
-    /**
-     * Pega o estado do botão
-     *
-     * @param element Seletor JQuery ou Objeto JQuery
-     */
-    declare function getState(element: string|JQuery): boolean;
-
-    /**
-     * Configura o estado como checked
-     *
-     * @param element Seletor JQuery ou Objeto JQuery
-     */
-    declare function setTrue(element: string|JQuery): void;
-
-    /**
-     * Configura o estado como false (não selecionado)
-     *
-     * @param element Seletor JQuery ou Objeto JQuery
-     */
-    declare function setFalse(element: string|JQuery): void;
-
-    /**
-     * Alterna o estado do botão
-     *
-     * @param element Seletor JQuery ou Objeto JQuery
-     */
-    declare function toggleState(element: string|JQuery): void;
-
-    /**
-     * Habilita o botão (remove disabled do checkbox/radio)
-     *
-     * @param element Seletor JQuery ou Objeto JQuery
-     */
-    declare function enable(element: string|JQuery): void;
-
-    /**
-     * Desabilita o botão (coloca disabled no checkbox/radio)
-     *
-     * Cuidado: inputs desabilitados não são enviados pelo formulário.
-     *
-     * @param element Seletor JQuery ou Objeto JQuery
-     */
-    declare function disable(element: string|JQuery): void;
-
-    /**
-     * Indica se é para o botão ser somente leitura
-     *
-     * @param element Seletor JQuery ou Objeto JQuery
-     */
-    declare function isReadOnly(element: string|JQuery, readOnly: boolean): void;
-
-    /**
-     * Remove o botão switch
-     *
-     * @param element Seletor JQuery ou Objeto JQuery
-     */
-    declare function destroy(element: string|JQuery): void;
-
-    /**
-     * Evento disparado quando iniciar um botão Switch
-     *
-     * @param element Seletor JQuery ou Objeto JQuery
-     * @param callback Função executada ao disparar o evento
-     */
-    declare function onInit(element: string|JQuery, callback: SwitchInitCallback): void;
-
-    /**
-     * Evento disparado houver mudança de estado do botão Switch
-     *
-     * @param element Seletor JQuery ou Objeto JQuery
-     * @param callback Função executada ao disparar o evento
-     */
-    declare function onChange(element: string|JQuery, callback: SwitchChangeCallback): void;
-}
-
-interface IwsConsultaSQL {
-    /**
-     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
-     *
-     * @param {string} sql Código (ID) do SQL cadastrado no RM
-     * @param {number} coligadaNumber
-     * @param {string} systemCode
-     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
-     */
-    realizarConsultaSQL(sql:string, coligadaNumber:number, systemCode:string, parameters:string): string;
-}
-
-declare namespace java.lang {
-    declare class Object {
-        /**
-         * Retorna o valor do objeto como uma string
-         */
-        toString(): string;
-    }
-}
-
-declare namespace java.text {
-
-    /**
-     * Formatador de Datas
-     *
-     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
-     */
-    declare class SimpleDateFormat {
-        /**
-         * Cria um novo formatador de datas com o padrão indicado
-         *
-         * Exemplos:
-         *
-         * - "dd/MM/yyyy" -> data no formato pt-BR
-         * - "yyyy-MM-dd" -> data no formato ISO
-         * - "HH:mm" -> Hora (24h) e minuto
-         * - "yyyy-MM-dd'T'HH:mm:ss.SSSZ" -> Data completa (Ex: 2021-07-04T12:08:56.235-0700)
-         *
-         * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
-         */
-        constructor(formato: string);
-
-        /**
-         * Retorna a data formatada conforme o padrão da formatação
-         */
-        format(data: java.util.Date): string;
-
-        /**
-         * Converte uma string, formatada como indicado no construtor, em um objeto Date
-         */
-        parse(dataFormatada: string): java.util.Date;
-    }
-}
-
-declare namespace javax.naming {
-    /**
-     * Inicia um Contexto
-     */
-    declare class InitialContext {
-
-        /**
-         * Recupera o DataSource do Banco de Dados
-         *
-         * @param {string} dataSource O nome do dataSource. Ex: /jdbc/PostgreSqlDS
-         * @throws Exception
-         */
-        lookup(dataSource: string): javax.sql.DataSource;
-
-        /**
-         * Fecha o contexto ao invés de aguardar o coletor de lixo
-         */
-        close(): void;
-    }
-}
-
-declare namespace javax.sql {
-    declare class DataSource {
-        /**
-         * Recupera a Conexão com o Banco de Dados
-         *
-         * @throws Exception
-         */
-        getConnection(): Connection;
-    }
-
-    /**
-     * Conexão com o Banco de Dados
-     *
-     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html
-     */
-    declare class Connection {
-        /**
-         * Cria o objeto que executará o SQL
-         *
-         * @throws Exception
-         */
-        createStatement(): Statement;
-
-        /**
-         * Encerra a conexão ao invés de aguardar o coletor de lixo
-         */
-        close(): void;
-    }
-
-    /**
-     * Objeto que executa uma instrução SQL
-     *
-     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html
-     */
-    declare class Statement {
-        /**
-         * Executa um SQL que deve ser uma consulta (SELECT)
-         *
-         * @throws Exception
-         */
-        executeQuery(sql: string): ResultSet;
-
-        /**
-         * Executa um SQL que modifica algo no banco (INSERT, UPDATE ou DELETE)
-         *
-         * @returns {number} Quantidade de registros afetados
-         * @throws Exception
-         */
-        executeUpdate(sql: string): number;
-
-        /**
-         * Libera os recursos da execução imediatamente ao invés de aguardar o coletor de lixo
-         */
-         close(): void;
-    }
-
-    /**
-     * Representa o resultado de uma consulta SQL
-     *
-     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
-     */
-    declare class ResultSet {
-
-        /**
-         * Move o cursor para o primeiro resultado da consulta
-         *
-         * @returns {boolean} Retorna true se moveu o cursor
-         */
-        first(): boolean;
-
-        /**
-         * Move o cursor para o último resultado da consulta
-         *
-         * @returns {boolean} Retorna true se moveu o cursor
-         */
-        last(): boolean;
-
-        /**
-         * Move o cursor para o próximo resultado da consulta
-         *
-         * @returns {boolean} Retorna true se moveu o cursor
-         */
-        next(): boolean;
-
-        /**
-         * Move o cursor para o resultado anterior da consulta
-         *
-         * @returns {boolean} Retorna true se moveu o cursor
-         */
-        previous(): boolean;
-
-        /**
-         * Pega o número, tipos e propriedades das colunas retornadas na consulta
-         */
-        getMetaData(): ResultSetMetaData;
-
-        /**
-         * Retorna o valor da coluna como um Objeto Java
-         *
-         * Há vários métodos get para obter o valor da coluna como objetos específicos
-         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
-         */
-        getObject(columnIndex: number): java.lang.Object;
-        getObject(columnLabel: string): java.lang.Object;
-
-        /**
-         * Retorna o valor da coluna como uma string
-         *
-         * Há vários métodos get para obter o valor da coluna como objetos específicos
-         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
-         */
-        getString(columnIndex: number): string;
-        getString(columnLabel: string): string;
-
-        /**
-         * Retorna o valor da coluna como um boolean
-         *
-         * Há vários métodos get para obter o valor da coluna como objetos específicos
-         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
-         */
-        getBoolean(columnIndex: number): boolean;
-        getBoolean(columnLabel: string): boolean;
-
-        /**
-         * Retorna o valor da coluna como objeto Date
-         *
-         * Esse método retorna um java.sql.Date que herda de java.util.Date.
-         * Para evitar retrabalho deixei como java.util.Date mesmo.
-         *
-         * Há vários métodos get para obter o valor da coluna como objetos específicos
-         * do Java, tais como byte, java.sql.Blob etc.
-         */
-        getDate(columnIndex: number): java.util.Date;
-        getDate(columnLabel: string): java.util.Date;
-
-        /**
-         * Libera o resultado da consulta imediatamente ao invés de aguardar o coletor de lixo
-         */
-        close(): void;
-    }
-
-    declare class ResultSetMetaData {
-        /**
-         * Pega o total de colunas da consulta
-         */
-        getColumnCount(): number;
-
-        /**
-         * Pega o Nome da Coluna (label)
-         */
-        getColumnName(column: number): string;
-    }
 }
