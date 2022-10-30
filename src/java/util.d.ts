@@ -448,7 +448,7 @@ declare namespace java.util {
         get(campo: number): number;
 
         /**
-         * Retorna o valor do campo indicado
+         * Atribui o valor ao campo indicado
          *
          * @param {number} campo Uma das constantes da classe indicando o campo
          * @param {number} valor O valor que será atribuído ao campo
