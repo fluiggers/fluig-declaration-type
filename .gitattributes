@@ -7,5 +7,3 @@ package.json export-ignore
 README.md export-ignore
 gulpfile.js export-ignore
 src export-ignore
-* linguist-vendored
-jsconfig.json linguist-vendored=false
