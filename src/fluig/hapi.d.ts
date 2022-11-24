@@ -52,6 +52,25 @@ declare namespace hAPI {
     declare function addCardChild(tableName: string, cardData: java.util.HashMap<string, string>): void;
 
     /**
+     * Remove uma linha de uma tabela Pai X Filho
+     * 
+     * Caso queira utilizar este método em um laço de repetição se atente a percorrer do
+     * último registro para o primeiro, pois o método reordena os índices. Em uma tabela 
+     * com 3 linhas ao remover a linha 1 terá a linha 2 reordenada para 1, e a 
+     * linha 3 será reordenada para linha 2.
+     * 
+     * @example
+     * var indexes = hAPI.getChildrenIndexes("tableName");
+     * for (var i = indexes.length - 1; i >= 0; --i) {
+     *     hAPI.removeCardChild("tableName", indexes[i]);
+     * }
+     * 
+     * @param tableName Nome da tabela pai-filho
+     * @param index Índice da linha a ser removida
+     */
+    declare function removeCardChild(tableName: string, index: number): void;
+
+    /**
      * Encaminha o processo para uma determinada atividade
      *
      * Deve ser usado para tomar decisões em atividades automáticas de listener (AutomaticTasks).
