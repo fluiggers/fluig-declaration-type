@@ -53,18 +53,18 @@ declare namespace hAPI {
 
     /**
      * Remove uma linha de uma tabela Pai X Filho
-     * 
+     *
      * Caso queira utilizar este método em um laço de repetição se atente a percorrer do
-     * último registro para o primeiro, pois o método reordena os índices. Em uma tabela 
-     * com 3 linhas ao remover a linha 1 terá a linha 2 reordenada para 1, e a 
+     * último registro para o primeiro, pois o método reordena os índices. Em uma tabela
+     * com 3 linhas ao remover a linha 1 terá a linha 2 reordenada para 1, e a
      * linha 3 será reordenada para linha 2.
-     * 
+     *
      * @example
      * var indexes = hAPI.getChildrenIndexes("tableName");
      * for (var i = indexes.length - 1; i >= 0; --i) {
      *     hAPI.removeCardChild("tableName", indexes[i]);
      * }
-     * 
+     *
      * @param tableName Nome da tabela pai-filho
      * @param index Índice da linha a ser removida
      */
@@ -279,9 +279,9 @@ declare namespace hAPI {
     /**
      * Retorna os campos filhos, e seus valores, de uma tabela pai.
      *
-     * Retorna um objeto com a propriedade sendo o nome do campo e seus valores.
+     * Retorna um objeto Map com a propriedade seu valor.
      */
-    declare function getChildrenFromTable(tableName: string): object;
+    declare function getChildrenFromTable(tableName: string): java.util.Map<string, string>;
 
     /**
      * Retorna os índices dos campos filhos de uma tabela pai.
