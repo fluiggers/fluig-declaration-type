@@ -54,33 +54,33 @@ interface AutoCompleteOptions {
      * - tag
      * - tagAutocomplete
      */
-    type?: string;
+    type?: string;
 
     /**
      * Item exibido na sugestão
      *
      * Obrigatório para autocomplete e tagAutocomplete
      */
-    displayKey?: string;
+    displayKey?: string;
 
     /**
      * Nome do dataset
      *
      * Opcional para autocomplete e tagAutocomplete
      */
-    name?: string;
+    name?: string;
 
     /**
      * Determina o serviço utilizado para buscar as sugestões
      */
     source: {
-        url: string;
-        limit: 10,
-        offset: 0,
-        limitKey: string;
-        patternKey: string;
-        root: string;
-    };
+        url: string;
+        limit: 10,
+        offset: 0,
+        limitKey: string;
+        patternKey: string;
+        root: string;
+    };
 
     /**
      * Coloca o texto em negrito quando efetua a busca
@@ -90,62 +90,62 @@ interface AutoCompleteOptions {
     /**
      * Mínimo de caracteres antes de iniciar a busca
      */
-    minLength?: number;
+    minLength?: number;
 
     /**
      * Se falso não exibirá as opções retornadas da busca
      */
-    hint?: boolean;
+    hint?: boolean;
 
     /**
      * Tempo limite para obter um resultado da busca
      */
-    searchTimeout?: number;
+    searchTimeout?: number;
 
     /**
      * Nome da classe utilizada na tag
      */
-    tagClass?: string;
+    tagClass?: string;
 
     /**
      * Máximo de tags permitidas para selecionar
      */
-    maxTags?: number;
+    maxTags?: number;
 
     /**
      * Permite selecionar a mesma tag várias vezes
      */
-    allowDuplicates?: boolean
+    allowDuplicates?: boolean
 
     /**
      * Evento disparado quando tentar adicionar uma tag repetida
      */
-    onTagExists?: AutoCompleteOnTagCallback;
+    onTagExists?: AutoCompleteOnTagCallback;
 
     /**
      * Evento disparado ao atingir o limite de tags
      */
-    onMaxTags?: AutoCompleteOnTagCallback;
+    onMaxTags?: AutoCompleteOnTagCallback;
 
     /**
      * Largura máxima da tag
      */
-    tagMaxWidth?: number;
+    tagMaxWidth?: number;
 
     /**
      * Template da dica
      */
-    templates?: {
-        tag: string;
-        suggestion: string;
-    };
-    
+    templates?: {
+        tag: string;
+        suggestion: string;
+    };
+
     /**
      * Objeto com o CSS para formatar uma tag removida
      */
-    tagRemoveCss?: {
+    tagRemoveCss?: {
         [property: string]: string;
-    };
+    };
 
 }
 
