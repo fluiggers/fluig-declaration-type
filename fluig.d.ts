@@ -914,33 +914,33 @@ interface AutoCompleteOptions {
      * - tag
      * - tagAutocomplete
      */
-    type?: string;
+    type?: string;
 
     /**
      * Item exibido na sugestão
      *
      * Obrigatório para autocomplete e tagAutocomplete
      */
-    displayKey?: string;
+    displayKey?: string;
 
     /**
      * Nome do dataset
      *
      * Opcional para autocomplete e tagAutocomplete
      */
-    name?: string;
+    name?: string;
 
     /**
      * Determina o serviço utilizado para buscar as sugestões
      */
     source: {
-        url: string;
-        limit: 10,
-        offset: 0,
-        limitKey: string;
-        patternKey: string;
-        root: string;
-    };
+        url: string;
+        limit: 10,
+        offset: 0,
+        limitKey: string;
+        patternKey: string;
+        root: string;
+    };
 
     /**
      * Coloca o texto em negrito quando efetua a busca
@@ -950,62 +950,62 @@ interface AutoCompleteOptions {
     /**
      * Mínimo de caracteres antes de iniciar a busca
      */
-    minLength?: number;
+    minLength?: number;
 
     /**
      * Se falso não exibirá as opções retornadas da busca
      */
-    hint?: boolean;
+    hint?: boolean;
 
     /**
      * Tempo limite para obter um resultado da busca
      */
-    searchTimeout?: number;
+    searchTimeout?: number;
 
     /**
      * Nome da classe utilizada na tag
      */
-    tagClass?: string;
+    tagClass?: string;
 
     /**
      * Máximo de tags permitidas para selecionar
      */
-    maxTags?: number;
+    maxTags?: number;
 
     /**
      * Permite selecionar a mesma tag várias vezes
      */
-    allowDuplicates?: boolean
+    allowDuplicates?: boolean
 
     /**
      * Evento disparado quando tentar adicionar uma tag repetida
      */
-    onTagExists?: AutoCompleteOnTagCallback;
+    onTagExists?: AutoCompleteOnTagCallback;
 
     /**
      * Evento disparado ao atingir o limite de tags
      */
-    onMaxTags?: AutoCompleteOnTagCallback;
+    onMaxTags?: AutoCompleteOnTagCallback;
 
     /**
      * Largura máxima da tag
      */
-    tagMaxWidth?: number;
+    tagMaxWidth?: number;
 
     /**
      * Template da dica
      */
-    templates?: {
-        tag: string;
-        suggestion: string;
-    };
-    
+    templates?: {
+        tag: string;
+        suggestion: string;
+    };
+
     /**
      * Objeto com o CSS para formatar uma tag removida
      */
-    tagRemoveCss?: {
+    tagRemoveCss?: {
         [property: string]: string;
-    };
+    };
 
 }
 
@@ -2293,18 +2293,18 @@ declare namespace hAPI {
 
     /**
      * Remove uma linha de uma tabela Pai X Filho
-     * 
+     *
      * Caso queira utilizar este método em um laço de repetição se atente a percorrer do
-     * último registro para o primeiro, pois o método reordena os índices. Em uma tabela 
-     * com 3 linhas ao remover a linha 1 terá a linha 2 reordenada para 1, e a 
+     * último registro para o primeiro, pois o método reordena os índices. Em uma tabela
+     * com 3 linhas ao remover a linha 1 terá a linha 2 reordenada para 1, e a
      * linha 3 será reordenada para linha 2.
-     * 
+     *
      * @example
      * var indexes = hAPI.getChildrenIndexes("tableName");
      * for (var i = indexes.length - 1; i >= 0; --i) {
      *     hAPI.removeCardChild("tableName", indexes[i]);
      * }
-     * 
+     *
      * @param tableName Nome da tabela pai-filho
      * @param index Índice da linha a ser removida
      */
@@ -2519,9 +2519,9 @@ declare namespace hAPI {
     /**
      * Retorna os campos filhos, e seus valores, de uma tabela pai.
      *
-     * Retorna um objeto com a propriedade sendo o nome do campo e seus valores.
+     * Retorna um objeto Map com a propriedade seu valor.
      */
-    declare function getChildrenFromTable(tableName: string): object;
+    declare function getChildrenFromTable(tableName: string): java.util.Map<string, string>;
 
     /**
      * Retorna os índices dos campos filhos de uma tabela pai.
@@ -3525,6 +3525,18 @@ interface IwsConsultaSQL {
      * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
      */
     realizarConsultaSQL(sql:string, coligadaNumber:number, systemCode:string, parameters:string): string;
+
+    /**
+     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
+     *
+     * @param {string} sql Código (ID) do SQL cadastrado no RM
+     * @param {number} coligadaNumber
+     * @param {string} systemCode
+     * @param {string} username
+     * @param {string} password
+     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
+     */
+    realizarConsultaSQLAuth(sql:string, coligadaNumber:number, systemCode:string, username:string, password:string, parameters:string): string;
 }
 
 declare namespace com.fluig.sdk.filter {
