@@ -2,6 +2,1674 @@ declare namespace com.totvs.technology.foundation.sdk.service.vo.common {
     declare class OrderParam {}
 }
 
+declare namespace java.lang {
+    declare class Object {
+        /**
+         * Retorna o valor do objeto como uma string
+         */
+        toString(): string;
+    }
+
+    declare class String {
+        constructor();
+        constructor(original: string);
+
+        /**
+         * Pega o char da posição indicada.
+         *
+         * Importante: embora o método deva devolver um char o Fluig
+         * trata como um número (provavelmente o código ASCII do char).
+         *
+         * Se precisar da letra utilize o método substring indicando índice
+         * inicial e final ou converta utilizando a classe Character.
+         *
+         * @example
+         * var str = new java.lang.String("texto");
+         * str.substring(1, 2); // Retornará "e"
+         *
+         * var str = new java.lang.String("012");
+         * Character.digit(str.charAt(2), 10); // Retornará número 2
+         * Character.toString(str.charAt(2)); // Retornará string 2
+         */
+        charAt(index: number): number;
+
+        /**
+         * Compara duas strings
+         *
+         * Retorna 0 se as strings forem iguais, menor que zero se essa string
+         * for menor do que a outra string ou maior que zero se essa string for
+         * maior do que a outra.
+         */
+        compareTo(anotherString: string): number;
+
+        /**
+         * Compara duas strings ignorando as diferenças de maiúscula e minúscula
+         *
+         * Retorna 0 se as strings forem iguais, menor que zero se essa string
+         * for menor do que a outra string ou maior que zero se essa string for
+         * maior do que a outra.
+         */
+        compareToIgnoreCase(anotherString: string): number;
+
+        /**
+         * Retorna verdadeiro se essa string contém a string informada
+         */
+        contains(substring: string): boolean;
+
+        /**
+         * Retorna verdadeiro se essa string termina com a string informada
+         */
+        endsWith(suffix: string): boolean;
+
+        /**
+         * Retorna verdadeiro se essa string começa com a string informada
+         */
+        startsWith(prefix: string): boolean;
+
+        /**
+         * Retorna verdadeiro se ambas strings forem iguais ignorando case
+         */
+        equalsIgnoreCase(anotherString: string): boolean;
+
+        /**
+         * Retorna o índice da primeira ocorrência da string informada
+         */
+        indexOf(str: string): number;
+
+        /**
+         * Retorna o índice da primeira ocorrência da string informada a partir do índice indicado
+         */
+        indexOf(str: string, fromIndex: number): number;
+
+        /**
+         * Retorna o índice da última ocorrência da string informada
+         */
+        lastIndexOf(str: string): number;
+
+        /**
+         * Retorna o índice da última ocorrência da string informada a partir do índice indicado
+         */
+        lastIndexOf(str: string, fromIndex: number): number;
+
+        /**
+         * Retorna a quantidade de caracteres da string
+         */
+        length(): number;
+
+        /**
+         * Retorna verdadeiro se a string satisfaz a Expressão Regular
+         */
+        matches(regex: string): boolean;
+
+        /**
+         * Substitui nessa string todos os trechos que satisfaçam a string target
+         *
+         * Importante: esse método não aceita Expressão Regular.
+         *
+         * @param target Texto a procurar
+         * @param replacement Texto a substituir
+         */
+        replace(target: string, replacement: string): String;
+
+        /**
+         * Substitui nessa string todos os trechos que satisfaçam a string de Expressão Regular
+         *
+         * @param regex String de Expressão Regular
+         * @param replacement Texto a substituir
+         */
+        replaceAll(regex: string, replacement: string): String
+
+        /**
+         * Divide a string em arrays satisfazendo a Expressão Regular fornecida
+         *
+         * @param regex String de Expressão Regular
+         */
+        split(regex: string): String[];
+
+        /**
+         * Divide a string em arrays satisfazendo a Expressão Regular fornecida
+         *
+         * @param regex String de Expressão Regular
+         * @param limit Número máximo de partes a dividir a string
+         */
+        split(regex: string, limit: number): String[];
+
+        /**
+         * Retorna uma substring iniciando no índice indicado até o final da string
+         *
+         * @param beginIndex Índice inicial, começando em 0
+         */
+        substring(beginIndex: number): String;
+
+        /**
+         * Retorna uma substring iniciando no índice indicado até o índice final
+         *
+         * @param beginIndex Índice inicial, começando em 0
+         * @param endIndex Índice final, começando em 0
+         */
+        substring(beginIndex: number, endIndex: number): String;
+
+        /**
+         * Converte a string para letras minúsculas
+         */
+        toLowerCase(): String;
+
+        /**
+         * Converte a string para letras maiúsculas
+         */
+        toUpperCase(): String;
+
+        /**
+         * Remove espaços em branco do início e fim da string
+         */
+        trim(): String;
+    }
+
+    declare class Character {
+        /**
+         * Retorna o caracter como uma String
+         *
+         * @param c Código do CHAR
+         */
+        toString(c: number): String;
+
+        /**
+         * Converte o caracter em um número
+         *
+         * @param c Código do CHAR
+         * @param radix Base a converter (normalmente 10 pra indicar que é decimal)
+         */
+        digit(c: number, radix: number): number;
+    }
+}
+
+declare namespace javax.naming {
+    /**
+     * Inicia um Contexto
+     */
+    declare class InitialContext {
+
+        /**
+         * Recupera o DataSource do Banco de Dados
+         *
+         * @param {string} dataSource O nome do dataSource. Ex: /jdbc/PostgreSqlDS
+         * @throws Exception
+         */
+        lookup(dataSource: string): javax.sql.DataSource;
+
+        /**
+         * Fecha o contexto ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+}
+
+declare namespace javax.sql {
+    declare class DataSource {
+        /**
+         * Recupera a Conexão com o Banco de Dados
+         *
+         * @throws Exception
+         */
+        getConnection(): Connection;
+    }
+
+    /**
+     * Conexão com o Banco de Dados
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html
+     */
+    declare class Connection {
+        /**
+         * Cria o objeto que executará o SQL
+         *
+         * @throws Exception
+         */
+        createStatement(): Statement;
+
+        /**
+         * Encerra a conexão ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+
+    /**
+     * Objeto que executa uma instrução SQL
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html
+     */
+    declare class Statement {
+        /**
+         * Executa um SQL que deve ser uma consulta (SELECT)
+         *
+         * @throws Exception
+         */
+        executeQuery(sql: string): ResultSet;
+
+        /**
+         * Executa um SQL que modifica algo no banco (INSERT, UPDATE ou DELETE)
+         *
+         * @returns {number} Quantidade de registros afetados
+         * @throws Exception
+         */
+        executeUpdate(sql: string): number;
+
+        /**
+         * Libera os recursos da execução imediatamente ao invés de aguardar o coletor de lixo
+         */
+         close(): void;
+    }
+
+    /**
+     * Representa o resultado de uma consulta SQL
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
+     */
+    declare class ResultSet {
+
+        /**
+         * Move o cursor para o primeiro resultado da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        first(): boolean;
+
+        /**
+         * Move o cursor para o último resultado da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        last(): boolean;
+
+        /**
+         * Move o cursor para o próximo resultado da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        next(): boolean;
+
+        /**
+         * Move o cursor para o resultado anterior da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        previous(): boolean;
+
+        /**
+         * Pega o número, tipos e propriedades das colunas retornadas na consulta
+         */
+        getMetaData(): ResultSetMetaData;
+
+        /**
+         * Retorna o valor da coluna como um Objeto Java
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
+         */
+        getObject(columnIndex: number): java.lang.Object;
+        getObject(columnLabel: string): java.lang.Object;
+
+        /**
+         * Retorna o valor da coluna como uma string
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
+         */
+        getString(columnIndex: number): string;
+        getString(columnLabel: string): string;
+
+        /**
+         * Retorna o valor da coluna como um boolean
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
+         */
+        getBoolean(columnIndex: number): boolean;
+        getBoolean(columnLabel: string): boolean;
+
+        /**
+         * Retorna o valor da coluna como objeto Date
+         *
+         * Esse método retorna um java.sql.Date que herda de java.util.Date.
+         * Para evitar retrabalho deixei como java.util.Date mesmo.
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como byte, java.sql.Blob etc.
+         */
+        getDate(columnIndex: number): java.util.Date;
+        getDate(columnLabel: string): java.util.Date;
+
+        /**
+         * Libera o resultado da consulta imediatamente ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+
+    declare class ResultSetMetaData {
+        /**
+         * Pega o total de colunas da consulta
+         */
+        getColumnCount(): number;
+
+        /**
+         * Pega o Nome da Coluna (label)
+         */
+        getColumnName(column: number): string;
+    }
+}
+
+declare namespace java.text {
+
+    /**
+     * Formatador de Datas
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+     */
+    declare class SimpleDateFormat {
+        /**
+         * Cria um novo formatador de datas com o padrão indicado
+         *
+         * Exemplos:
+         *
+         * - "dd/MM/yyyy" -> data no formato pt-BR
+         * - "yyyy-MM-dd" -> data no formato ISO
+         * - "HH:mm" -> Hora (24h) e minuto
+         * - "yyyy-MM-dd'T'HH:mm:ss.SSSZ" -> Data completa (Ex: 2021-07-04T12:08:56.235-0700)
+         *
+         * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+         */
+        constructor(formato: string);
+
+        /**
+         * Aplica o padrão de data de forma similar ao construtor
+         */
+        applyPattern(formato: string): void;
+
+        /**
+         * Retorna a data formatada conforme o padrão da formatação
+         */
+        format(data: java.util.Date): string;
+
+        /**
+         * Converte uma string, formatada como indicado no construtor, em um objeto Date
+         */
+        parse(dataFormatada: string): java.util.Date;
+    }
+}
+
+declare namespace java.util {
+    declare abstract class Iterator<T> {
+        /**
+         * Indica se ainda há elementos a percorrer
+         */
+        hasNext(): boolean;
+
+        /**
+         * Pega o próximo elemento
+         */
+        next(): T;
+    }
+
+    declare abstract class Set<T> {
+        /**
+         * Adiciona um elemento ao conjunto
+         */
+        add(value: T): boolean;
+
+        /**
+         * Indica se o conjunto está vazio
+         */
+        isEmpty(): boolean;
+
+        /**
+         * Pega a quantidade de elementos do conjunto
+         */
+        size(): number;
+
+        /**
+         * Remove todos os elementos
+         */
+        clear(): void;
+
+        /**
+        * Verifica se existe o elemento
+        */
+        contains(value: T): boolean;
+
+        /**
+         * Pega um iterator para percorrer o conjunto
+         */
+        iterator(): java.util.Iterator<T>;
+    }
+
+    declare abstract class List<T> {
+        /**
+         * Pega o elemento no índice indicado
+         */
+        get(index: number): T;
+
+        /**
+         * Adiciona um elemento à lista
+         */
+        add(value: T): void;
+
+        /**
+         * Adiciona todos os elementos da lista indicada para esta lista
+         */
+        addAll(l: java.util.List<T>): void;
+
+        /**
+         * Indica o tamanho da lista
+         */
+        size(): number;
+
+        /**
+         * Remove todos os elementos
+         */
+        clear(): void;
+
+        /**
+         * Verifica se existe o elemento
+         */
+        contains(value: T): boolean;
+
+        /**
+         * Indica se a lista está vazia
+         */
+         isEmpty(): boolean;
+
+        /**
+         * Pega um iterator para percorrer a lista
+         */
+        iterator(): java.util.Iterator<T>
+    }
+
+    declare class ArrayList<T> extends List<T> {
+    }
+
+    declare abstract class Map<K, V> {
+        /**
+         * Pega o elemento no índice indicado
+         */
+        get(name: K): T;
+
+        /**
+         * Adiciona um elemento
+         */
+        put(name: K, value: T): void;
+
+        /**
+         * Indica o tamanho da lista
+         */
+        size(): number;
+
+        /**
+         * Remove todos os elementos
+         */
+         clear(): void;
+
+        /**
+         * Copia todos os elementos do mapa indicado para este mapa
+         */
+        putAll(m: java.util.Map<K, V>): void;
+
+        /**
+         * Retorna um conjunto com as chaves do Mapa
+         */
+        keySet(): java.util.Set<K>;
+    }
+
+    declare class HashMap<K, V> extends java.util.Map<K, V> {
+    }
+
+    declare class LinkedHashSet<T> extends java.util.Set<T> {
+    }
+
+    declare class LinkedHashMap<K, V> extends java.util.HashMap<K, V> {
+    }
+
+    declare class Date {
+
+        /**
+         * Inicializa com a data do momento que o objeto foi criado
+         */
+        constructor();
+
+        /**
+         * Inicializa com a data em milisegundos decorridos desde 1970-01-01 00:00:00 GMT
+         */
+        constructor(date: number);
+
+        /**
+         * Compara se essa data é posterior à data indicada
+         */
+        after(when: Date): boolean;
+
+        /**
+         * Compara se essa data é anterior à data indicada
+         */
+        before(when: Date): boolean;
+
+        /**
+         * Retorna o dia do mês
+         *
+         * @deprecated Usar Calendar.get(Calendar.DAY_OF_MONTH)
+         */
+        getDate(): number;
+
+        /**
+         * Retorna o dia da semana
+         *
+         * @deprecated Usar Calendar.get(Calendar.DAY_OF_WEEK)
+         */
+        getDay(): number;
+
+        /**
+         * Retorna a hora
+         *
+         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY)
+         */
+        getHours(): number;
+
+        /**
+         * Retorna os minutos
+         *
+         * @deprecated Usar Calendar.get(Calendar.MINUTE)
+         */
+        getMinutes(): number;
+
+        /**
+         * Retorna o mês
+         *
+         * @deprecated Usar Calendar.get(Calendar.MONTH)
+         */
+        getMonth(): number;
+
+        /**
+         * Retorna os segundos
+         *
+         * @deprecated Usar Calendar.get(Calendar.SECOND)
+         */
+        getSeconds(): number;
+
+        /**
+         * Retorna o ano
+         *
+         * @deprecated Usar Calendar.get(Calendar.YEAR) - 1900
+         */
+        getYear(): number;
+
+        /**
+         * Atribui o dia do mês
+         *
+         * @deprecated Usar Calendar.set(Calendar.DAY_OF_MONTH, dia)
+         */
+        setDate(): number;
+
+        /**
+         * Atribui a hora
+         *
+         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY, hora)
+         */
+        setHours(): number;
+
+        /**
+         * Atribui os minutos
+         *
+         * @deprecated Usar Calendar.set(Calendar.MINUTE, minutos)
+         */
+        setMinutes(): number;
+
+        /**
+         * Atribui o mês
+         *
+         * @deprecated Usar Calendar.set(Calendar.MONTH, mes)
+         */
+        setMonth(): number;
+
+        /**
+         * Atribui os segundos
+         *
+         * @deprecated Usar Calendar.set(Calendar.SECOND, segundos)
+         */
+        setSeconds(): number;
+
+        /**
+         * Atribui o ano
+         *
+         * @deprecated Usar Calendar.set(Calendar.YEAR, ano + 1900)
+         */
+        setYear(): number;
+    }
+
+    /**
+     * A Classe Calendar não deve ser instanciada com operador new. Use sempre o método getInstance().
+     *
+     * Essa classe á abstrata e o Java normalmente vai instanciar um GregorianCalendar quando chamada a getInstance().
+     */
+    declare abstract class Calendar {
+        /**
+         * Cria uma instância de Calendário
+         *
+         * Essa classe é abstrata, por isso não é possível instanciá-la diretamente.
+         */
+        static getInstance(): Calendar;
+
+        // Constantes indicando os valores dos meses
+
+        /**
+         * Indica o valor de Janeiro
+         */
+        static const JANUARY: number;
+
+        /**
+         * Indica o valor de Fevereiro
+         */
+        static const FEBRUARY: number;
+
+        /**
+         * Indica o valor de Março
+         */
+        static const MARCH: number;
+
+        /**
+         * Indica o valor de Abril
+         */
+        static const APRIL: number;
+
+        /**
+         * Indica o valor de Maio
+         */
+        static const MAY: number;
+
+        /**
+         * Indica o valor de Junho
+         */
+        static const JUNE: number;
+
+        /**
+         * Indica o valor de Julho
+         */
+        static const JULY: number;
+
+        /**
+         * Indica o valor de Agosto
+         */
+        static const AUGUST: number;
+
+        /**
+         * Indica o valor de Setembro
+         */
+        static const SEPTEMBER: number;
+
+        /**
+         * Indica o valor de Outubro
+         */
+        static const OCTOBER: number;
+
+        /**
+         * Indica o valor de Novembro
+         */
+        static const NOVEMBER: number;
+
+        /**
+         * Indica o valor de Dezembro
+         */
+        static const DECEMBER: number;
+
+        // Constantes de horário
+
+        /**
+         * Indica que a hora é antes de meio dia
+         */
+        static const AM: number;
+
+        /**
+         * Indica que a hora é após meio dia
+         */
+        static const PM: number;
+
+        // Constantes de dia da semana
+
+        /**
+         * Indica que é Domingo
+         */
+        static const SUNDAY: number;
+
+        /**
+         * Indica que é segunda-feira
+         */
+        static const MONDAY: number;
+
+        /**
+         * Indica que é terça-feira
+         */
+        static const TUESDAY: number;
+
+        /**
+         * Indica que é quarta-feira
+         */
+        static const WEDNESDAY: number;
+
+        /**
+         * Indica que é quinta-feira
+         */
+         static const THURSDAY: number;
+
+        /**
+         * Indica que é sexta-feira
+         */
+        static const FRIDAY: number;
+
+        /**
+         * Indica que é Sábado
+         */
+        static const SATURDAY: number;
+
+
+        // Constantes de campo
+
+        /**
+         * Campo que indica se horário é antes ou depois do meio dia
+         */
+        static const AM_PM: number;
+
+        /**
+         * Campo que indica o dia do mês
+         */
+        static const DATE: number;
+
+        /**
+         * Campo que indica o dia do mês
+         */
+        static const DAY_OF_MONTH: number;
+
+        /**
+         * Campo que indica o dia da semana
+         */
+        static const DAY_OF_WEEK: number;
+
+        /**
+         * Campo que indica o dia do ano
+         */
+        static const DAY_OF_YEAR: number;
+
+        /**
+         * Campo que indica a hora antes ou depois do meio dia (12h)
+         */
+        static const HOUR: number;
+
+        /**
+         * Campo que indica a hora do dia (24h)
+         */
+        static const HOUR_OF_DAY: number;
+
+        /**
+         * Campo que indica os milissegundos
+         */
+        static const MILLISECOND: number;
+
+        /**
+         * Campo que indica os minutos
+         */
+        static const MINUTE: number;
+
+        /**
+         * Campo que indica o mês
+         */
+        static const MONTH: number;
+
+        /**
+         * Campo que indica os segundos
+         */
+        static const SECOND: number;
+
+        /**
+         * Campo que indica a semana do mês
+         */
+        static const WEEK_OF_MONTH: number;
+
+        /**
+         * Campo que indica a semana do ano
+         */
+        static const WEEK_OF_YEAR: number;
+
+        /**
+         * Campo que indica o ano
+         */
+        static const YEAR: number;
+
+        /**
+         * Retorna o valor do campo indicado
+         *
+         * @param {number} campo Uma das constantes da classe indicando o campo
+         */
+        get(campo: number): number;
+
+        /**
+         * Atribui o valor ao campo indicado
+         *
+         * @param {number} campo Uma das constantes da classe indicando o campo
+         * @param {number} valor O valor que será atribuído ao campo
+         */
+        set(campo: number, valor: number): void;
+
+        /**
+         * Retorna o calendário como um objeto Date
+         */
+        getTime(): Date;
+
+        /**
+         * Configura o calendário usando um objeto Date
+         */
+        setTime(data: Date): void;
+
+        /**
+         * Compara se essa data é posterior à data indicada
+         */
+        after(data: Calendar): boolean;
+
+        /**
+         * Compara se essa data é anterior à data indicada
+         */
+        before(data: Calendar): boolean;
+
+        /**
+         * Configura o calendário com o Ano, Mês e Dia
+         */
+        set(ano: number, mes: number, dia: number): void;
+
+        /**
+         * Configura o calendário com o Ano, Mês, Dia, Hora e Minutos
+         */
+        set(ano: number, mes: number, dia: number, hora: number, minutos: number): void;
+
+        /**
+         * Configura o calendário com o Ano, Mês, Dia, Hora, Minutos e Segundos
+         */
+        set(ano: number, mes: number, dia: number, hora: number, minutos: number, segundos: number): void;
+
+        /**
+         * Adiciona ou Subtrai 1 unidade do campo indicado
+         *
+         * @param {number} campo Uma das constantes de campo
+         * @param {boolean} aumentaValor Se for true aumentará o campo, senão ele será diminuído
+         */
+        roll(campo: number, aumentaValor: boolean): void;
+
+        /**
+         * Adiciona ou Subtrai unidades do campo indicado
+         *
+         * @param {number} campo Uma das constantes de campo
+         * @param {boolean} valor Valor que será utilizado no cálculo. Se positivo aumentará, se negativo diminuirá
+         */
+        roll(campo: number, valor: number): void;
+    }
+}
+
+declare namespace com.fluig.sdk.filter {
+    declare class FilterFieldVO {}
+    declare class FilterGroupResultVO {}
+    declare class FilterGroupVO {}
+    declare class FilterOrderVO {}
+    declare class FilterResultVO {}
+    declare class FilterVO {}
+}
+
+declare namespace com.fluig.sdk.identity {
+    declare class UserAuthTokenSessionVO {}
+}
+
+declare namespace com.fluig.sdk.page {
+    declare class PageMobileApiVO {}
+    declare class PageWidgetMobileApiVO {}
+    declare class PublicApiPageVO {}
+}
+
+/**
+ * Serviços do Fluig
+ */
+
+declare namespace com.fluig.sdk.service {
+    /**
+     * Fornece acesso aos serviços de notificações
+     */
+    declare class AlertService {
+        /**
+         * Método que conta os alertas não lidos de um usuário.
+         */
+        countUnreadAlerts(receiverId: number): number;
+
+        /**
+         * Método que conta os alertas de um modulo não lidos de um usuário
+         */
+        countUnreadAlertsByModule(module: string, receiverId: number): number;
+
+        /**
+         * Get the number of notification in the tenant
+         */
+        getTenantTotalOfNotification(): number;
+
+        /**
+         * Busca os alertas com ação vinculada, do usuário logado ordenado pela data de criação.
+         */
+        listAlertsWithAction(limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
+
+        /**
+         * Busca os alertas com nota, do usuário logado ordenado pela data de criação.
+         */
+        listAlertsWithNote(limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
+
+        /**
+         * Retorna todas as notificações do usuário logado ordenadas pela data de criação.
+         */
+        listAllAlerts(limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
+
+        /**
+         * Retorna todas as notificações de um usuário por um único módulo
+         */
+        listAllAlertsByModule(module: string, limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
+
+        /**
+         * Método marca os alertas informados de um usuário também dado como lidos
+         */
+        markAlertAsRead(loginReceiver: string, alertsId: java.util.List<number>): void;
+
+        /**
+         * Método marca todos os alertas de um usuário como lidos.
+         */
+        markAllAlertsAsRead(loginReceiver: string): void;
+
+        /**
+         * Método que remove os alertas informados de um usuário também dado, esse método também é responsável por remover os senders, places e objects relacionado aos alertas
+         */
+        removeAlerts(loginSender: string, alertsId: java.util.List<number>): void;
+
+        /**
+         * Salva a configuração de um usuário para receber ou não alertas de um dado evento através de um dado aplicativo.
+         */
+        saveConfiguration(alertConfig: com.fluig.sdk.api.alert.AlertConfigVO): void;
+
+        /**
+         * Método que deve ser invocado por todos os módulos do sistema para enviar alertas.
+         */
+        sendNotification(eventKey: string, loginSender: string, loginReceiver: string, object: com.fluig.sdk.api.alert.AlertVO, place: com.fluig.sdk.api.alert.AlertVO, actions: java.util.List<com.fluig.sdk.api.alert.AlertActionVO>, metadata: java.util.HashMap<string, string>): void;
+    }
+
+    declare class ArticleService {}
+
+    /**
+     * Cliente para requisições externas usando autenticação do Fluig
+     */
+    declare class AuthorizeClientSdkService {
+        /**
+         * Executa a chamada ao WS
+         *
+         * O parâmetro passado deve ser um objeto convertido em string (JSON.stringfy) com as seguintes propriedades:
+         *
+         * - companyId;
+         * - serviceCode: ID do serviço cadastrado no Fluig;
+         * - endpoint;
+         * - method: Método HTTP (GET, POST, PUT, DELETE);
+         * - timeoutService (em segundos);
+         * - params: Objeto com os valores a serem enviados na requisição;
+         * - headers: Objeto com os valores a serem enviados no cabeçalho;
+         * - options: Objeto com as propriedades da requisição:
+         *     - encoding (padrão UTF-8)
+         *     - mediaType (padrão application/json)
+         *     - useSSL (padrão false)
+         *
+         * @tutorial https://tdn.totvs.com/pages/releaseview.action?pageId=239041233#Autoriza%C3%A7%C3%A3oparaclientdeServi%C3%A7osREST-Consumindooservi%C3%A7ocomautentica%C3%A7%C3%A3oOAuth1,OAuth2,BasicAuthentication,CustomAuthenticationeNoneAuthentication
+         */
+        invoke(data: string): com.fluig.sdk.api.authorizeclient.AuthorizeClientSdkServiceVO;
+    }
+    declare class CardIndexService {}
+    declare class CardService {}
+    declare class CollaborationSDKService {}
+    declare class CommentService {}
+    declare class CommunityService {}
+    declare class ContentFilesService {}
+    /**
+     * Fornece acesso aos serviços de documentos (GED)
+     */
+    declare class DocumentService {
+        /**
+         * Aprova ou reprova um documento.
+         */
+        approveDocument(documentId: number, version: number, approved: boolean, observation: string): void;
+
+        /**
+         * Copia o documento que esta na área de upload
+         */
+        copyDocumentToUploadArea(documentId: number): string[];
+
+        /**
+         * Cria o documento com permissões e aprovadores
+         */
+        createDocument(documentVO: com.fluig.sdk.api.document.DocumentVO): com.fluig.sdk.api.document.DocumentVO;
+
+        /**
+         * Cria uma documento privado
+         */
+        createPrivateDocument(companyId: number, userId: string, fileName: string, file: File): com.fluig.sdk.api.document.DocumentVO;
+
+        /**
+         * Cria uma documento privado
+         */
+        createPrivateDocument(companyId: number, userId: string, fileName: string, filePath: string): com.fluig.sdk.api.document.DocumentVO;
+
+        /**
+         * Remove o documento
+         */
+        deleteDocument(documentId: number): void;
+
+        /**
+         * Retorna o documento ativo passado o ID do mesmo.
+         */
+        getActive(documentId: number): com.fluig.sdk.api.document.DocumentVO
+
+        /**
+         * Retorna documento com as informações de checkout
+         */
+        getAllocatedDocument(documentId: number, version: number): com.fluig.sdk.api.document.AllocatedDocumentVO;
+
+        getCurrentUserPermission(documentId: number): com.fluig.sdk.api.document.SolvedPermissionVO;
+
+        /**
+         * Return the approvement history of the document
+         */
+        getDocumentApprovalHistory(documentId: number): java.util.List<com.fluig.sdk.api.document.DocumentApprovementHistoryVO>;
+
+        /**
+         * Retrieve all document approvers and yours status.
+         */
+        getDocumentApprovers(documentId: number): java.util.List<com.fluig.sdk.api.document.DocumentApproverVO>;
+
+        /**
+         * Retorna as permissões do documento
+         */
+        getDocumentPermissions(documentId: number, version: number): java.util.List<com.fluig.sdk.api.document.DocumentPermissionVO>;
+
+        /**
+         * Retorna a url do documento
+         */
+        getDownloadURL(documentId: number): string;
+
+        /**
+         * Retorna a permissão do usuário em um documento.
+         */
+        getUserPermissions(documentId: number, version: number, user: string): number;
+
+        /**
+         * Set Approvers for a specific document
+         */
+        setDocumentApprovers(documentId: number, documentSecurityVO: com.fluig.sdk.api.document.DocumentSecurityVO): void;
+
+        /**
+         * Determina as permissões do documento
+         */
+        setDocumentPermissions(documentId: number, permissions: java.util.List<com.fluig.sdk.api.document.DocumentPermissionVO>): void;
+
+        /**
+         * Update file
+         */
+        updateFile(docVO: com.fluig.sdk.api.document.DocumentVO): com.fluig.sdk.api.document.DocumentVO;
+
+        /**
+         * Valida configurações de documento
+         */
+        validateDocumentPublicUrlConfiguration(tenantId: number, documentId: number, version: number): void;
+    }
+    declare class DocumentationProxyServiceService {}
+    declare class FavoritesService {}
+    declare class FilterAPIService {}
+
+    /**
+     * Fornece acesso aos serviços de pastas (GED)
+     */
+    declare class FolderDocumentService {
+        /**
+         * Criação de uma nova pasta
+         */
+        create(vo: com.fluig.sdk.api.document.FolderVO): com.fluig.sdk.api.document.FolderVO;
+
+        /**
+         * Recupera um documento através do id
+         */
+        get(documentId: number): com.fluig.sdk.api.document.DocumentVO;
+
+        /**
+         * Recupera lista de documentos através do id da pasta
+         */
+        list(folderId: number): java.util.List<com.fluig.sdk.api.document.DocumentVO>;
+
+        /**
+         * Recupera lista de documentos através do id da pasta
+         */
+        list(folderId: number, permission: number): java.util.List<com.fluig.sdk.api.document.DocumentVO>;
+
+        /**
+         * Retorna os documentos de uma pasta
+         */
+        listDocumentsByFolder(folderVO: com.fluig.sdk.api.document.FolderVO, limit: number, offset: number): java.util.List<com.fluig.sdk.api.document.DocumentVO>;
+
+        /**
+         * Atualiza documento ou pasta
+         */
+        updateDocumentDescription(companyId: number, documentId: number, description: string): com.fluig.sdk.api.document.DocumentVO;
+    }
+    declare class GlobalParameterService {}
+    declare class GroupService {}
+    declare class HolidayAPIService {}
+    declare class I18NService {}
+    declare class IdentityService {}
+    declare class JobService {}
+    declare class LocalAPIService {}
+
+    /**
+     * Serviço para tratar páginas
+     */
+    declare class PageService {
+        createPageDraftFromVersion(pageCode: string, pageVersion: number): void;
+        disable(pageCode: string): void;
+        enable(pageCode: string): void;
+
+        /**
+         * Retorna itens de menu da página
+         */
+        findMenuFromPage(pageCode: string): java.util.List<com.fluig.sdk.page.PublicApiPageVO>;
+
+        /**
+         * Consulta páginas do fluig
+         */
+        findPages(parentPageCode: string, isMobile: boolean, filter: string, start: number, size: number, searchLevel: number, internalPages: boolean): java.util.List<com.fluig.sdk.page.PublicApiPageVO>;
+        findPages(parentPageCode: string, isMobile: boolean, filter: string, start: number, size: number, searchLevel: number, internalPages: boolean, codePage: string): java.util.List<com.fluig.sdk.page.PublicApiPageVO>;
+
+        /**
+         * Retorna a URL do servidor
+         */
+        getServerURL(): string;
+
+        /**
+         * Recupera os valores de preferências para uma instância de uma widget.
+         */
+        getWidgetPreferences(instanceId: number): java.util.HashMap<string, string>;
+
+        mobileMapping(pageCode: string): com.fluig.sdk.page.PageMobileApiVO;
+
+        hide(pageCode: string): void;
+
+        publishPageDraft(pageCode: string, publicationDescription: string): void;
+
+        pageHistory(pageCode: string): java.util.List<string>;
+
+        /**
+         * Recarrega o layout de uma página
+         */
+        reloadPageLayout(pageCode: string): void;
+
+        /**
+         * Seta o valor de uma preferência para uma instância de uma widget
+         */
+        setWidgetPreference(instanceId: number, key: string, value: string): void;
+
+        show(pageCode: string): void;
+    }
+
+    declare class PageWidgetService {}
+    declare class PostService {}
+    declare class SearchService {}
+
+    declare class SecurityService {
+        /**
+         * Verifica se o usuário logado possui determinada permissão no recurso informado
+         */
+        hasPermission(resource: string, permission: string): boolean;
+
+        /**
+         * Lista os recursos da categoria
+         */
+        listResourcesByCategory(category: string, filter: string, offset: number, limit: number): java.util.List<com.fluig.sdk.api.permission.PermissionAssetVO>
+
+        /**
+         * Lista as permissões do recurso informado
+         */
+        getPermissionsByResourceCode(resourceCode: string): java.util.List<com.fluig.sdk.api.permission.PermissionVO>
+
+        /**
+         * Crias as permissões para o recurso
+         */
+        createPermissions(resourceCode: string, permissions: java.util.List<com.fluig.sdk.api.permission.PermissionVO>): void;
+
+        /**
+         * Remove as permissões do recurso
+         */
+        deletePermissions(resourceCode: string, permissions: java.util.List<com.fluig.sdk.api.permission.PermissionVO>): void;
+    }
+
+    declare class SocialBreadcrumbService {}
+    declare class SocialSDKService {}
+    declare class TagsCloudService {}
+    declare class TasksService {}
+    declare class TenantService {}
+
+    /**
+     * Fornece acesso aos serviços de usuário
+     */
+    declare class UserService {
+
+        /**
+         * Adiciona um usuário a um grupo
+         */
+        addUserToGroup(tenantId: number, groupCode: string, userVO: com.fluig.sdk.user.UserVO): void;
+
+        /**
+         * Change the user password
+         */
+        changeUserPassword(vo: com.fluig.sdk.user.UserPasswordVO): void;
+
+        /**
+         * Cria um novo usuário
+         */
+        create(vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
+        create(tenantId: number, vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
+
+        /**
+         * Retorna o usuário pelo id
+         */
+        findById(id: number): com.fluig.sdk.user.UserVO
+
+        /**
+         * Retorna o usuário pelo login
+         */
+        findByLogin(login: string): com.fluig.sdk.user.UserVO
+
+        /**
+         * Retorna usuário pelo ID
+         */
+        findByUserCode(colleagueId: string): com.fluig.sdk.user.UserVO
+
+        /**
+         * Retorna o usuário corrente logado
+         */
+        getCurrent(): com.fluig.sdk.user.UserVO
+
+        /**
+         * Pesquisa por usuários baseado em um conjunto de parâmetros.
+         */
+        list(offset: number, limit: number): java.util.List<com.fluig.sdk.user.UserVO>;
+        list(params: java.util.HashMap<string, object>, offset: number, limit: number): java.util.List<com.fluig.sdk.user.UserVO>;
+        list(sortField: string, sortType: string, limit: number, offset: number, search: string): java.util.List<com.fluig.sdk.user.UserVO>;
+
+        /**
+         * Pesquisa por usuários ativos e inativos baseado em um conjunto de parâmetros.
+         */
+        listAll(sortField: string, sortType: string, limit: number, offset: number, search: string): java.util.List<com.fluig.sdk.user.UserVO>;
+
+        /**
+         * Pega todos os dados do usuário especificado pelo login
+         */
+        listData(login: string): java.util.HashMap<string, string>;
+
+        /**
+         * Pega todos os grupos do usuário especificado pelo login
+         */
+        listGroups(login: string): java.util.List<string>;
+
+        /**
+         * Pega todos os papéis do usuário especificado pelo login
+         */
+        listRoles(login: string): java.util.List<string>;
+
+        /**
+         * Remove dados do usuário
+         */
+        removeUserData(alias: string, key: string): void;
+
+        /**
+         * Atualiza o usuário
+         */
+        updateUser(vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
+
+        /**
+         * Atualiza os dados do usuário logado
+         */
+        updateUserData(data: java.util.HashMap<string, string>): boolean;
+
+        /**
+         * Atualiza os dados do usuário procurando pelo ID
+         */
+        updateUserDataById(data: java.util.HashMap<string, string>, userId: string): boolean;
+
+        /**
+         * Atualiza usuário mesmo que esteja desabilitado (inativo)
+         */
+        updateUserEvenDisabled(vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
+    }
+    declare class WidgetService {}
+
+    /**
+     * Fornece acesso aos serviços de workflow
+     */
+    declare class WorkflowAPIService {
+        /**
+         * Faz com que o usuário repassado assuma a tarefa
+         */
+        assumeProcessTask(assumeProcessTaskVO: com.fluig.sdk.api.workflow.AssumeProcessTaskVO): com.fluig.sdk.api.workflow.AssumeProcessTaskResultVO;
+        assumeProcessTask(companyId: number, userId: string, processInstanceId: number, movementSequence: number, replacementId: string): com.fluig.sdk.api.workflow.ProcessTaskVO;
+
+        /**
+         * Faz com que os usuários repassados assumam as tarefas vinculadas aos mesmos
+         */
+        assumeProcessTasks(assumeProcessTasksVO: com.fluig.sdk.api.workflow.AssumeProcessTasksVO): com.fluig.sdk.api.workflow.AssumeProcessTaskResultVO;
+
+        cancelInstance(cancelInstanceVO: com.fluig.sdk.api.workflow.CancelInstanceVO): com.fluig.sdk.api.workflow.CancelInstanceResultVO;
+        cancelInstances(cancelInstanceVO: com.fluig.sdk.api.workflow.CancelInstancesVO): com.fluig.sdk.api.workflow.CancelInstancesResultVO;
+
+        /**
+         * Insere um complemento em uma solicitação
+         */
+        createProcessObservation(processObservationVO: com.fluig.sdk.api.workflow.ProcessObservationVO): com.fluig.sdk.api.workflow.ProcessObservationVO;
+
+        findAssignedToMeTasks(processId: string, initialStartDate: string, finalStartDate: string, requester: string, manager: string, page: string, pageSize: string, statusTypeTaskRequest: string, calculate: string, expand: string, cardFilters: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestProcessTaskVO>;
+
+        findManagedByMeTasks(processId: string, initialStartDate: string, finalStartDate: string, assignee: string, requester: string, page: string, pageSize: string, statusTypeTaskRequest: string, calculate: string, expand: string, cardFilters: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestProcessTaskVO>;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como requisitante
+         */
+        findMyRequestsSLA(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, assignee: string, manager: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+
+        findMyRequestsTasks(processId: string, initialStartDate: string, finalStartDate: string, assignee: string, manager: string, page: string, pageSize: string, statusTypeTaskRequest: string, calculate: string, expand: string, cardFilters: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestProcessTaskVO>;
+
+        /**
+         * Retorna a lista de complementos em uma solicitação
+         */
+        findObservations(processInstanceId: number, stateSequence: number, threadSequence: number): java.util.List<com.fluig.sdk.api.workflow.ProcessObservationVO>;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como responsável
+         */
+        findRequestSLAByProcessInstanceId(processInstanceId: number, populateCurrentTasks: boolean, calculate: boolean, populateCardFields: boolean, populateLocals: boolean, assigneeLocals: boolean): com.fluig.sdk.api.workflow.RequestSLAVO;
+        findRequestSLAByProcessInstanceId(processInstanceId: string, expand: string, calculate: string): com.fluig.sdk.api.workflow.RequestSLAVO;
+
+        /**
+         * Recupera uma lista das solicitações de SLA dos processos configurados
+         */
+        findRequestsSLA(): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: java.util.List<string>): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: java.util.List<string>, statusRequiredList: java.util.List<string>): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: java.util.List<string>, statusRequiredList: java.util.List<string>, returnCurrentTasks: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>, statusRequiredList: java.util.List<string>, returnCurrentTasks: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>, statusRequiredList: java.util.List<string>, initialStartDate: Date, finalStartDate: Date, initialDeadlineDate: Date, finalDeadlineDate: Date, initialWarningDate: Date, finalWarningDate: Date, returnCurrentTasks: boolean, requester: string, assignee: string, manager: string, requesterLocals: java.util.List<string>, assigneeLocals: java.util.List<string>, orderParams: java.util.List<com.totvs.technology.foundation.sdk.service.vo.common.OrderParam>, calculate: boolean, page: number, pageSize: number, populateCardFields: boolean, populateLocalsValue: boolean, populateAssigneeLocalsValue: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+        findRequestsSLA(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, requester: string, assignee: string, manager: string, requesterLocals: string, assigneeLocals: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como responsável
+         */
+        findRequestsSLAAssignedToMe(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, requester: string, manager: string, requesterLocals: string, assigneeLocals: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como gestor
+         */
+        findRequestsSLAManagedByMe(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, requester: string, assignee: string, requesterLocals: string, assigneeLocals: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
+
+        findSLATasks(processId: string, initialStartDate: string, finalStartDate: string, assignee: string, requester: string, manager: string, page: string, pageSize: string, statusTypeTaskRequest: string, calculate: string, expand: string, cardFilters: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestProcessTaskVO>;
+
+        /**
+         * Retorna uma lista das atividades pendentes de um processo
+         */
+        getActiveTasks(processInstanceId: number): com.fluig.sdk.api.workflow.ProcessInstanceInfoVO;
+
+        /**
+         * Retorna uma lista de processos disponíveis para o usuário
+         */
+        getAvailableProcess(tenantId: number, userId: string): java.util.List<com.fluig.sdk.api.workflow.ProcessVersionVO>;
+
+        /**
+         * Retorna a versão de um processo
+         */
+        getProcessVersion(processId: string): number;
+
+        /**
+         * Retorna todos os processos da empresa
+         */
+        listProcess(pattern: string, limit: number, offset: number): java.util.List<com.fluig.sdk.api.workflow.ProcessDefinitionVO>;
+
+        /**
+         * Retorna todos os processos da empresa
+         */
+        listSlaProcess(): java.util.List<com.fluig.sdk.api.workflow.ProcessDefinitionVO>;
+
+        resumeAssignedToMeTasks(processId: string, startDate: string, endDate: string, requester: string, manager: string): com.fluig.sdk.api.workflow.ResumeProcessTaskVO;
+        resumeManagedByMeTasks(processId: string, startDate: string, endDate: string, requester: string, assignee: string): com.fluig.sdk.api.workflow.ResumeProcessTaskVO;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como requisitante
+         */
+        resumeMyRequestsSLA(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, assignee: string, manager: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+
+        resumeMyRequestsTasks(processId: string, startDate: string, endDate: string, assignee: string, manager: string): com.fluig.sdk.api.workflow.ResumeProcessTaskVO;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados
+         */
+        resumeRequestsSLA(): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>, countersRequiredList: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>, countersRequiredList: java.util.List<string>, initialStartDate: Date, finalStartDate: Date, initialDeadlineDate: Date, finalDeadlineDate: Date, initialWarningDate: Date, finalWarningDate: Date, requester: string, assignee: string, manager: string, requesterLocalsList: java.util.List<string>, assigneeLocalsList: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+        resumeRequestsSLA(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, requester: string, assignee: string, manager: string, requesterLocals: string, assigneeLocals: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como responsável
+         */
+        resumeRequestsSLAAssignedToMe(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, requester: string, manager: string, requesterLocals: string, assigneeLocals: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+
+        /**
+         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como gestor
+         */
+        resumeRequestsSLAManagedByMe(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, requester: string, assignee: string, requesterLocals: string, assigneeLocals: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
+
+        resumeSLATasks(processId: string, startDate: string, endDate: string, assignee: string, requester: string, manager: string): com.fluig.sdk.api.workflow.ResumeProcessTaskVO;
+    }
+}
+
+declare namespace com.fluig.sdk.tenant {
+    declare class AdminUserVO {}
+    declare class TenantVO {}
+}
+
+declare namespace com.fluig.sdk.user {
+    declare class ColleagueVO {}
+    declare class UserPasswordVO {}
+
+    /**
+     * Representa um Usuário
+     */
+    declare class UserVO {
+        /**
+         * Pega o e-mail
+         */
+        getEmail(): string
+
+        /**
+         * Pega o nome completo
+         */
+        getFullName(): string
+
+        /**
+         * Pega o primeiro nome
+         */
+        getFirstName(): string;
+
+        /**
+         * Pega o sobrenome
+         */
+        getLastName(): string;
+
+        /**
+         * Pega o login
+         */
+        getLogin(): string;
+
+        /**
+         * Pega o código
+         */
+        getCode(): string
+
+        /**
+         * Pega todos os dados extras
+         */
+        getExtData(): java.util.HashMap<string, object>;
+
+        /**
+         * Pega um dado extra
+         */
+        getExtraData(key: string): object;
+
+        /**
+         * Pega os grupos
+         */
+        getGroups(): java.util.List<string>;
+
+        /**
+         * Pega o ID
+         */
+        getId(): number;
+
+        /**
+         * Informa se é um usuário Ativo
+         */
+        getIsActive(): boolean;
+
+        /**
+         * Pega a senha
+         */
+        getPassword(): string;
+
+        /**
+         * Pega o fuso horário
+         */
+        getTimezone(): string;
+
+        /**
+         * Pega os papéis
+         */
+        getRoles(): java.util.List<string>;
+
+        /**
+         * Pega o token de acesso
+         */
+        getTokenAccess(): string;
+
+        /**
+         * Pega a senha do token
+         */
+        getTokenSecret(): string;
+
+        /**
+         * Pega o UUID
+         */
+        getUserUUID(): string;
+
+        /**
+         * Retorna objeto no mapa
+         */
+        getValueExtData(key: string): object;
+
+                /**
+         * Adiciona dados extras
+         */
+        addExtData(key: string, value: object): void;
+
+        /**
+         * Atribui o código
+         */
+        setCode(code: string): void;
+
+        /**
+         * Atribui o e-mail
+         */
+        setEmail(email: string): void;
+
+        /**
+         * Atribui os dados extras
+         */
+        setExtData(extData: java.util.HashMap<string, object>): void;
+
+        /**
+         * Atribui um valor para um dado extra
+         */
+        setExtraData(key: string, value: object): void;
+
+        /**
+         * Atribui o primeiro nome
+         */
+        setFirstName(firstName: string): void;
+
+        /**
+         * Atribui o sobrenome
+         */
+        setLastName(lastName: string): void;
+
+        /**
+         * Atribui o nome completo
+         */
+        setFullName(fullName: string): void;
+
+        /**
+         * Atribui os grupos
+         */
+        setGroups(groups: java.util.List<string>): void;
+
+        /**
+         * Atribui o ID
+         */
+        setId(id: number): void;
+
+        /**
+         * Atribui o status de Ativo
+         */
+        setIsActive(isActive: boolean): void;
+
+        /**
+         * Atribui o login
+         */
+        setLogin(login: string): void;
+
+        /**
+         * Atribui a senha
+         */
+        setPassword(password: string): void;
+
+        /**
+         * Atribui os papéis
+         */
+        setRoles(roles: java.util.List<string>): void;
+
+        /**
+         * Atribui o fuso horário
+         */
+        setTimezone(timezone: string): void;
+
+        /**
+         * Atribui o token de acesso
+         */
+        setTokenAccess(token: string): void;
+
+        /**
+         * Atribui a senha do token
+         */
+        setTokenSecret(tokenSecret: string): void;
+
+        /**
+         * Atribui o UUID
+         */
+        setUserUUID(userUUID: string): void;
+    }
+}
+
 /**
  * Tipos de campo de um Dataset
  *
@@ -2000,12 +3668,12 @@ declare class FormController {
     /**
      * Atribui valor a um campo do formulário
      */
-    setValue(nomeCampo: string, valor: string): string;
+    setValue(nomeCampo: string, valor: string): void;
 
     /**
      * Pega o valor de um campo do formulário
      */
-    getValue(nomeCampo: string): string;
+    getValue(nomeCampo: string): java.lang.String;
 
     /**
      * Deixa o campo invisível buscando pelo nome do campo
@@ -2787,885 +4455,6 @@ declare namespace WCMSpaceAPI.PageService {
     declare function UPDATEPREFERENCES(settings: WidgetUpdatePreferences, instanceId: number, preferences: object): void;
 }
 
-declare namespace java.lang {
-    declare class Object {
-        /**
-         * Retorna o valor do objeto como uma string
-         */
-        toString(): string;
-    }
-
-    declare class String {
-        constructor();
-        constructor(original: string);
-
-        /**
-         * Pega o char da posição indicada.
-         *
-         * Importante: embora o método deva devolver um char o Fluig
-         * trata como um número (provavelmente o código ASCII do char).
-         *
-         * Se precisar da letra utilize o método substring indicando índice
-         * inicial e final.
-         *
-         * @example
-         * var str = new java.lang.String("texto");
-         * str.substring(1, 2); // Retornará "e"
-         */
-        charAt(index: number): number;
-
-        /**
-         * Compara duas strings
-         *
-         * Retorna 0 se as strings forem iguais, menor que zero se essa string
-         * for menor do que a outra string ou maior que zero se essa string for
-         * maior do que a outra.
-         */
-        compareTo(anotherString: string): number;
-
-        /**
-         * Compara duas strings ignorando as diferenças de maiúscula e minúscula
-         *
-         * Retorna 0 se as strings forem iguais, menor que zero se essa string
-         * for menor do que a outra string ou maior que zero se essa string for
-         * maior do que a outra.
-         */
-        compareToIgnoreCase(anotherString: string): number;
-
-        /**
-         * Retorna verdadeiro se essa string contém a string informada
-         */
-        contains(substring: string): boolean;
-
-        /**
-         * Retorna verdadeiro se essa string termina com a string informada
-         */
-        endsWith(suffix: string): boolean;
-
-        /**
-         * Retorna verdadeiro se essa string começa com a string informada
-         */
-        startsWith(prefix: string): boolean;
-
-        /**
-         * Retorna verdadeiro se ambas strings forem iguais ignorando case
-         */
-        equalsIgnoreCase(anotherString: string): boolean;
-
-        /**
-         * Retorna o índice da primeira ocorrência da string informada
-         */
-        indexOf(str: string): number;
-
-        /**
-         * Retorna o índice da primeira ocorrência da string informada a partir do índice indicado
-         */
-        indexOf(str: string, fromIndex: number): number;
-
-        /**
-         * Retorna o índice da última ocorrência da string informada
-         */
-        lastIndexOf(str: string): number;
-
-        /**
-         * Retorna o índice da última ocorrência da string informada a partir do índice indicado
-         */
-        lastIndexOf(str: string, fromIndex: number): number;
-
-        /**
-         * Retorna a quantidade de caracteres da string
-         */
-        length(): number;
-
-        /**
-         * Retorna verdadeiro se a string satisfaz a Expressão Regular
-         */
-        matches(regex: string): boolean;
-
-        /**
-         * Substitui nessa string todos os trechos que satisfaçam a string target
-         *
-         * Importante: esse método não aceita Expressão Regular.
-         *
-         * @param target Texto a procurar
-         * @param replacement Texto a substituir
-         */
-        replace(target: string, replacement: string): String;
-
-        /**
-         * Substitui nessa string todos os trechos que satisfaçam a string de Expressão Regular
-         *
-         * @param regex String de Expressão Regular
-         * @param replacement Texto a substituir
-         */
-        replaceAll(regex: string, replacement: string): String
-
-        /**
-         * Divide a string em arrays satisfazendo a Expressão Regular fornecida
-         *
-         * @param regex String de Expressão Regular
-         */
-        split(regex: string): String[];
-
-        /**
-         * Divide a string em arrays satisfazendo a Expressão Regular fornecida
-         *
-         * @param regex String de Expressão Regular
-         * @param limit Número máximo de partes a dividir a string
-         */
-        split(regex: string, limit: number): String[];
-
-        /**
-         * Retorna uma substring iniciando no índice indicado até o final da string
-         *
-         * @param beginIndex Índice inicial, começando em 0
-         */
-        substring(beginIndex: number): String;
-
-        /**
-         * Retorna uma substring iniciando no índice indicado até o índice final
-         *
-         * @param beginIndex Índice inicial, começando em 0
-         * @param endIndex Índice final, começando em 0
-         */
-        substring(beginIndex: number, endIndex: number): String;
-
-        /**
-         * Converte a string para letras minúsculas
-         */
-        toLowerCase(): String;
-
-        /**
-         * Converte a string para letras maiúsculas
-         */
-        toUpperCase(): String;
-
-        /**
-         * Remove espaços em branco do início e fim da string
-         */
-        trim(): String;
-    }
-}
-
-declare namespace javax.naming {
-    /**
-     * Inicia um Contexto
-     */
-    declare class InitialContext {
-
-        /**
-         * Recupera o DataSource do Banco de Dados
-         *
-         * @param {string} dataSource O nome do dataSource. Ex: /jdbc/PostgreSqlDS
-         * @throws Exception
-         */
-        lookup(dataSource: string): javax.sql.DataSource;
-
-        /**
-         * Fecha o contexto ao invés de aguardar o coletor de lixo
-         */
-        close(): void;
-    }
-}
-
-declare namespace javax.sql {
-    declare class DataSource {
-        /**
-         * Recupera a Conexão com o Banco de Dados
-         *
-         * @throws Exception
-         */
-        getConnection(): Connection;
-    }
-
-    /**
-     * Conexão com o Banco de Dados
-     *
-     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html
-     */
-    declare class Connection {
-        /**
-         * Cria o objeto que executará o SQL
-         *
-         * @throws Exception
-         */
-        createStatement(): Statement;
-
-        /**
-         * Encerra a conexão ao invés de aguardar o coletor de lixo
-         */
-        close(): void;
-    }
-
-    /**
-     * Objeto que executa uma instrução SQL
-     *
-     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html
-     */
-    declare class Statement {
-        /**
-         * Executa um SQL que deve ser uma consulta (SELECT)
-         *
-         * @throws Exception
-         */
-        executeQuery(sql: string): ResultSet;
-
-        /**
-         * Executa um SQL que modifica algo no banco (INSERT, UPDATE ou DELETE)
-         *
-         * @returns {number} Quantidade de registros afetados
-         * @throws Exception
-         */
-        executeUpdate(sql: string): number;
-
-        /**
-         * Libera os recursos da execução imediatamente ao invés de aguardar o coletor de lixo
-         */
-         close(): void;
-    }
-
-    /**
-     * Representa o resultado de uma consulta SQL
-     *
-     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
-     */
-    declare class ResultSet {
-
-        /**
-         * Move o cursor para o primeiro resultado da consulta
-         *
-         * @returns {boolean} Retorna true se moveu o cursor
-         */
-        first(): boolean;
-
-        /**
-         * Move o cursor para o último resultado da consulta
-         *
-         * @returns {boolean} Retorna true se moveu o cursor
-         */
-        last(): boolean;
-
-        /**
-         * Move o cursor para o próximo resultado da consulta
-         *
-         * @returns {boolean} Retorna true se moveu o cursor
-         */
-        next(): boolean;
-
-        /**
-         * Move o cursor para o resultado anterior da consulta
-         *
-         * @returns {boolean} Retorna true se moveu o cursor
-         */
-        previous(): boolean;
-
-        /**
-         * Pega o número, tipos e propriedades das colunas retornadas na consulta
-         */
-        getMetaData(): ResultSetMetaData;
-
-        /**
-         * Retorna o valor da coluna como um Objeto Java
-         *
-         * Há vários métodos get para obter o valor da coluna como objetos específicos
-         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
-         */
-        getObject(columnIndex: number): java.lang.Object;
-        getObject(columnLabel: string): java.lang.Object;
-
-        /**
-         * Retorna o valor da coluna como uma string
-         *
-         * Há vários métodos get para obter o valor da coluna como objetos específicos
-         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
-         */
-        getString(columnIndex: number): string;
-        getString(columnLabel: string): string;
-
-        /**
-         * Retorna o valor da coluna como um boolean
-         *
-         * Há vários métodos get para obter o valor da coluna como objetos específicos
-         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
-         */
-        getBoolean(columnIndex: number): boolean;
-        getBoolean(columnLabel: string): boolean;
-
-        /**
-         * Retorna o valor da coluna como objeto Date
-         *
-         * Esse método retorna um java.sql.Date que herda de java.util.Date.
-         * Para evitar retrabalho deixei como java.util.Date mesmo.
-         *
-         * Há vários métodos get para obter o valor da coluna como objetos específicos
-         * do Java, tais como byte, java.sql.Blob etc.
-         */
-        getDate(columnIndex: number): java.util.Date;
-        getDate(columnLabel: string): java.util.Date;
-
-        /**
-         * Libera o resultado da consulta imediatamente ao invés de aguardar o coletor de lixo
-         */
-        close(): void;
-    }
-
-    declare class ResultSetMetaData {
-        /**
-         * Pega o total de colunas da consulta
-         */
-        getColumnCount(): number;
-
-        /**
-         * Pega o Nome da Coluna (label)
-         */
-        getColumnName(column: number): string;
-    }
-}
-
-declare namespace java.text {
-
-    /**
-     * Formatador de Datas
-     *
-     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
-     */
-    declare class SimpleDateFormat {
-        /**
-         * Cria um novo formatador de datas com o padrão indicado
-         *
-         * Exemplos:
-         *
-         * - "dd/MM/yyyy" -> data no formato pt-BR
-         * - "yyyy-MM-dd" -> data no formato ISO
-         * - "HH:mm" -> Hora (24h) e minuto
-         * - "yyyy-MM-dd'T'HH:mm:ss.SSSZ" -> Data completa (Ex: 2021-07-04T12:08:56.235-0700)
-         *
-         * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
-         */
-        constructor(formato: string);
-
-        /**
-         * Retorna a data formatada conforme o padrão da formatação
-         */
-        format(data: java.util.Date): string;
-
-        /**
-         * Converte uma string, formatada como indicado no construtor, em um objeto Date
-         */
-        parse(dataFormatada: string): java.util.Date;
-    }
-}
-
-declare namespace java.util {
-    declare abstract class Iterator<T> {
-        /**
-         * Indica se ainda há elementos a percorrer
-         */
-        hasNext(): boolean;
-
-        /**
-         * Pega o próximo elemento
-         */
-        next(): T;
-    }
-
-    declare abstract class Set<T> {
-        /**
-         * Adiciona um elemento ao conjunto
-         */
-        add(value: T): boolean;
-
-        /**
-         * Indica se o conjunto está vazio
-         */
-        isEmpty(): boolean;
-
-        /**
-         * Pega a quantidade de elementos do conjunto
-         */
-        size(): number;
-
-        /**
-         * Remove todos os elementos
-         */
-        clear(): void;
-
-        /**
-        * Verifica se existe o elemento
-        */
-        contains(value: T): boolean;
-
-        /**
-         * Pega um iterator para percorrer o conjunto
-         */
-        iterator(): java.util.Iterator<T>;
-    }
-
-    declare abstract class List<T> {
-        /**
-         * Pega o elemento no índice indicado
-         */
-        get(index: number): T;
-
-        /**
-         * Adiciona um elemento à lista
-         */
-        add(value: T): void;
-
-        /**
-         * Adiciona todos os elementos da lista indicada para esta lista
-         */
-        addAll(l: java.util.List<T>): void;
-
-        /**
-         * Indica o tamanho da lista
-         */
-        size(): number;
-
-        /**
-         * Remove todos os elementos
-         */
-        clear(): void;
-
-        /**
-         * Verifica se existe o elemento
-         */
-        contains(value: T): boolean;
-
-        /**
-         * Indica se a lista está vazia
-         */
-         isEmpty(): boolean;
-
-        /**
-         * Pega um iterator para percorrer a lista
-         */
-        iterator(): java.util.Iterator<T>
-    }
-
-    declare class ArrayList<T> extends List<T> {
-    }
-
-    declare abstract class Map<K, V> {
-        /**
-         * Pega o elemento no índice indicado
-         */
-        get(name: K): T;
-
-        /**
-         * Adiciona um elemento
-         */
-        put(name: K, value: T): void;
-
-        /**
-         * Indica o tamanho da lista
-         */
-        size(): number;
-
-        /**
-         * Remove todos os elementos
-         */
-         clear(): void;
-
-        /**
-         * Copia todos os elementos do mapa indicado para este mapa
-         */
-        putAll(m: java.util.Map<K, V>): void;
-
-        /**
-         * Retorna um conjunto com as chaves do Mapa
-         */
-        keySet(): java.util.Set<K>;
-    }
-
-    declare class HashMap<K, V> extends java.util.Map<K, V> {
-    }
-
-    declare class LinkedHashSet<T> extends java.util.Set<T> {
-    }
-
-    declare class LinkedHashMap<K, V> extends java.util.HashMap<K, V> {
-    }
-
-    declare class Date {
-
-        /**
-         * Inicializa com a data do momento que o objeto foi criado
-         */
-        constructor();
-
-        /**
-         * Inicializa com a data em milisegundos decorridos desde 1970-01-01 00:00:00 GMT
-         */
-        constructor(date: number);
-
-        /**
-         * Compara se essa data é posterior à data indicada
-         */
-        after(when: Date): boolean;
-
-        /**
-         * Compara se essa data é anterior à data indicada
-         */
-        before(when: Date): boolean;
-
-        /**
-         * Retorna o dia do mês
-         *
-         * @deprecated Usar Calendar.get(Calendar.DAY_OF_MONTH)
-         */
-        getDate(): number;
-
-        /**
-         * Retorna o dia da semana
-         *
-         * @deprecated Usar Calendar.get(Calendar.DAY_OF_WEEK)
-         */
-        getDay(): number;
-
-        /**
-         * Retorna a hora
-         *
-         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY)
-         */
-        getHours(): number;
-
-        /**
-         * Retorna os minutos
-         *
-         * @deprecated Usar Calendar.get(Calendar.MINUTE)
-         */
-        getMinutes(): number;
-
-        /**
-         * Retorna o mês
-         *
-         * @deprecated Usar Calendar.get(Calendar.MONTH)
-         */
-        getMonth(): number;
-
-        /**
-         * Retorna os segundos
-         *
-         * @deprecated Usar Calendar.get(Calendar.SECOND)
-         */
-        getSeconds(): number;
-
-        /**
-         * Retorna o ano
-         *
-         * @deprecated Usar Calendar.get(Calendar.YEAR) - 1900
-         */
-        getYear(): number;
-
-        /**
-         * Atribui o dia do mês
-         *
-         * @deprecated Usar Calendar.set(Calendar.DAY_OF_MONTH, dia)
-         */
-        setDate(): number;
-
-        /**
-         * Atribui a hora
-         *
-         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY, hora)
-         */
-        setHours(): number;
-
-        /**
-         * Atribui os minutos
-         *
-         * @deprecated Usar Calendar.set(Calendar.MINUTE, minutos)
-         */
-        setMinutes(): number;
-
-        /**
-         * Atribui o mês
-         *
-         * @deprecated Usar Calendar.set(Calendar.MONTH, mes)
-         */
-        setMonth(): number;
-
-        /**
-         * Atribui os segundos
-         *
-         * @deprecated Usar Calendar.set(Calendar.SECOND, segundos)
-         */
-        setSeconds(): number;
-
-        /**
-         * Atribui o ano
-         *
-         * @deprecated Usar Calendar.set(Calendar.YEAR, ano + 1900)
-         */
-        setYear(): number;
-    }
-
-    /**
-     * A Classe Calendar não deve ser instanciada com operador new. Use sempre o método getInstance().
-     *
-     * Essa classe á abstrata e o Java normalmente vai instanciar um GregorianCalendar quando chamada a getInstance().
-     */
-    declare abstract class Calendar {
-        /**
-         * Cria uma instância de Calendário
-         *
-         * Essa classe é abstrata, por isso não é possível instanciá-la diretamente.
-         */
-        static getInstance(): Calendar;
-
-        // Constantes indicando os valores dos meses
-
-        /**
-         * Indica o valor de Janeiro
-         */
-        static const JANUARY: number;
-
-        /**
-         * Indica o valor de Fevereiro
-         */
-        static const FEBRUARY: number;
-
-        /**
-         * Indica o valor de Março
-         */
-        static const MARCH: number;
-
-        /**
-         * Indica o valor de Abril
-         */
-        static const APRIL: number;
-
-        /**
-         * Indica o valor de Maio
-         */
-        static const MAY: number;
-
-        /**
-         * Indica o valor de Junho
-         */
-        static const JUNE: number;
-
-        /**
-         * Indica o valor de Julho
-         */
-        static const JULY: number;
-
-        /**
-         * Indica o valor de Agosto
-         */
-        static const AUGUST: number;
-
-        /**
-         * Indica o valor de Setembro
-         */
-        static const SEPTEMBER: number;
-
-        /**
-         * Indica o valor de Outubro
-         */
-        static const OCTOBER: number;
-
-        /**
-         * Indica o valor de Novembro
-         */
-        static const NOVEMBER: number;
-
-        /**
-         * Indica o valor de Dezembro
-         */
-        static const DECEMBER: number;
-
-        // Constantes de horário
-
-        /**
-         * Indica que a hora é antes de meio dia
-         */
-        static const AM: number;
-
-        /**
-         * Indica que a hora é após meio dia
-         */
-        static const PM: number;
-
-        // Constantes de dia da semana
-
-        /**
-         * Indica que é Domingo
-         */
-        static const SUNDAY: number;
-
-        /**
-         * Indica que é segunda-feira
-         */
-        static const MONDAY: number;
-
-        /**
-         * Indica que é terça-feira
-         */
-        static const TUESDAY: number;
-
-        /**
-         * Indica que é quarta-feira
-         */
-        static const WEDNESDAY: number;
-
-        /**
-         * Indica que é quinta-feira
-         */
-         static const THURSDAY: number;
-
-        /**
-         * Indica que é sexta-feira
-         */
-        static const FRIDAY: number;
-
-        /**
-         * Indica que é Sábado
-         */
-        static const SATURDAY: number;
-
-
-        // Constantes de campo
-
-        /**
-         * Campo que indica se horário é antes ou depois do meio dia
-         */
-        static const AM_PM: number;
-
-        /**
-         * Campo que indica o dia do mês
-         */
-        static const DATE: number;
-
-        /**
-         * Campo que indica o dia do mês
-         */
-        static const DAY_OF_MONTH: number;
-
-        /**
-         * Campo que indica o dia da semana
-         */
-        static const DAY_OF_WEEK: number;
-
-        /**
-         * Campo que indica o dia do ano
-         */
-        static const DAY_OF_YEAR: number;
-
-        /**
-         * Campo que indica a hora antes ou depois do meio dia (12h)
-         */
-        static const HOUR: number;
-
-        /**
-         * Campo que indica a hora do dia (24h)
-         */
-        static const HOUR_OF_DAY: number;
-
-        /**
-         * Campo que indica os milissegundos
-         */
-        static const MILLISECOND: number;
-
-        /**
-         * Campo que indica os minutos
-         */
-        static const MINUTE: number;
-
-        /**
-         * Campo que indica o mês
-         */
-        static const MONTH: number;
-
-        /**
-         * Campo que indica os segundos
-         */
-        static const SECOND: number;
-
-        /**
-         * Campo que indica a semana do mês
-         */
-        static const WEEK_OF_MONTH: number;
-
-        /**
-         * Campo que indica a semana do ano
-         */
-        static const WEEK_OF_YEAR: number;
-
-        /**
-         * Campo que indica o ano
-         */
-        static const YEAR: number;
-
-        /**
-         * Retorna o valor do campo indicado
-         *
-         * @param {number} campo Uma das constantes da classe indicando o campo
-         */
-        get(campo: number): number;
-
-        /**
-         * Atribui o valor ao campo indicado
-         *
-         * @param {number} campo Uma das constantes da classe indicando o campo
-         * @param {number} valor O valor que será atribuído ao campo
-         */
-        set(campo: number, valor: number): void;
-
-        /**
-         * Retorna o calendário como um objeto Date
-         */
-        getTime(): Date;
-
-        /**
-         * Configura o calendário usando um objeto Date
-         */
-        setTime(data: Date): void;
-
-        /**
-         * Compara se essa data é posterior à data indicada
-         */
-        after(data: Calendar): boolean;
-
-        /**
-         * Compara se essa data é anterior à data indicada
-         */
-        before(data: Calendar): boolean;
-
-        /**
-         * Configura o calendário com o Ano, Mês e Dia
-         */
-        set(ano: number, mes: number, dia: number): void;
-
-        /**
-         * Configura o calendário com o Ano, Mês, Dia, Hora e Minutos
-         */
-        set(ano: number, mes: number, dia: number, hora: number, minutos: number): void;
-
-        /**
-         * Configura o calendário com o Ano, Mês, Dia, Hora, Minutos e Segundos
-         */
-        set(ano: number, mes: number, dia: number, hora: number, minutos: number, segundos: number): void;
-
-        /**
-         * Adiciona ou Subtrai 1 unidade do campo indicado
-         *
-         * @param {number} campo Uma das constantes de campo
-         * @param {boolean} aumentaValor Se for true aumentará o campo, senão ele será diminuído
-         */
-        roll(campo: number, aumentaValor: boolean): void;
-
-        /**
-         * Adiciona ou Subtrai unidades do campo indicado
-         *
-         * @param {number} campo Uma das constantes de campo
-         * @param {boolean} valor Valor que será utilizado no cálculo. Se positivo aumentará, se negativo diminuirá
-         */
-        roll(campo: number, valor: number): void;
-    }
-}
-
 interface IwsConsultaSQL {
     /**
      * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
@@ -3688,769 +4477,6 @@ interface IwsConsultaSQL {
      * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
      */
     realizarConsultaSQLAuth(sql:string, coligadaNumber:number, systemCode:string, username:string, password:string, parameters:string): string;
-}
-
-declare namespace com.fluig.sdk.filter {
-    declare class FilterFieldVO {}
-    declare class FilterGroupResultVO {}
-    declare class FilterGroupVO {}
-    declare class FilterOrderVO {}
-    declare class FilterResultVO {}
-    declare class FilterVO {}
-}
-
-declare namespace com.fluig.sdk.identity {
-    declare class UserAuthTokenSessionVO {}
-}
-
-declare namespace com.fluig.sdk.page {
-    declare class PageMobileApiVO {}
-    declare class PageWidgetMobileApiVO {}
-    declare class PublicApiPageVO {}
-}
-
-/**
- * Serviços do Fluig
- */
-
-declare namespace com.fluig.sdk.service {
-    /**
-     * Fornece acesso aos serviços de notificações
-     */
-    declare class AlertService {
-        /**
-         * Método que conta os alertas não lidos de um usuário.
-         */
-        countUnreadAlerts(receiverId: number): number;
-
-        /**
-         * Método que conta os alertas de um modulo não lidos de um usuário
-         */
-        countUnreadAlertsByModule(module: string, receiverId: number): number;
-
-        /**
-         * Get the number of notification in the tenant
-         */
-        getTenantTotalOfNotification(): number;
-
-        /**
-         * Busca os alertas com ação vinculada, do usuário logado ordenado pela data de criação.
-         */
-        listAlertsWithAction(limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
-
-        /**
-         * Busca os alertas com nota, do usuário logado ordenado pela data de criação.
-         */
-        listAlertsWithNote(limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
-
-        /**
-         * Retorna todas as notificações do usuário logado ordenadas pela data de criação.
-         */
-        listAllAlerts(limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
-
-        /**
-         * Retorna todas as notificações de um usuário por um único módulo
-         */
-        listAllAlertsByModule(module: string, limit: number, offset: number): java.util.List<com.fluig.sdk.api.alert.AlertVO>
-
-        /**
-         * Método marca os alertas informados de um usuário também dado como lidos
-         */
-        markAlertAsRead(loginReceiver: string, alertsId: java.util.List<number>): void;
-
-        /**
-         * Método marca todos os alertas de um usuário como lidos.
-         */
-        markAllAlertsAsRead(loginReceiver: string): void;
-
-        /**
-         * Método que remove os alertas informados de um usuário também dado, esse método também é responsável por remover os senders, places e objects relacionado aos alertas
-         */
-        removeAlerts(loginSender: string, alertsId: java.util.List<number>): void;
-
-        /**
-         * Salva a configuração de um usuário para receber ou não alertas de um dado evento através de um dado aplicativo.
-         */
-        saveConfiguration(alertConfig: com.fluig.sdk.api.alert.AlertConfigVO): void;
-
-        /**
-         * Método que deve ser invocado por todos os módulos do sistema para enviar alertas.
-         */
-        sendNotification(eventKey: string, loginSender: string, loginReceiver: string, object: com.fluig.sdk.api.alert.AlertVO, place: com.fluig.sdk.api.alert.AlertVO, actions: java.util.List<com.fluig.sdk.api.alert.AlertActionVO>, metadata: java.util.HashMap<string, string>): void;
-    }
-
-    declare class ArticleService {}
-
-    /**
-     * Cliente para requisições externas usando autenticação do Fluig
-     */
-    declare class AuthorizeClientSdkService {
-        /**
-         * Executa a chamada ao WS
-         *
-         * O parâmetro passado deve ser um objeto convertido em string (JSON.stringfy) com as seguintes propriedades:
-         *
-         * - companyId;
-         * - serviceCode: ID do serviço cadastrado no Fluig;
-         * - endpoint;
-         * - method: Método HTTP (GET, POST, PUT, DELETE);
-         * - timeoutService (em segundos);
-         * - params: Objeto com os valores a serem enviados na requisição;
-         * - headers: Objeto com os valores a serem enviados no cabeçalho;
-         * - options: Objeto com as propriedades da requisição:
-         *     - encoding (padrão UTF-8)
-         *     - mediaType (padrão application/json)
-         *     - useSSL (padrão false)
-         *
-         * @tutorial https://tdn.totvs.com/pages/releaseview.action?pageId=239041233#Autoriza%C3%A7%C3%A3oparaclientdeServi%C3%A7osREST-Consumindooservi%C3%A7ocomautentica%C3%A7%C3%A3oOAuth1,OAuth2,BasicAuthentication,CustomAuthenticationeNoneAuthentication
-         */
-        invoke(data: string): com.fluig.sdk.api.authorizeclient.AuthorizeClientSdkServiceVO;
-    }
-    declare class CardIndexService {}
-    declare class CardService {}
-    declare class CollaborationSDKService {}
-    declare class CommentService {}
-    declare class CommunityService {}
-    declare class ContentFilesService {}
-    /**
-     * Fornece acesso aos serviços de documentos (GED)
-     */
-    declare class DocumentService {
-        /**
-         * Aprova ou reprova um documento.
-         */
-        approveDocument(documentId: number, version: number, approved: boolean, observation: string): void;
-
-        /**
-         * Copia o documento que esta na área de upload
-         */
-        copyDocumentToUploadArea(documentId: number): string[];
-
-        /**
-         * Cria o documento com permissões e aprovadores
-         */
-        createDocument(documentVO: com.fluig.sdk.api.document.DocumentVO): com.fluig.sdk.api.document.DocumentVO;
-
-        /**
-         * Cria uma documento privado
-         */
-        createPrivateDocument(companyId: number, userId: string, fileName: string, file: File): com.fluig.sdk.api.document.DocumentVO;
-
-        /**
-         * Cria uma documento privado
-         */
-        createPrivateDocument(companyId: number, userId: string, fileName: string, filePath: string): com.fluig.sdk.api.document.DocumentVO;
-
-        /**
-         * Remove o documento
-         */
-        deleteDocument(documentId: number): void;
-
-        /**
-         * Retorna o documento ativo passado o ID do mesmo.
-         */
-        getActive(documentId: number): com.fluig.sdk.api.document.DocumentVO
-
-        /**
-         * Retorna documento com as informações de checkout
-         */
-        getAllocatedDocument(documentId: number, version: number): com.fluig.sdk.api.document.AllocatedDocumentVO;
-
-        getCurrentUserPermission(documentId: number): com.fluig.sdk.api.document.SolvedPermissionVO;
-
-        /**
-         * Return the approvement history of the document
-         */
-        getDocumentApprovalHistory(documentId: number): java.util.List<com.fluig.sdk.api.document.DocumentApprovementHistoryVO>;
-
-        /**
-         * Retrieve all document approvers and yours status.
-         */
-        getDocumentApprovers(documentId: number): java.util.List<com.fluig.sdk.api.document.DocumentApproverVO>;
-
-        /**
-         * Retorna as permissões do documento
-         */
-        getDocumentPermissions(documentId: number, version: number): java.util.List<com.fluig.sdk.api.document.DocumentPermissionVO>;
-
-        /**
-         * Retorna a url do documento
-         */
-        getDownloadURL(documentId: number): string;
-
-        /**
-         * Retorna a permissão do usuário em um documento.
-         */
-        getUserPermissions(documentId: number, version: number, user: string): number;
-
-        /**
-         * Set Approvers for a specific document
-         */
-        setDocumentApprovers(documentId: number, documentSecurityVO: com.fluig.sdk.api.document.DocumentSecurityVO): void;
-
-        /**
-         * Determina as permissões do documento
-         */
-        setDocumentPermissions(documentId: number, permissions: java.util.List<com.fluig.sdk.api.document.DocumentPermissionVO>): void;
-
-        /**
-         * Update file
-         */
-        updateFile(docVO: com.fluig.sdk.api.document.DocumentVO): com.fluig.sdk.api.document.DocumentVO;
-
-        /**
-         * Valida configurações de documento
-         */
-        validateDocumentPublicUrlConfiguration(tenantId: number, documentId: number, version: number): void;
-    }
-    declare class DocumentationProxyServiceService {}
-    declare class FavoritesService {}
-    declare class FilterAPIService {}
-
-    /**
-     * Fornece acesso aos serviços de pastas (GED)
-     */
-    declare class FolderDocumentService {
-        /**
-         * Criação de uma nova pasta
-         */
-        create(vo: com.fluig.sdk.api.document.FolderVO): com.fluig.sdk.api.document.FolderVO;
-
-        /**
-         * Recupera um documento através do id
-         */
-        get(documentId: number): com.fluig.sdk.api.document.DocumentVO;
-
-        /**
-         * Recupera lista de documentos através do id da pasta
-         */
-        list(folderId: number): java.util.List<com.fluig.sdk.api.document.DocumentVO>;
-
-        /**
-         * Recupera lista de documentos através do id da pasta
-         */
-        list(folderId: number, permission: number): java.util.List<com.fluig.sdk.api.document.DocumentVO>;
-
-        /**
-         * Retorna os documentos de uma pasta
-         */
-        listDocumentsByFolder(folderVO: com.fluig.sdk.api.document.FolderVO, limit: number, offset: number): java.util.List<com.fluig.sdk.api.document.DocumentVO>;
-
-        /**
-         * Atualiza documento ou pasta
-         */
-        updateDocumentDescription(companyId: number, documentId: number, description: string): com.fluig.sdk.api.document.DocumentVO;
-    }
-    declare class GlobalParameterService {}
-    declare class GroupService {}
-    declare class HolidayAPIService {}
-    declare class I18NService {}
-    declare class IdentityService {}
-    declare class JobService {}
-    declare class LocalAPIService {}
-
-    /**
-     * Serviço para tratar páginas
-     */
-    declare class PageService {
-        createPageDraftFromVersion(pageCode: string, pageVersion: number): void;
-        disable(pageCode: string): void;
-        enable(pageCode: string): void;
-
-        /**
-         * Retorna itens de menu da página
-         */
-        findMenuFromPage(pageCode: string): java.util.List<com.fluig.sdk.page.PublicApiPageVO>;
-
-        /**
-         * Consulta páginas do fluig
-         */
-        findPages(parentPageCode: string, isMobile: boolean, filter: string, start: number, size: number, searchLevel: number, internalPages: boolean): java.util.List<com.fluig.sdk.page.PublicApiPageVO>;
-        findPages(parentPageCode: string, isMobile: boolean, filter: string, start: number, size: number, searchLevel: number, internalPages: boolean, codePage: string): java.util.List<com.fluig.sdk.page.PublicApiPageVO>;
-
-        /**
-         * Retorna a URL do servidor
-         */
-        getServerURL(): string;
-
-        /**
-         * Recupera os valores de preferências para uma instância de uma widget.
-         */
-        getWidgetPreferences(instanceId: number): java.util.HashMap<string, string>;
-
-        mobileMapping(pageCode: string): com.fluig.sdk.page.PageMobileApiVO;
-
-        hide(pageCode: string): void;
-
-        publishPageDraft(pageCode: string, publicationDescription: string): void;
-
-        pageHistory(pageCode: string): java.util.List<string>;
-
-        /**
-         * Recarrega o layout de uma página
-         */
-        reloadPageLayout(pageCode: string): void;
-
-        /**
-         * Seta o valor de uma preferência para uma instância de uma widget
-         */
-        setWidgetPreference(instanceId: number, key: string, value: string): void;
-
-        show(pageCode: string): void;
-    }
-
-    declare class PageWidgetService {}
-    declare class PostService {}
-    declare class SearchService {}
-
-    declare class SecurityService {
-        /**
-         * Verifica se o usuário logado possui determinada permissão no recurso informado
-         */
-        hasPermission(resource: string, permission: string): boolean;
-
-        /**
-         * Lista os recursos da categoria
-         */
-        listResourcesByCategory(category: string, filter: string, offset: number, limit: number): java.util.List<com.fluig.sdk.api.permission.PermissionAssetVO>
-
-        /**
-         * Lista as permissões do recurso informado
-         */
-        getPermissionsByResourceCode(resourceCode: string): java.util.List<com.fluig.sdk.api.permission.PermissionVO>
-
-        /**
-         * Crias as permissões para o recurso
-         */
-        createPermissions(resourceCode: string, permissions: java.util.List<com.fluig.sdk.api.permission.PermissionVO>): void;
-
-        /**
-         * Remove as permissões do recurso
-         */
-        deletePermissions(resourceCode: string, permissions: java.util.List<com.fluig.sdk.api.permission.PermissionVO>): void;
-    }
-
-    declare class SocialBreadcrumbService {}
-    declare class SocialSDKService {}
-    declare class TagsCloudService {}
-    declare class TasksService {}
-    declare class TenantService {}
-
-    /**
-     * Fornece acesso aos serviços de usuário
-     */
-    declare class UserService {
-
-        /**
-         * Adiciona um usuário a um grupo
-         */
-        addUserToGroup(tenantId: number, groupCode: string, userVO: com.fluig.sdk.user.UserVO): void;
-
-        /**
-         * Change the user password
-         */
-        changeUserPassword(vo: com.fluig.sdk.user.UserPasswordVO): void;
-
-        /**
-         * Cria um novo usuário
-         */
-        create(vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
-        create(tenantId: number, vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
-
-        /**
-         * Retorna o usuário pelo id
-         */
-        findById(id: number): com.fluig.sdk.user.UserVO
-
-        /**
-         * Retorna o usuário pelo login
-         */
-        findByLogin(login: string): com.fluig.sdk.user.UserVO
-
-        /**
-         * Retorna usuário pelo ID
-         */
-        findByUserCode(colleagueId: string): com.fluig.sdk.user.UserVO
-
-        /**
-         * Retorna o usuário corrente logado
-         */
-        getCurrent(): com.fluig.sdk.user.UserVO
-
-        /**
-         * Pesquisa por usuários baseado em um conjunto de parâmetros.
-         */
-        list(offset: number, limit: number): java.util.List<com.fluig.sdk.user.UserVO>;
-        list(params: java.util.HashMap<string, object>, offset: number, limit: number): java.util.List<com.fluig.sdk.user.UserVO>;
-        list(sortField: string, sortType: string, limit: number, offset: number, search: string): java.util.List<com.fluig.sdk.user.UserVO>;
-
-        /**
-         * Pesquisa por usuários ativos e inativos baseado em um conjunto de parâmetros.
-         */
-        listAll(sortField: string, sortType: string, limit: number, offset: number, search: string): java.util.List<com.fluig.sdk.user.UserVO>;
-
-        /**
-         * Pega todos os dados do usuário especificado pelo login
-         */
-        listData(login: string): java.util.HashMap<string, string>;
-
-        /**
-         * Pega todos os grupos do usuário especificado pelo login
-         */
-        listGroups(login: string): java.util.List<string>;
-
-        /**
-         * Pega todos os papéis do usuário especificado pelo login
-         */
-        listRoles(login: string): java.util.List<string>;
-
-        /**
-         * Remove dados do usuário
-         */
-        removeUserData(alias: string, key: string): void;
-
-        /**
-         * Atualiza o usuário
-         */
-        updateUser(vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
-
-        /**
-         * Atualiza os dados do usuário logado
-         */
-        updateUserData(data: java.util.HashMap<string, string>): boolean;
-
-        /**
-         * Atualiza os dados do usuário procurando pelo ID
-         */
-        updateUserDataById(data: java.util.HashMap<string, string>, userId: string): boolean;
-
-        /**
-         * Atualiza usuário mesmo que esteja desabilitado (inativo)
-         */
-        updateUserEvenDisabled(vo: com.fluig.sdk.user.UserVO): com.fluig.sdk.user.UserVO;
-    }
-    declare class WidgetService {}
-
-    /**
-     * Fornece acesso aos serviços de workflow
-     */
-    declare class WorkflowAPIService {
-        /**
-         * Faz com que o usuário repassado assuma a tarefa
-         */
-        assumeProcessTask(assumeProcessTaskVO: com.fluig.sdk.api.workflow.AssumeProcessTaskVO): com.fluig.sdk.api.workflow.AssumeProcessTaskResultVO;
-        assumeProcessTask(companyId: number, userId: string, processInstanceId: number, movementSequence: number, replacementId: string): com.fluig.sdk.api.workflow.ProcessTaskVO;
-
-        /**
-         * Faz com que os usuários repassados assumam as tarefas vinculadas aos mesmos
-         */
-        assumeProcessTasks(assumeProcessTasksVO: com.fluig.sdk.api.workflow.AssumeProcessTasksVO): com.fluig.sdk.api.workflow.AssumeProcessTaskResultVO;
-
-        cancelInstance(cancelInstanceVO: com.fluig.sdk.api.workflow.CancelInstanceVO): com.fluig.sdk.api.workflow.CancelInstanceResultVO;
-        cancelInstances(cancelInstanceVO: com.fluig.sdk.api.workflow.CancelInstancesVO): com.fluig.sdk.api.workflow.CancelInstancesResultVO;
-
-        /**
-         * Insere um complemento em uma solicitação
-         */
-        createProcessObservation(processObservationVO: com.fluig.sdk.api.workflow.ProcessObservationVO): com.fluig.sdk.api.workflow.ProcessObservationVO;
-
-        findAssignedToMeTasks(processId: string, initialStartDate: string, finalStartDate: string, requester: string, manager: string, page: string, pageSize: string, statusTypeTaskRequest: string, calculate: string, expand: string, cardFilters: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestProcessTaskVO>;
-
-        findManagedByMeTasks(processId: string, initialStartDate: string, finalStartDate: string, assignee: string, requester: string, page: string, pageSize: string, statusTypeTaskRequest: string, calculate: string, expand: string, cardFilters: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestProcessTaskVO>;
-
-        /**
-         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como requisitante
-         */
-        findMyRequestsSLA(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, assignee: string, manager: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
-
-        findMyRequestsTasks(processId: string, initialStartDate: string, finalStartDate: string, assignee: string, manager: string, page: string, pageSize: string, statusTypeTaskRequest: string, calculate: string, expand: string, cardFilters: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestProcessTaskVO>;
-
-        /**
-         * Retorna a lista de complementos em uma solicitação
-         */
-        findObservations(processInstanceId: number, stateSequence: number, threadSequence: number): java.util.List<com.fluig.sdk.api.workflow.ProcessObservationVO>;
-
-        /**
-         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como responsável
-         */
-        findRequestSLAByProcessInstanceId(processInstanceId: number, populateCurrentTasks: boolean, calculate: boolean, populateCardFields: boolean, populateLocals: boolean, assigneeLocals: boolean): com.fluig.sdk.api.workflow.RequestSLAVO;
-        findRequestSLAByProcessInstanceId(processInstanceId: string, expand: string, calculate: string): com.fluig.sdk.api.workflow.RequestSLAVO;
-
-        /**
-         * Recupera uma lista das solicitações de SLA dos processos configurados
-         */
-        findRequestsSLA(): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
-        findRequestsSLA(processes: java.util.List<string>): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
-        findRequestsSLA(processes: java.util.List<string>, statusRequiredList: java.util.List<string>): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
-        findRequestsSLA(processes: java.util.List<string>, statusRequiredList: java.util.List<string>, returnCurrentTasks: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
-        findRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>, statusRequiredList: java.util.List<string>, returnCurrentTasks: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
-        findRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>, statusRequiredList: java.util.List<string>, initialStartDate: Date, finalStartDate: Date, initialDeadlineDate: Date, finalDeadlineDate: Date, initialWarningDate: Date, finalWarningDate: Date, returnCurrentTasks: boolean, requester: string, assignee: string, manager: string, requesterLocals: java.util.List<string>, assigneeLocals: java.util.List<string>, orderParams: java.util.List<com.totvs.technology.foundation.sdk.service.vo.common.OrderParam>, calculate: boolean, page: number, pageSize: number, populateCardFields: boolean, populateLocalsValue: boolean, populateAssigneeLocalsValue: boolean): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
-        findRequestsSLA(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, requester: string, assignee: string, manager: string, requesterLocals: string, assigneeLocals: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
-
-        /**
-         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como responsável
-         */
-        findRequestsSLAAssignedToMe(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, requester: string, manager: string, requesterLocals: string, assigneeLocals: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
-
-        /**
-         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como gestor
-         */
-        findRequestsSLAManagedByMe(processes: string, cardFilters: string, statusRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, expand: string, requester: string, assignee: string, requesterLocals: string, assigneeLocals: string, order: string, calculate: string, page: string, pageSize: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestSLAVO>;
-
-        findSLATasks(processId: string, initialStartDate: string, finalStartDate: string, assignee: string, requester: string, manager: string, page: string, pageSize: string, statusTypeTaskRequest: string, calculate: string, expand: string, cardFilters: string): java.util.LinkedHashSet<com.fluig.sdk.api.workflow.RequestProcessTaskVO>;
-
-        /**
-         * Retorna uma lista das atividades pendentes de um processo
-         */
-        getActiveTasks(processInstanceId: number): com.fluig.sdk.api.workflow.ProcessInstanceInfoVO;
-
-        /**
-         * Retorna uma lista de processos disponíveis para o usuário
-         */
-        getAvailableProcess(tenantId: number, userId: string): java.util.List<com.fluig.sdk.api.workflow.ProcessVersionVO>;
-
-        /**
-         * Retorna a versão de um processo
-         */
-        getProcessVersion(processId: string): number;
-
-        /**
-         * Retorna todos os processos da empresa
-         */
-        listProcess(pattern: string, limit: number, offset: number): java.util.List<com.fluig.sdk.api.workflow.ProcessDefinitionVO>;
-
-        /**
-         * Retorna todos os processos da empresa
-         */
-        listSlaProcess(): java.util.List<com.fluig.sdk.api.workflow.ProcessDefinitionVO>;
-
-        resumeAssignedToMeTasks(processId: string, startDate: string, endDate: string, requester: string, manager: string): com.fluig.sdk.api.workflow.ResumeProcessTaskVO;
-        resumeManagedByMeTasks(processId: string, startDate: string, endDate: string, requester: string, assignee: string): com.fluig.sdk.api.workflow.ResumeProcessTaskVO;
-
-        /**
-         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como requisitante
-         */
-        resumeMyRequestsSLA(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, assignee: string, manager: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
-
-        resumeMyRequestsTasks(processId: string, startDate: string, endDate: string, assignee: string, manager: string): com.fluig.sdk.api.workflow.ResumeProcessTaskVO;
-
-        /**
-         * Recupera um resumo dos indicadores de SLA dos processos configurados
-         */
-        resumeRequestsSLA(): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
-        resumeRequestsSLA(processes: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
-        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
-        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>, countersRequiredList: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
-        resumeRequestsSLA(processes: java.util.List<string>, cardFilters: java.util.HashMap<string, string>, countersRequiredList: java.util.List<string>, initialStartDate: Date, finalStartDate: Date, initialDeadlineDate: Date, finalDeadlineDate: Date, initialWarningDate: Date, finalWarningDate: Date, requester: string, assignee: string, manager: string, requesterLocalsList: java.util.List<string>, assigneeLocalsList: java.util.List<string>): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
-        resumeRequestsSLA(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, requester: string, assignee: string, manager: string, requesterLocals: string, assigneeLocals: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
-
-        /**
-         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como responsável
-         */
-        resumeRequestsSLAAssignedToMe(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, requester: string, manager: string, requesterLocals: string, assigneeLocals: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
-
-        /**
-         * Recupera um resumo dos indicadores de SLA dos processos configurados considerando o usuário logado como gestor
-         */
-        resumeRequestsSLAManagedByMe(processes: string, cardFilters: string, countersRequired: string, initialStartDate: string, finalStartDate: string, initialDeadlineDate: string, finalDeadlineDate: string, initialWarningDate: string, finalWarningDate: string, requester: string, assignee: string, requesterLocals: string, assigneeLocals: string): com.fluig.sdk.api.workflow.ResumeRequestsSLAVO;
-
-        resumeSLATasks(processId: string, startDate: string, endDate: string, assignee: string, requester: string, manager: string): com.fluig.sdk.api.workflow.ResumeProcessTaskVO;
-    }
-}
-
-declare namespace com.fluig.sdk.tenant {
-    declare class AdminUserVO {}
-    declare class TenantVO {}
-}
-
-declare namespace com.fluig.sdk.user {
-    declare class ColleagueVO {}
-    declare class UserPasswordVO {}
-
-    /**
-     * Representa um Usuário
-     */
-    declare class UserVO {
-        /**
-         * Pega o e-mail
-         */
-        getEmail(): string
-
-        /**
-         * Pega o nome completo
-         */
-        getFullName(): string
-
-        /**
-         * Pega o primeiro nome
-         */
-        getFirstName(): string;
-
-        /**
-         * Pega o sobrenome
-         */
-        getLastName(): string;
-
-        /**
-         * Pega o login
-         */
-        getLogin(): string;
-
-        /**
-         * Pega o código
-         */
-        getCode(): string
-
-        /**
-         * Pega todos os dados extras
-         */
-        getExtData(): java.util.HashMap<string, object>;
-
-        /**
-         * Pega um dado extra
-         */
-        getExtraData(key: string): object;
-
-        /**
-         * Pega os grupos
-         */
-        getGroups(): java.util.List<string>;
-
-        /**
-         * Pega o ID
-         */
-        getId(): number;
-
-        /**
-         * Informa se é um usuário Ativo
-         */
-        getIsActive(): boolean;
-
-        /**
-         * Pega a senha
-         */
-        getPassword(): string;
-
-        /**
-         * Pega o fuso horário
-         */
-        getTimezone(): string;
-
-        /**
-         * Pega os papéis
-         */
-        getRoles(): java.util.List<string>;
-
-        /**
-         * Pega o token de acesso
-         */
-        getTokenAccess(): string;
-
-        /**
-         * Pega a senha do token
-         */
-        getTokenSecret(): string;
-
-        /**
-         * Pega o UUID
-         */
-        getUserUUID(): string;
-
-        /**
-         * Retorna objeto no mapa
-         */
-        getValueExtData(key: string): object;
-
-                /**
-         * Adiciona dados extras
-         */
-        addExtData(key: string, value: object): void;
-
-        /**
-         * Atribui o código
-         */
-        setCode(code: string): void;
-
-        /**
-         * Atribui o e-mail
-         */
-        setEmail(email: string): void;
-
-        /**
-         * Atribui os dados extras
-         */
-        setExtData(extData: java.util.HashMap<string, object>): void;
-
-        /**
-         * Atribui um valor para um dado extra
-         */
-        setExtraData(key: string, value: object): void;
-
-        /**
-         * Atribui o primeiro nome
-         */
-        setFirstName(firstName: string): void;
-
-        /**
-         * Atribui o sobrenome
-         */
-        setLastName(lastName: string): void;
-
-        /**
-         * Atribui o nome completo
-         */
-        setFullName(fullName: string): void;
-
-        /**
-         * Atribui os grupos
-         */
-        setGroups(groups: java.util.List<string>): void;
-
-        /**
-         * Atribui o ID
-         */
-        setId(id: number): void;
-
-        /**
-         * Atribui o status de Ativo
-         */
-        setIsActive(isActive: boolean): void;
-
-        /**
-         * Atribui o login
-         */
-        setLogin(login: string): void;
-
-        /**
-         * Atribui a senha
-         */
-        setPassword(password: string): void;
-
-        /**
-         * Atribui os papéis
-         */
-        setRoles(roles: java.util.List<string>): void;
-
-        /**
-         * Atribui o fuso horário
-         */
-        setTimezone(timezone: string): void;
-
-        /**
-         * Atribui o token de acesso
-         */
-        setTokenAccess(token: string): void;
-
-        /**
-         * Atribui a senha do token
-         */
-        setTokenSecret(tokenSecret: string): void;
-
-        /**
-         * Atribui o UUID
-         */
-        setUserUUID(userUUID: string): void;
-    }
 }
 
 declare namespace com.fluig.sdk.api.alert {
