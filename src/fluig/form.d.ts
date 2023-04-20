@@ -46,12 +46,12 @@ declare class FormController {
     /**
      * Atribui valor a um campo do formulário
      */
-    setValue(nomeCampo: string, valor: string): string;
+    setValue(nomeCampo: string, valor: string): void;
 
     /**
      * Pega o valor de um campo do formulário
      */
-    getValue(nomeCampo: string): string;
+    getValue(nomeCampo: string): java.lang.String;
 
     /**
      * Deixa o campo invisível buscando pelo nome do campo
