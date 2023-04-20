@@ -17,11 +17,15 @@ declare namespace java.lang {
          * trata como um número (provavelmente o código ASCII do char).
          *
          * Se precisar da letra utilize o método substring indicando índice
-         * inicial e final.
+         * inicial e final ou converta utilizando a classe Character.
          *
          * @example
          * var str = new java.lang.String("texto");
          * str.substring(1, 2); // Retornará "e"
+         *
+         * var str = new java.lang.String("012");
+         * Character.digit(str.charAt(2), 10); // Retornará número 2
+         * Character.toString(str.charAt(2)); // Retornará string 2
          */
         charAt(index: number): number;
 
@@ -155,5 +159,22 @@ declare namespace java.lang {
          * Remove espaços em branco do início e fim da string
          */
         trim(): String;
+    }
+
+    declare class Character {
+        /**
+         * Retorna o caracter como uma String
+         *
+         * @param c Código do CHAR
+         */
+        toString(c: number): String;
+
+        /**
+         * Converte o caracter em um número
+         *
+         * @param c Código do CHAR
+         * @param radix Base a converter (normalmente 10 pra indicar que é decimal)
+         */
+        digit(c: number, radix: number): number;
     }
 }

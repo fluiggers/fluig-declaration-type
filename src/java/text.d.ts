@@ -21,6 +21,11 @@ declare namespace java.text {
         constructor(formato: string);
 
         /**
+         * Aplica o padrão de data de forma similar ao construtor
+         */
+        applyPattern(formato: string): void;
+
+        /**
          * Retorna a data formatada conforme o padrão da formatação
          */
         format(data: java.util.Date): string;
