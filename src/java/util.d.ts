@@ -112,12 +112,12 @@ declare namespace java.util {
         /**
          * Pega o elemento no índice indicado
          */
-        get(name: K): T;
+        get(name: K): V;
 
         /**
          * Adiciona um elemento
          */
-        put(name: K, value: T): void;
+        put(name: K, value: V): void;
 
         /**
          * Indica o tamanho da lista
