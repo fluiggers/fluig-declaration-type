@@ -41,6 +41,16 @@ declare namespace java.util {
          * Pega um iterator para percorrer o conjunto
          */
         iterator(): java.util.Iterator<T>;
+
+        /**
+         * Remove o elemento indicado
+         */
+        remove(value: T): boolean;
+
+        /**
+         * Retorna um array com todos os elementos
+         */
+        toArray(): T[];
     }
 
     declare abstract class List<T> {
@@ -77,12 +87,22 @@ declare namespace java.util {
         /**
          * Indica se a lista está vazia
          */
-         isEmpty(): boolean;
+        isEmpty(): boolean;
 
         /**
          * Pega um iterator para percorrer a lista
          */
         iterator(): java.util.Iterator<T>
+
+        /**
+         * Remove o elemento
+         */
+        remove(value: T): boolean;
+
+        /**
+         * Retorna um array com todos os elementos da lista
+         */
+        toArray(): T[];
     }
 
     declare class ArrayList<T> extends List<T> {
@@ -107,7 +127,7 @@ declare namespace java.util {
         /**
          * Remove todos os elementos
          */
-         clear(): void;
+        clear(): void;
 
         /**
          * Copia todos os elementos do mapa indicado para este mapa
@@ -118,6 +138,21 @@ declare namespace java.util {
          * Retorna um conjunto com as chaves do Mapa
          */
         keySet(): java.util.Set<K>;
+
+        /**
+         * Retorna verdadeiro se houver item para a chave indicada
+         */
+        containsKey(name: K): boolean;
+
+        /**
+         * Retorna verdadeiro se o mapa está vazio
+         */
+        isEmpty(): boolean;
+
+        /**
+         * Remove o elemento indicado pela chave
+         */
+        remove(name: K): V;
     }
 
     declare class HashMap<K, V> extends java.util.Map<K, V> {
@@ -505,5 +540,13 @@ declare namespace java.util {
          * @param {boolean} valor Valor que será utilizado no cálculo. Se positivo aumentará, se negativo diminuirá
          */
         roll(campo: number, valor: number): void;
+
+        /**
+         * Adiciona ou subtrai a quantidade indicada do campo indicado
+         *
+         * @param campo Uma das constantes de campo
+         * @param valor Valor que será utilizado no cálculo. Se negativo vai subtrair
+         */
+        add(campo: number, valor: number): void;
     }
 }

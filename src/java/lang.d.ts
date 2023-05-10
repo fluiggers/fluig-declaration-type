@@ -163,14 +163,14 @@ declare namespace java.lang {
 
     declare class Character {
         /**
-         * Retorna o caracter como uma String
+         * Retorna o caractere como uma String
          *
          * @param c Código do CHAR
          */
         toString(c: number): String;
 
         /**
-         * Converte o caracter em um número
+         * Converte o caractere em um número
          *
          * @param c Código do CHAR
          * @param radix Base a converter (normalmente 10 pra indicar que é decimal)
