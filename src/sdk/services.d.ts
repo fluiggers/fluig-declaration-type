@@ -63,9 +63,55 @@ declare namespace com.fluig.sdk.service {
         saveConfiguration(alertConfig: com.fluig.sdk.api.alert.AlertConfigVO): void;
 
         /**
-         * Método que deve ser invocado por todos os módulos do sistema para enviar alertas.
+         * Envia uma Notificação de Sistema e também um e-mail de notificação
+         *
+         * De acordo com o Evento disparado ele dispara e-mail específico da notificação,
+         * podedendo gerar erro de disparo de e-mail por não ter os dados necessários ao template
+         * do e-mail disparado. Não descobri como configurar template de e-mail para a notificação nem os dados.
+         *
+         * Usando o serviço AlertServiceRest da API REST (antiga) é possível listar os módulos e eventos disponíveis,
+         * assim como criar novos módulos e eventos para facilitar o disparo de notificações.
+         * @see https://api.fluig.com/old/resource_AlertServiceRest.html
+         *
+         * @example
+         * var alertService = fluigAPI.getAlertService();
+         *
+         * var objeto = new com.totvs.technology.foundation.alert.GenericAlertObject(
+         *     -1,
+         *    "alertObjectClass",
+         *    "Solicitação de Veículo",
+         *    "2537",
+         *    "",
+         *    "/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID=2537"
+         * );
+         *
+         * alertService.sendNotification(
+         *     "FROTA_REAGENDAR_VEICULO",
+         *     null,
+         *     "bruno.gasparetto",
+         *     objeto,
+         *     null,
+         *     null,
+         *     null
+         * );
+         *
+         * @param eventKey Chave do Evento
+         * @param loginSender Login de quem enviou a notificação
+         * @param loginReceiver Login de quem receberá a notificação
+         * @param object Objeto que identifica a notificação
+         * @param place Objeto que identifica a origem da notificação
+         * @param actions Ações
+         * @param metadata Dados adicionais para tratamento em eventos de notificação
          */
-        sendNotification(eventKey: string, loginSender: string, loginReceiver: string, object: com.fluig.sdk.api.alert.AlertVO, place: com.fluig.sdk.api.alert.AlertVO, actions: java.util.List<com.fluig.sdk.api.alert.AlertActionVO>, metadata: java.util.HashMap<string, string>): void;
+        sendNotification(
+            eventKey: string,
+            loginSender:? string,
+            loginReceiver: string,
+            object: com.totvs.technology.foundation.alert.AlertObject,
+            place:? com.totvs.technology.foundation.alert.AlertObject,
+            actions:? java.util.List<com.totvs.technology.foundation.alert.AlertAction>,
+            metadata:? java.util.HashMap<string, string>
+        ): void;
     }
 
     declare class ArticleService {}

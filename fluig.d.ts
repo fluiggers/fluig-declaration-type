@@ -3735,6 +3735,30 @@ declare namespace java.util {
     }
 }
 
+interface IwsConsultaSQL {
+    /**
+     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
+     *
+     * @param {string} sql Código (ID) do SQL cadastrado no RM
+     * @param {number} coligadaNumber
+     * @param {string} systemCode
+     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
+     */
+    realizarConsultaSQL(sql:string, coligadaNumber:number, systemCode:string, parameters:string): string;
+
+    /**
+     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
+     *
+     * @param {string} sql Código (ID) do SQL cadastrado no RM
+     * @param {number} coligadaNumber
+     * @param {string} systemCode
+     * @param {string} username
+     * @param {string} password
+     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
+     */
+    realizarConsultaSQLAuth(sql:string, coligadaNumber:number, systemCode:string, username:string, password:string, parameters:string): string;
+}
+
 declare namespace com.fluig.sdk.filter {
     declare class FilterFieldVO {}
     declare class FilterGroupResultVO {}
@@ -3819,9 +3843,55 @@ declare namespace com.fluig.sdk.service {
         saveConfiguration(alertConfig: com.fluig.sdk.api.alert.AlertConfigVO): void;
 
         /**
-         * Método que deve ser invocado por todos os módulos do sistema para enviar alertas.
+         * Envia uma Notificação de Sistema e também um e-mail de notificação
+         *
+         * De acordo com o Evento disparado ele dispara e-mail específico da notificação,
+         * podedendo gerar erro de disparo de e-mail por não ter os dados necessários ao template
+         * do e-mail disparado. Não descobri como configurar template de e-mail para a notificação nem os dados.
+         *
+         * Usando o serviço AlertServiceRest da API REST (antiga) é possível listar os módulos e eventos disponíveis,
+         * assim como criar novos módulos e eventos para facilitar o disparo de notificações.
+         * @see https://api.fluig.com/old/resource_AlertServiceRest.html
+         *
+         * @example
+         * var alertService = fluigAPI.getAlertService();
+         *
+         * var objeto = new com.totvs.technology.foundation.alert.GenericAlertObject(
+         *     -1,
+         *    "alertObjectClass",
+         *    "Solicitação de Veículo",
+         *    "2537",
+         *    "",
+         *    "/pageworkflowview?app_ecm_workflowview_detailsProcessInstanceID=2537"
+         * );
+         *
+         * alertService.sendNotification(
+         *     "FROTA_REAGENDAR_VEICULO",
+         *     null,
+         *     "bruno.gasparetto",
+         *     objeto,
+         *     null,
+         *     null,
+         *     null
+         * );
+         *
+         * @param eventKey Chave do Evento
+         * @param loginSender Login de quem enviou a notificação
+         * @param loginReceiver Login de quem receberá a notificação
+         * @param object Objeto que identifica a notificação
+         * @param place Objeto que identifica a origem da notificação
+         * @param actions Ações
+         * @param metadata Dados adicionais para tratamento em eventos de notificação
          */
-        sendNotification(eventKey: string, loginSender: string, loginReceiver: string, object: com.fluig.sdk.api.alert.AlertVO, place: com.fluig.sdk.api.alert.AlertVO, actions: java.util.List<com.fluig.sdk.api.alert.AlertActionVO>, metadata: java.util.HashMap<string, string>): void;
+        sendNotification(
+            eventKey: string,
+            loginSender:? string,
+            loginReceiver: string,
+            object: com.totvs.technology.foundation.alert.AlertObject,
+            place:? com.totvs.technology.foundation.alert.AlertObject,
+            actions:? java.util.List<com.totvs.technology.foundation.alert.AlertAction>,
+            metadata:? java.util.HashMap<string, string>
+        ): void;
     }
 
     declare class ArticleService {}
@@ -4498,30 +4568,6 @@ declare namespace com.fluig.sdk.user {
     }
 }
 
-interface IwsConsultaSQL {
-    /**
-     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
-     *
-     * @param {string} sql Código (ID) do SQL cadastrado no RM
-     * @param {number} coligadaNumber
-     * @param {string} systemCode
-     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
-     */
-    realizarConsultaSQL(sql:string, coligadaNumber:number, systemCode:string, parameters:string): string;
-
-    /**
-     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
-     *
-     * @param {string} sql Código (ID) do SQL cadastrado no RM
-     * @param {number} coligadaNumber
-     * @param {string} systemCode
-     * @param {string} username
-     * @param {string} password
-     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
-     */
-    realizarConsultaSQLAuth(sql:string, coligadaNumber:number, systemCode:string, username:string, password:string, parameters:string): string;
-}
-
 declare namespace com.fluig.sdk.api.alert {
     declare class AlertActionVO {}
     declare class AlertConfigVO {}
@@ -4557,6 +4603,81 @@ declare namespace com.fluig.sdk.api.alert {
         setRead(read: boolean): void;
         setReceiver(receiver: com.fluig.sdk.api.alert.AlertUserVO): void;
         setSenders(senders: java.util.List<com.fluig.sdk.api.alert.AlertSenderVO>): void;
+    }
+}
+
+declare namespace com.totvs.technology.foundation.alert.enumeration {
+    enum FDNAlertActionType {
+        MAIN,
+        DEFAULT,
+    }
+
+    enum FDNAlertIntegrationType {
+        JMS,
+        HTTP,
+        NONE,
+    }
+}
+
+declare namespace com.totvs.technology.foundation.alert {
+    declare abstract class AlertObject {
+        getAlertObjectId(): number;
+        getAlertObjectClass(): java.lang.String;
+        getAlertObjectTypeDescriptionKey(): java.lang.String;
+        getAlertObjectDescription(): java.lang.String;
+        getAlertObjectLink(): java.lang.String;
+        getAlertObjectDetailKey(): java.lang.String;
+        getAlertObjectNote(): java.lang.String;
+        setAlertObjectNote(paramString: string): void;
+    }
+
+    declare class GenericAlertObject extends AlertObject {
+        public GenericAlertObject();
+
+        /**
+         * Cria um novo objeto
+         *
+         * @param alertObjectId ID do objeto de alerta. Acredito que passar -1 crie um ID auto incrementado (igual ao RM faz)
+         * @param alertObjectClass Nome da classe do Objeto. Não entendi como funciona, mas qualquer string faz funcionar
+         * @param alertObjectTypeDescriptionKey Texto ou chave I18N. Informa a descrição do tipo da notificação
+         * @param alertObjectDescription Texto ou chave I18N. Informa a descrição do objeto. Será o texto do link
+         * @param alertObjectDetailKey Texto ou chave I18N. Informa os detalhes da notificação
+         * @param alertObjectLink URL para encaminhar o usuário ao objeto da notificação. Começar com /
+         * @param alertObjectNote Anotação do objeto
+         */
+        public GenericAlertObject(
+            alertObjectId: number,
+            alertObjectClass: string,
+            alertObjectTypeDescriptionKey: string,
+            alertObjectDescription: string,
+            alertObjectDetailKey: string,
+            alertObjectLink: string,
+            alertObjectNote:? string = null
+        );
+    }
+
+    declare abstract class AlertAction {
+        getActionKey(): java.lang.String;
+        getDescriptionKey(): java.lang.String;
+        getDescriptionAfterExecKey(): java.lang.String;
+        getHttpMethod(): java.lang.String;
+        getUrl(): java.lang.String;
+        getActionType(): com.totvs.technology.foundation.alert.enumeration.FDNAlertActionType;
+        getIntegrationType(): com.totvs.technology.foundation.alert.enumeration.FDNAlertIntegrationType;
+    }
+
+    declare class GenericAlertAction extends AlertAction {
+        GenericAlertAction();
+
+        GenericAlertAction(
+            actionKey: string,
+            actionType: com.totvs.technology.foundation.alert.enumeration.FDNAlertActionType,
+            descriptionKey: string,
+            descriptionAfterExecKey: string,
+            integrationType: com.totvs.technology.foundation.alert.enumeration.FDNAlertIntegrationType,
+            httpMethod: string,
+            url: string
+        );
     }
 }
 
