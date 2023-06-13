@@ -2792,7 +2792,7 @@ declare namespace java.lang {
         /**
          * Retorna o valor do objeto como uma string
          */
-        toString(): string;
+        toString(): String;
     }
 
     declare class String {
@@ -3100,8 +3100,8 @@ declare namespace javax.sql {
          * Há vários métodos get para obter o valor da coluna como objetos específicos
          * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
          */
-        getString(columnIndex: number): string;
-        getString(columnLabel: string): string;
+        getString(columnIndex: number): java.lang.String;
+        getString(columnLabel: string): java.lang.String;
 
         /**
          * Retorna o valor da coluna como um boolean
@@ -3139,7 +3139,7 @@ declare namespace javax.sql {
         /**
          * Pega o Nome da Coluna (label)
          */
-        getColumnName(column: number): string;
+        getColumnName(column: number): java.lang.String;
     }
 }
 
@@ -3173,7 +3173,7 @@ declare namespace java.text {
         /**
          * Retorna a data formatada conforme o padrão da formatação
          */
-        format(data: java.util.Date): string;
+        format(data: java.util.Date): java.lang.String;
 
         /**
          * Converte uma string, formatada como indicado no construtor, em um objeto Date
@@ -3733,6 +3733,18 @@ declare namespace java.util {
          */
         add(campo: number, valor: number): void;
     }
+
+    declare class UUID {
+        /**
+         * Cria um UUID tipo 4 (geração pseudo aleatória)
+         */
+        static randomUUID(): UUID;
+
+        /**
+         * Retorna uma string representando o UUID
+         */
+        toString(): java.lang.String;
+    }
 }
 
 interface IwsConsultaSQL {
@@ -4057,7 +4069,20 @@ declare namespace com.fluig.sdk.service {
         updateDocumentDescription(companyId: number, documentId: number, description: string): com.fluig.sdk.api.document.DocumentVO;
     }
     declare class GlobalParameterService {}
-    declare class GroupService {}
+
+    declare class GroupService {
+        /**
+         * Retorna os usuários de um grupo, mesmo que estejam dentro de subgrupo
+         *
+         * @param groupId Código do Grupo
+         * @param pattern Não sei
+         * @param limit Limite de usuários retornados (não pode ser 0 ou menor que 0)
+         * @param offset A partir de qual índice retornará
+         * @param order Ordem (não sei cmo utilizar)
+         */
+        findUsersByGroup(groupId: string, pattern: string, limit: number, offset: number, order: string): java.util.List<com.fluig.sdk.user.ColleagueVO>;
+    }
+
     declare class HolidayAPIService {}
     declare class I18NService {}
     declare class IdentityService {}
@@ -4379,7 +4404,72 @@ declare namespace com.fluig.sdk.tenant {
 }
 
 declare namespace com.fluig.sdk.user {
-    declare class ColleagueVO {}
+
+    /**
+     * Representa um colleague (que acho ser o mesmo que user, mas o Flug quis diferenciar)
+     */
+    declare class ColleagueVO {
+        /**
+         * Pega o e-mail
+         */
+        getEmail(): java.lang.String
+
+        /**
+         * Pega o nome completo
+         */
+        getFullName(): java.lang.String
+
+        /**
+         * Pega o primeiro nome
+         */
+        getFirstName(): java.lang.String;
+
+        /**
+         * Pega o sobrenome
+         */
+        getLastName(): java.lang.String;
+
+        /**
+         * Pega o login
+         */
+        getLogin(): java.lang.String;
+
+        /**
+         * Pega o código
+         */
+        getCode(): java.lang.String
+
+        /**
+         * Atribui o login
+         */
+        setLogin(login: string): void;
+
+        /**
+         * Atribui o primeiro nome
+         */
+        setFirstName(firstName: string): void;
+
+        /**
+         * Atribui o sobrenome
+         */
+        setLastName(lastName: string): void;
+
+        /**
+         * Atribui o nome completo
+         */
+        setFullName(fullName: string): void;
+
+        /**
+         * Atribui o código
+         */
+        setCode(code: string): void;
+
+        /**
+         * Atribui o e-mail
+         */
+        setEmail(email: string): void;
+    }
+
     declare class UserPasswordVO {}
 
     /**
@@ -4389,37 +4479,37 @@ declare namespace com.fluig.sdk.user {
         /**
          * Pega o e-mail
          */
-        getEmail(): string
+        getEmail(): java.lang.String
 
         /**
          * Pega o nome completo
          */
-        getFullName(): string
+        getFullName(): java.lang.String
 
         /**
          * Pega o primeiro nome
          */
-        getFirstName(): string;
+        getFirstName(): java.lang.String;
 
         /**
          * Pega o sobrenome
          */
-        getLastName(): string;
+        getLastName(): java.lang.String;
 
         /**
          * Pega o login
          */
-        getLogin(): string;
+        getLogin(): java.lang.String;
 
         /**
          * Pega o código
          */
-        getCode(): string
+        getCode(): java.lang.String
 
         /**
          * Pega todos os dados extras
          */
-        getExtData(): java.util.HashMap<string, object>;
+        getExtData(): java.util.HashMap<java.lang.String, object>;
 
         /**
          * Pega um dado extra
@@ -4429,7 +4519,7 @@ declare namespace com.fluig.sdk.user {
         /**
          * Pega os grupos
          */
-        getGroups(): java.util.List<string>;
+        getGroups(): java.util.List<java.lang.String>;
 
         /**
          * Pega o ID
@@ -4449,27 +4539,27 @@ declare namespace com.fluig.sdk.user {
         /**
          * Pega o fuso horário
          */
-        getTimezone(): string;
+        getTimezone(): java.lang.String;
 
         /**
          * Pega os papéis
          */
-        getRoles(): java.util.List<string>;
+        getRoles(): java.util.List<java.lang.String>;
 
         /**
          * Pega o token de acesso
          */
-        getTokenAccess(): string;
+        getTokenAccess(): java.lang.String;
 
         /**
          * Pega a senha do token
          */
-        getTokenSecret(): string;
+        getTokenSecret(): java.lang.String;
 
         /**
          * Pega o UUID
          */
-        getUserUUID(): string;
+        getUserUUID(): java.lang.String;
 
         /**
          * Retorna objeto no mapa
@@ -4732,7 +4822,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera o valor do comentário nas informações extras
          */
-        getAdditionalComments(): string;
+        getAdditionalComments(): java.lang.String;
 
         /**
          * Recupera valor, se documento permite multi card por usuário
@@ -4762,12 +4852,12 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera descrição do card
          */
-        getCardDescription(): string;
+        getCardDescription(): java.lang.String;
 
         /**
          * Recupera id do colega
          */
-        getColleagueId(): string;
+        getColleagueId(): java.lang.String;
 
         /**
          * Recupera valor do crc
@@ -4787,7 +4877,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera descrição do documento
          */
-        getDocumentDescription(): string;
+        getDocumentDescription(): java.lang.String;
 
         /**
          * Recupera valor do document Id
@@ -4812,7 +4902,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor do id do tipo de documento
          */
-        getDocumentTypeId(): string;
+        getDocumentTypeId(): java.lang.String;
 
         /**
          * Recupera valor, se download é habilitado
@@ -4837,12 +4927,12 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera os dados extras
          */
-        getExtData(): java.util.HashMap<string, object>;
+        getExtData(): java.util.HashMap<java.lang.String, object>;
 
         /**
          * Recupera id documento externo
          */
-        getExternalDocumentId(): string;
+        getExternalDocumentId(): java.lang.String;
 
         /**
          * Recupera os dados extras
@@ -4857,7 +4947,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor do path do icon
          */
-        getIconPath(): string;
+        getIconPath(): java.lang.String;
 
         /**
          * Recupera valor, se documento é imutável
@@ -4882,12 +4972,12 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor de palavra chave
          */
-        getKeyWord(): string;
+        getKeyWord(): java.lang.String;
 
         /**
          * Recupera id da linguagem
          */
-        getLanguageId(): string;
+        getLanguageId(): java.lang.String;
 
         /**
          * Recupera valor da última data de modificação
@@ -4897,7 +4987,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera última data de modificação
          */
-        getLastModifiedTime(): string;
+        getLastModifiedTime(): java.lang.String;
 
         /**
          * Recupera valor, se documento está em checkout
@@ -4917,7 +5007,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera arquivo físico
          */
-        getPhisicalFile(): string;
+        getPhisicalFile(): java.lang.String;
 
         /**
          * Recupera valor do tamanho do arquivo físico
@@ -4932,7 +5022,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor id privado do colega
          */
-        getPrivateColleagueId(): string;
+        getPrivateColleagueId(): java.lang.String;
 
         /**
          * Recupera valor, se documento é privado
@@ -4942,12 +5032,12 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera id do publicador
          */
-        getPublisherId(): string;
+        getPublisherId(): java.lang.String;
 
         /**
          * Recupera arquivos relacionados
          */
-        getRelatedFiles(): string;
+        getRelatedFiles(): java.lang.String;
 
         /**
          * Recupera tipo de restrição
@@ -4957,7 +5047,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor do código do site
          */
-        getSiteCode(): string;
+        getSiteCode(): java.lang.String;
 
         /**
          * Recupera id do tenant
@@ -4982,7 +5072,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera o identificador do upload
          */
-        getUploadId(): string;
+        getUploadId(): java.lang.String;
 
         /**
          * Recupera valor, se usuário será notificado
@@ -4992,7 +5082,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor do UUID
          */
-        getUUID(): string;
+        getUUID(): java.lang.String;
 
         /**
          * Recupera data de inicio de validação
@@ -5007,22 +5097,22 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera a ação que será realizada em relação a versão documento
          */
-        getVersionAction(): string;
+        getVersionAction(): java.lang.String;
 
         /**
          * Recupera descrição da versão
          */
-        getVersionDescription(): string;
+        getVersionDescription(): java.lang.String;
 
         /**
          * Recupera visualização
          */
-        getVisualization(): string;
+        getVisualization(): java.lang.String;
 
         /**
          * Recupera id do volume
          */
-        getVolumeId(): string;
+        getVolumeId(): java.lang.String;
 
         /**
          * Atribui valor para número de acessos
@@ -5333,7 +5423,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera comentário adicional
          */
-        getAdditionalComments(): string;
+        getAdditionalComments(): java.lang.String;
 
         /**
          * Recupera valor de approvalAndOr
@@ -5343,7 +5433,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor do colleagueId
          */
-        getColleagueId(): string;
+        getColleagueId(): java.lang.String;
 
         /**
          * Recupera valor da data de criação
@@ -5353,7 +5443,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor de descrição do documento
          */
-        getDocumentDescription(): string;
+        getDocumentDescription(): java.lang.String;
 
         /**
          * Recupera valor do documentoId
@@ -5363,7 +5453,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera id do tipo de documento
          */
-        getDocumentTypeId(): string;
+        getDocumentTypeId(): java.lang.String;
 
         /**
          * Recupera os tipos de documento
@@ -5383,7 +5473,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera os filtros
          */
-        getFilters(): java.util.HashMap<string, object>;
+        getFilters(): java.util.HashMap<java.lang.String, object>;
 
         /**
          * Recupera valor do iconId
@@ -5408,7 +5498,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor da palavra chave
          */
-        getKeyWord(): string;
+        getKeyWord(): java.lang.String;
 
         /**
          * Recupera boolean se usuário será notificado
@@ -5444,7 +5534,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera id do publicador
          */
-        getPublisherId(): string;
+        getPublisherId(): java.lang.String;
 
         /**
          * Recupera lista de restrições de documentos
@@ -5479,12 +5569,12 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor da descrição da versão
          */
-        getVersionDescription(): string;
+        getVersionDescription(): java.lang.String;
 
         /**
          * Recupera id do volume
          */
-        getVolumeId(): string;
+        getVolumeId(): java.lang.String;
 
         /**
          * Atribui valor para comentário adicional

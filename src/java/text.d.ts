@@ -28,7 +28,7 @@ declare namespace java.text {
         /**
          * Retorna a data formatada conforme o padrão da formatação
          */
-        format(data: java.util.Date): string;
+        format(data: java.util.Date): java.lang.String;
 
         /**
          * Converte uma string, formatada como indicado no construtor, em um objeto Date

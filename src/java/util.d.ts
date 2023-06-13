@@ -549,4 +549,16 @@ declare namespace java.util {
          */
         add(campo: number, valor: number): void;
     }
+
+    declare class UUID {
+        /**
+         * Cria um UUID tipo 4 (geração pseudo aleatória)
+         */
+        static randomUUID(): UUID;
+
+        /**
+         * Retorna uma string representando o UUID
+         */
+        toString(): java.lang.String;
+    }
 }

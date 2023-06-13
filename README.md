@@ -27,4 +27,4 @@ Os principais documentos utilizados para elaborar essas declarações de tipos v
 
 - [Documentação Oficial do Fluig](https://tdn.totvs.com/display/public/fluig/TOTVS+FLUIG+PLATAFORMA)
 - [Style Guide](https://style.fluig.com/)
-- [Javadoc for Fluig - SDK - API 1.7.0](https://fluig.totvs.com/api/sdk/index.html?overview-summary.html)
+- [Javadoc for Fluig - SDK - API 1.8.0](https://fluig.totvs.com/api/sdk/index.html?overview-summary.html)

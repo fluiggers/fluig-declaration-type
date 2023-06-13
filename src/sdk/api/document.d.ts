@@ -26,7 +26,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera o valor do comentário nas informações extras
          */
-        getAdditionalComments(): string;
+        getAdditionalComments(): java.lang.String;
 
         /**
          * Recupera valor, se documento permite multi card por usuário
@@ -56,12 +56,12 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera descrição do card
          */
-        getCardDescription(): string;
+        getCardDescription(): java.lang.String;
 
         /**
          * Recupera id do colega
          */
-        getColleagueId(): string;
+        getColleagueId(): java.lang.String;
 
         /**
          * Recupera valor do crc
@@ -81,7 +81,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera descrição do documento
          */
-        getDocumentDescription(): string;
+        getDocumentDescription(): java.lang.String;
 
         /**
          * Recupera valor do document Id
@@ -106,7 +106,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor do id do tipo de documento
          */
-        getDocumentTypeId(): string;
+        getDocumentTypeId(): java.lang.String;
 
         /**
          * Recupera valor, se download é habilitado
@@ -131,12 +131,12 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera os dados extras
          */
-        getExtData(): java.util.HashMap<string, object>;
+        getExtData(): java.util.HashMap<java.lang.String, object>;
 
         /**
          * Recupera id documento externo
          */
-        getExternalDocumentId(): string;
+        getExternalDocumentId(): java.lang.String;
 
         /**
          * Recupera os dados extras
@@ -151,7 +151,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor do path do icon
          */
-        getIconPath(): string;
+        getIconPath(): java.lang.String;
 
         /**
          * Recupera valor, se documento é imutável
@@ -176,12 +176,12 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor de palavra chave
          */
-        getKeyWord(): string;
+        getKeyWord(): java.lang.String;
 
         /**
          * Recupera id da linguagem
          */
-        getLanguageId(): string;
+        getLanguageId(): java.lang.String;
 
         /**
          * Recupera valor da última data de modificação
@@ -191,7 +191,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera última data de modificação
          */
-        getLastModifiedTime(): string;
+        getLastModifiedTime(): java.lang.String;
 
         /**
          * Recupera valor, se documento está em checkout
@@ -211,7 +211,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera arquivo físico
          */
-        getPhisicalFile(): string;
+        getPhisicalFile(): java.lang.String;
 
         /**
          * Recupera valor do tamanho do arquivo físico
@@ -226,7 +226,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor id privado do colega
          */
-        getPrivateColleagueId(): string;
+        getPrivateColleagueId(): java.lang.String;
 
         /**
          * Recupera valor, se documento é privado
@@ -236,12 +236,12 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera id do publicador
          */
-        getPublisherId(): string;
+        getPublisherId(): java.lang.String;
 
         /**
          * Recupera arquivos relacionados
          */
-        getRelatedFiles(): string;
+        getRelatedFiles(): java.lang.String;
 
         /**
          * Recupera tipo de restrição
@@ -251,7 +251,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor do código do site
          */
-        getSiteCode(): string;
+        getSiteCode(): java.lang.String;
 
         /**
          * Recupera id do tenant
@@ -276,7 +276,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera o identificador do upload
          */
-        getUploadId(): string;
+        getUploadId(): java.lang.String;
 
         /**
          * Recupera valor, se usuário será notificado
@@ -286,7 +286,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor do UUID
          */
-        getUUID(): string;
+        getUUID(): java.lang.String;
 
         /**
          * Recupera data de inicio de validação
@@ -301,22 +301,22 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera a ação que será realizada em relação a versão documento
          */
-        getVersionAction(): string;
+        getVersionAction(): java.lang.String;
 
         /**
          * Recupera descrição da versão
          */
-        getVersionDescription(): string;
+        getVersionDescription(): java.lang.String;
 
         /**
          * Recupera visualização
          */
-        getVisualization(): string;
+        getVisualization(): java.lang.String;
 
         /**
          * Recupera id do volume
          */
-        getVolumeId(): string;
+        getVolumeId(): java.lang.String;
 
         /**
          * Atribui valor para número de acessos
@@ -627,7 +627,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera comentário adicional
          */
-        getAdditionalComments(): string;
+        getAdditionalComments(): java.lang.String;
 
         /**
          * Recupera valor de approvalAndOr
@@ -637,7 +637,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor do colleagueId
          */
-        getColleagueId(): string;
+        getColleagueId(): java.lang.String;
 
         /**
          * Recupera valor da data de criação
@@ -647,7 +647,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor de descrição do documento
          */
-        getDocumentDescription(): string;
+        getDocumentDescription(): java.lang.String;
 
         /**
          * Recupera valor do documentoId
@@ -657,7 +657,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera id do tipo de documento
          */
-        getDocumentTypeId(): string;
+        getDocumentTypeId(): java.lang.String;
 
         /**
          * Recupera os tipos de documento
@@ -677,7 +677,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera os filtros
          */
-        getFilters(): java.util.HashMap<string, object>;
+        getFilters(): java.util.HashMap<java.lang.String, object>;
 
         /**
          * Recupera valor do iconId
@@ -702,7 +702,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor da palavra chave
          */
-        getKeyWord(): string;
+        getKeyWord(): java.lang.String;
 
         /**
          * Recupera boolean se usuário será notificado
@@ -738,7 +738,7 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera id do publicador
          */
-        getPublisherId(): string;
+        getPublisherId(): java.lang.String;
 
         /**
          * Recupera lista de restrições de documentos
@@ -773,12 +773,12 @@ declare namespace com.fluig.sdk.api.document {
         /**
          * Recupera valor da descrição da versão
          */
-        getVersionDescription(): string;
+        getVersionDescription(): java.lang.String;
 
         /**
          * Recupera id do volume
          */
-        getVolumeId(): string;
+        getVolumeId(): java.lang.String;
 
         /**
          * Atribui valor para comentário adicional
