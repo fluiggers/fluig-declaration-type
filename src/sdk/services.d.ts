@@ -277,7 +277,20 @@ declare namespace com.fluig.sdk.service {
         updateDocumentDescription(companyId: number, documentId: number, description: string): com.fluig.sdk.api.document.DocumentVO;
     }
     declare class GlobalParameterService {}
-    declare class GroupService {}
+
+    declare class GroupService {
+        /**
+         * Retorna os usuários de um grupo, mesmo que estejam dentro de subgrupo
+         *
+         * @param groupId Código do Grupo
+         * @param pattern Não sei
+         * @param limit Limite de usuários retornados (não pode ser 0 ou menor que 0)
+         * @param offset A partir de qual índice retornará
+         * @param order Ordem (não sei cmo utilizar)
+         */
+        findUsersByGroup(groupId: string, pattern: string, limit: number, offset: number, order: string): java.util.List<com.fluig.sdk.user.ColleagueVO>;
+    }
+
     declare class HolidayAPIService {}
     declare class I18NService {}
     declare class IdentityService {}
