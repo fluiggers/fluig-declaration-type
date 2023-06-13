@@ -1,5 +1,70 @@
 declare namespace com.fluig.sdk.user {
-    declare class ColleagueVO {}
+
+    /**
+     * Representa um colleague (que acho ser o mesmo que user, mas o Flug quis diferenciar)
+     */
+    declare class ColleagueVO {
+        /**
+         * Pega o e-mail
+         */
+        getEmail(): string
+
+        /**
+         * Pega o nome completo
+         */
+        getFullName(): string
+
+        /**
+         * Pega o primeiro nome
+         */
+        getFirstName(): string;
+
+        /**
+         * Pega o sobrenome
+         */
+        getLastName(): string;
+
+        /**
+         * Pega o login
+         */
+        getLogin(): string;
+
+        /**
+         * Pega o código
+         */
+        getCode(): string
+
+        /**
+         * Atribui o login
+         */
+        setLogin(login: string): void;
+
+        /**
+         * Atribui o primeiro nome
+         */
+        setFirstName(firstName: string): void;
+
+        /**
+         * Atribui o sobrenome
+         */
+        setLastName(lastName: string): void;
+
+        /**
+         * Atribui o nome completo
+         */
+        setFullName(fullName: string): void;
+
+        /**
+         * Atribui o código
+         */
+        setCode(code: string): void;
+
+        /**
+         * Atribui o e-mail
+         */
+        setEmail(email: string): void;
+    }
+
     declare class UserPasswordVO {}
 
     /**
