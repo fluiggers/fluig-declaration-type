@@ -7,32 +7,32 @@ declare namespace com.fluig.sdk.user {
         /**
          * Pega o e-mail
          */
-        getEmail(): string
+        getEmail(): java.lang.String
 
         /**
          * Pega o nome completo
          */
-        getFullName(): string
+        getFullName(): java.lang.String
 
         /**
          * Pega o primeiro nome
          */
-        getFirstName(): string;
+        getFirstName(): java.lang.String;
 
         /**
          * Pega o sobrenome
          */
-        getLastName(): string;
+        getLastName(): java.lang.String;
 
         /**
          * Pega o login
          */
-        getLogin(): string;
+        getLogin(): java.lang.String;
 
         /**
          * Pega o código
          */
-        getCode(): string
+        getCode(): java.lang.String
 
         /**
          * Atribui o login
@@ -74,37 +74,37 @@ declare namespace com.fluig.sdk.user {
         /**
          * Pega o e-mail
          */
-        getEmail(): string
+        getEmail(): java.lang.String
 
         /**
          * Pega o nome completo
          */
-        getFullName(): string
+        getFullName(): java.lang.String
 
         /**
          * Pega o primeiro nome
          */
-        getFirstName(): string;
+        getFirstName(): java.lang.String;
 
         /**
          * Pega o sobrenome
          */
-        getLastName(): string;
+        getLastName(): java.lang.String;
 
         /**
          * Pega o login
          */
-        getLogin(): string;
+        getLogin(): java.lang.String;
 
         /**
          * Pega o código
          */
-        getCode(): string
+        getCode(): java.lang.String
 
         /**
          * Pega todos os dados extras
          */
-        getExtData(): java.util.HashMap<string, object>;
+        getExtData(): java.util.HashMap<java.lang.String, object>;
 
         /**
          * Pega um dado extra
@@ -114,7 +114,7 @@ declare namespace com.fluig.sdk.user {
         /**
          * Pega os grupos
          */
-        getGroups(): java.util.List<string>;
+        getGroups(): java.util.List<java.lang.String>;
 
         /**
          * Pega o ID
@@ -134,27 +134,27 @@ declare namespace com.fluig.sdk.user {
         /**
          * Pega o fuso horário
          */
-        getTimezone(): string;
+        getTimezone(): java.lang.String;
 
         /**
          * Pega os papéis
          */
-        getRoles(): java.util.List<string>;
+        getRoles(): java.util.List<java.lang.String>;
 
         /**
          * Pega o token de acesso
          */
-        getTokenAccess(): string;
+        getTokenAccess(): java.lang.String;
 
         /**
          * Pega a senha do token
          */
-        getTokenSecret(): string;
+        getTokenSecret(): java.lang.String;
 
         /**
          * Pega o UUID
          */
-        getUserUUID(): string;
+        getUserUUID(): java.lang.String;
 
         /**
          * Retorna objeto no mapa

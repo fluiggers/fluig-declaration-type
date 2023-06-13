@@ -3,7 +3,7 @@ declare namespace java.lang {
         /**
          * Retorna o valor do objeto como uma string
          */
-        toString(): string;
+        toString(): String;
     }
 
     declare class String {

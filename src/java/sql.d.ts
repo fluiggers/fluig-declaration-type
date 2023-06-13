@@ -109,8 +109,8 @@ declare namespace javax.sql {
          * Há vários métodos get para obter o valor da coluna como objetos específicos
          * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
          */
-        getString(columnIndex: number): string;
-        getString(columnLabel: string): string;
+        getString(columnIndex: number): java.lang.String;
+        getString(columnLabel: string): java.lang.String;
 
         /**
          * Retorna o valor da coluna como um boolean
@@ -148,6 +148,6 @@ declare namespace javax.sql {
         /**
          * Pega o Nome da Coluna (label)
          */
-        getColumnName(column: number): string;
+        getColumnName(column: number): java.lang.String;
     }
 }
