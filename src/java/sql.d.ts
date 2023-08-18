@@ -49,9 +49,53 @@ declare namespace javax.sql {
         executeUpdate(sql: string): number;
 
         /**
+         * Executa um SQL árbitrário. Para pegar o resultado precisa utilizar
+         *
+         * Caso necessite do resultado deve-se utilizar os métodos getResultSet ou getUpdateCount para recuperar os valores,
+         * e o método getMoreResults para pegar os demais resultados em consultas que retornam múltiplos resultados.
+         *
+         * Este método não pode ser chamado em uma PreparedStatement ou CallableStatement.
+         *
+         * @returns {boolean} true se o primeiro resultado for um ResultSet; false se for um contador de update ou sem resultado
+         * @throws Exception
+         */
+        execute(sql: string): boolean;
+
+        /**
+         * Retorna o resultado atual
+         *
+         * @throws Exception
+         */
+        getResultSet(): ResultSet;
+
+        /**
+         * Retorna o contador de linhas atualizadas quando é um update
+         *
+         * @returns {number} Retornará -1 quando não há mais resultados
+         * @throws Exception
+         */
+        getUpdateCount(): number;
+
+        /**
+         * Move para o próximo resultado indicando se conseguiu mover para o próximo
+         *
+         * Este método é utlizado quando há um retorno de múltiplos resultados. A cada chamada deste método ele avança para
+         * o próximo resultado, que você poderá obter usando os métodos getResultSet e getUpdateCount.
+         *
+         * @example
+         * while (stmt.getMoreResults() != false) {
+         *     var result = stmt.getResultSet();
+         * }
+         *
+         * @returns {boolean}
+         * @throws Exception
+         */
+        getMoreResults(): boolean;
+
+        /**
          * Libera os recursos da execução imediatamente ao invés de aguardar o coletor de lixo
          */
-         close(): void;
+        close(): void;
     }
 
     /**

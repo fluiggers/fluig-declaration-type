@@ -2787,6 +2787,30 @@ declare namespace WCMSpaceAPI.PageService {
     declare function UPDATEPREFERENCES(settings: WidgetUpdatePreferences, instanceId: number, preferences: object): void;
 }
 
+interface IwsConsultaSQL {
+    /**
+     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
+     *
+     * @param {string} sql Código (ID) do SQL cadastrado no RM
+     * @param {number} coligadaNumber
+     * @param {string} systemCode
+     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
+     */
+    realizarConsultaSQL(sql:string, coligadaNumber:number, systemCode:string, parameters:string): string;
+
+    /**
+     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
+     *
+     * @param {string} sql Código (ID) do SQL cadastrado no RM
+     * @param {number} coligadaNumber
+     * @param {string} systemCode
+     * @param {string} username
+     * @param {string} password
+     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
+     */
+    realizarConsultaSQLAuth(sql:string, coligadaNumber:number, systemCode:string, username:string, password:string, parameters:string): string;
+}
+
 declare namespace java.lang {
     declare class Object {
         /**
@@ -3040,9 +3064,53 @@ declare namespace javax.sql {
         executeUpdate(sql: string): number;
 
         /**
+         * Executa um SQL árbitrário. Para pegar o resultado precisa utilizar
+         *
+         * Caso necessite do resultado deve-se utilizar os métodos getResultSet ou getUpdateCount para recuperar os valores,
+         * e o método getMoreResults para pegar os demais resultados em consultas que retornam múltiplos resultados.
+         *
+         * Este método não pode ser chamado em uma PreparedStatement ou CallableStatement.
+         *
+         * @returns {boolean} true se o primeiro resultado for um ResultSet; false se for um contador de update ou sem resultado
+         * @throws Exception
+         */
+        execute(sql: string): boolean;
+
+        /**
+         * Retorna o resultado atual
+         *
+         * @throws Exception
+         */
+        getResultSet(): ResultSet;
+
+        /**
+         * Retorna o contador de linhas atualizadas quando é um update
+         *
+         * @returns {number} Retornará -1 quando não há mais resultados
+         * @throws Exception
+         */
+        getUpdateCount(): number;
+
+        /**
+         * Move para o próximo resultado indicando se conseguiu mover para o próximo
+         *
+         * Este método é utlizado quando há um retorno de múltiplos resultados. A cada chamada deste método ele avança para
+         * o próximo resultado, que você poderá obter usando os métodos getResultSet e getUpdateCount.
+         *
+         * @example
+         * while (stmt.getMoreResults() != false) {
+         *     var result = stmt.getResultSet();
+         * }
+         *
+         * @returns {boolean}
+         * @throws Exception
+         */
+        getMoreResults(): boolean;
+
+        /**
          * Libera os recursos da execução imediatamente ao invés de aguardar o coletor de lixo
          */
-         close(): void;
+        close(): void;
     }
 
     /**
@@ -3745,30 +3813,6 @@ declare namespace java.util {
          */
         toString(): java.lang.String;
     }
-}
-
-interface IwsConsultaSQL {
-    /**
-     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
-     *
-     * @param {string} sql Código (ID) do SQL cadastrado no RM
-     * @param {number} coligadaNumber
-     * @param {string} systemCode
-     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
-     */
-    realizarConsultaSQL(sql:string, coligadaNumber:number, systemCode:string, parameters:string): string;
-
-    /**
-     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
-     *
-     * @param {string} sql Código (ID) do SQL cadastrado no RM
-     * @param {number} coligadaNumber
-     * @param {string} systemCode
-     * @param {string} username
-     * @param {string} password
-     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
-     */
-    realizarConsultaSQLAuth(sql:string, coligadaNumber:number, systemCode:string, username:string, password:string, parameters:string): string;
 }
 
 declare namespace com.fluig.sdk.filter {
