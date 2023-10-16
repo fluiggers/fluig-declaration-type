@@ -2787,30 +2787,6 @@ declare namespace WCMSpaceAPI.PageService {
     declare function UPDATEPREFERENCES(settings: WidgetUpdatePreferences, instanceId: number, preferences: object): void;
 }
 
-interface IwsConsultaSQL {
-    /**
-     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
-     *
-     * @param {string} sql Código (ID) do SQL cadastrado no RM
-     * @param {number} coligadaNumber
-     * @param {string} systemCode
-     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
-     */
-    realizarConsultaSQL(sql:string, coligadaNumber:number, systemCode:string, parameters:string): string;
-
-    /**
-     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
-     *
-     * @param {string} sql Código (ID) do SQL cadastrado no RM
-     * @param {number} coligadaNumber
-     * @param {string} systemCode
-     * @param {string} username
-     * @param {string} password
-     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
-     */
-    realizarConsultaSQLAuth(sql:string, coligadaNumber:number, systemCode:string, username:string, password:string, parameters:string): string;
-}
-
 declare namespace java.lang {
     declare class Object {
         /**
@@ -3815,6 +3791,30 @@ declare namespace java.util {
     }
 }
 
+interface IwsConsultaSQL {
+    /**
+     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
+     *
+     * @param {string} sql Código (ID) do SQL cadastrado no RM
+     * @param {number} coligadaNumber
+     * @param {string} systemCode
+     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
+     */
+    realizarConsultaSQL(sql:string, coligadaNumber:number, systemCode:string, parameters:string): string;
+
+    /**
+     * Realiza uma consulta a um SQL previamente cadastrado no BI do RM
+     *
+     * @param {string} sql Código (ID) do SQL cadastrado no RM
+     * @param {number} coligadaNumber
+     * @param {string} systemCode
+     * @param {string} username
+     * @param {string} password
+     * @param {string} parameters Separe-os com ; e mantenha a sequência que o SQL pede. Ex: CODCOLIGADA=1;CODPROJ=00689
+     */
+    realizarConsultaSQLAuth(sql:string, coligadaNumber:number, systemCode:string, username:string, password:string, parameters:string): string;
+}
+
 declare namespace com.fluig.sdk.filter {
     declare class FilterFieldVO {}
     declare class FilterGroupResultVO {}
@@ -4226,12 +4226,26 @@ declare namespace com.fluig.sdk.service {
     declare class UserService {
 
         /**
+         * Ativa um usuário
+         *
+         * @param genericId login, userCode (matrícula) ou idpId
+         */
+        activateByCode(genericId: string): void
+
+        /**
+         * Desativa um usuário
+         *
+         * @param genericId login, userCode (matrícula) ou idpId
+         */
+        deactivateByCode(genericId: string): void
+
+        /**
          * Adiciona um usuário a um grupo
          */
         addUserToGroup(tenantId: number, groupCode: string, userVO: com.fluig.sdk.user.UserVO): void;
 
         /**
-         * Change the user password
+         * Altera a senha
          */
         changeUserPassword(vo: com.fluig.sdk.user.UserPasswordVO): void;
 

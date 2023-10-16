@@ -390,12 +390,26 @@ declare namespace com.fluig.sdk.service {
     declare class UserService {
 
         /**
+         * Ativa um usuário
+         *
+         * @param genericId login, userCode (matrícula) ou idpId
+         */
+        activateByCode(genericId: string): void
+
+        /**
+         * Desativa um usuário
+         *
+         * @param genericId login, userCode (matrícula) ou idpId
+         */
+        deactivateByCode(genericId: string): void
+
+        /**
          * Adiciona um usuário a um grupo
          */
         addUserToGroup(tenantId: number, groupCode: string, userVO: com.fluig.sdk.user.UserVO): void;
 
         /**
-         * Change the user password
+         * Altera a senha
          */
         changeUserPassword(vo: com.fluig.sdk.user.UserPasswordVO): void;
 
