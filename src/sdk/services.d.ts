@@ -457,6 +457,11 @@ declare namespace com.fluig.sdk.service {
          * Remove as permissões do recurso
          */
         deletePermissions(resourceCode: string, permissions: java.util.List<com.fluig.sdk.api.permission.PermissionVO>): void;
+
+        /**
+         * Recupera o Tenant corrente
+         */
+        getCurrentTenant(): com.fluig.sdk.tenant.TenantVO;
     }
 
     declare class SocialBreadcrumbService {}
