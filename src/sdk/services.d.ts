@@ -141,6 +141,87 @@ declare namespace com.fluig.sdk.service {
          */
         invoke(data: string): com.fluig.sdk.api.authorizeclient.AuthorizeClientSdkServiceVO;
     }
+
+
+    /**
+     * Serviço para tratar registros de formulários
+     */
+    declare class CardAPIService {
+        /**
+         * Cria um registro no formulário
+         *
+         * @param documentId ID do Formulário
+         * @param cardFieldVOs Campos e Valores
+         */
+        create(documentId: number, cardFieldVOs: java.util.ArrayList<com.fluig.sdk.api.cardindex.CardFieldVO>);
+
+        /**
+         * Cria um registro pai filho no registro do formulário
+         *
+         * @param cardId ID do registro do formulário
+         * @param cardFieldVOs Campos e Valores
+         */
+        createChild(cardId: number, cardFieldVOs: java.util.ArrayList<com.fluig.sdk.api.cardindex.CardFieldVO>): com.fluig.sdk.api.cardindex.CardChildrenVO;
+
+        /**
+         * Altera um registro do formulário
+         *
+         * @param cardId ID do registro do formulário
+         * @param cardFieldVOs Campos e Valores
+         */
+        edit(cardId: number, cardFieldVOs: java.util.ArrayList<com.fluig.sdk.api.cardindex.CardFieldVO>): com.fluig.sdk.api.cardindex.CardFindFieldVO;
+
+        /**
+         * Altera um registro pai filho no registro do formulário
+         *
+         * @param cardId ID do registro do formulário
+         * @param row Linha do filho na tabela Pai Filho
+         * @param cardFieldVOs Campos e Valores
+         */
+        editChild(cardId: number, row: number, cardFieldVOs: java.util.ArrayList<com.fluig.sdk.api.cardindex.CardFieldVO>): com.fluig.sdk.api.cardindex.CardChildrenVO;
+
+        /**
+         * Procura os registros do formulário pelo número do formulário e número do registro
+         *
+         * @param documentId ID do Formulário
+         * @param cardId ID do Registro
+         */
+        findById(documentId: number, cardId: number, fields: java.util.ArrayList<java.lang.String>, expandedFields: java.util.ArrayList<java.lang.String>): com.fluig.sdk.api.cardindex.CardFindFieldVO;
+
+        /**
+         * Procura os registros do formulário filho pelo numero do registro e linha
+         *
+         * @param cardId ID do Registro do Formulário
+         * @param row Linha do filho na tabela Pai Filho
+         */
+        findChildByCardIdAndRow(cardId: number, row: number, fields: java.util.ArrayList<java.lang.String>): com.fluig.sdk.api.cardindex.CardChildrenVO;
+
+        /**
+         * Lista os registros do formulário filho
+         *
+         * @param cardId ID do Registro do Formulário
+         * @param page Página
+         * @param pageSize Tamanho da Página
+         * @param fields Campos
+         */
+        findChildrenByCardId(cardId: number, page: number, pageSize: number, fields: java.util.ArrayList<java.lang.String>): com.totvs.technology.foundation.sdk.service.vo.common.ResponseEnvelopeVO<com.fluig.sdk.api.cardindex.CardChildrenVO>;
+
+        /**
+         * Remove um registro de formulário
+         *
+         * @param cardId ID do Registro do Formulário
+         */
+        remove(cardId: number): boolean;
+
+        /**
+         * Remove o registro pai filho do registro do formulário
+         *
+         * @param cardId ID do Registro do Formulário
+         * @param row Linha do filho na tabela Pai Filho
+         */
+        removeChild(cardId: number, row: number): com.fluig.sdk.api.cardindex.CardChildrenVO;
+    }
+
     declare class CardIndexService {}
     declare class CardService {}
     declare class CollaborationSDKService {}
@@ -376,6 +457,11 @@ declare namespace com.fluig.sdk.service {
          * Remove as permissões do recurso
          */
         deletePermissions(resourceCode: string, permissions: java.util.List<com.fluig.sdk.api.permission.PermissionVO>): void;
+
+        /**
+         * Recupera o Tenant corrente
+         */
+        getCurrentTenant(): com.fluig.sdk.tenant.TenantVO;
     }
 
     declare class SocialBreadcrumbService {}

@@ -28,6 +28,11 @@
     declare function getCardService(): com.fluig.sdk.service.CardService;
 
     /**
+     * Recupera o serviço para tratar registros de formulário
+     */
+    declare function CardAPIService(): com.fluig.sdk.service.CardAPIService;
+
+    /**
      * Recupera o serviço para tratar colaboradores
      */
     declare function getCollaborationService(): com.fluig.sdk.service.CollaborationSDKService;
