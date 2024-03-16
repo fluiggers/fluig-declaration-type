@@ -73,7 +73,6 @@ declare namespace globalVars {
  * - WKManagerMode: Identifica se o processo está sendo movimentado pela visão do gestor do processo ou não. Só funciona no Workflow
  * - WKReplacement: Código do usuário substituto
  * - WKIsTransfer: Permite verificar se o usuário está ou não transferindo uma tarefa
- * -
  */
 declare function getValue(nomePropriedade: string): string;
 
