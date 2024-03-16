@@ -22,4 +22,9 @@ declare namespace log {
      * Log com "criticidade" FATAL
      */
     declare function fatal(message: string): void;
+
+    /**
+     * Log com "criticidade" INFO para objetos ao invés de texto
+     */
+    declare function dir(item: object): void;
 };
