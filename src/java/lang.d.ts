@@ -177,4 +177,18 @@ declare namespace java.lang {
          */
         digit(c: number, radix: number): number;
     }
+
+    declare class Integer extends Object {
+        /**
+         * Converte a String em Integer
+         */
+        valueOf(value: String): Integer;
+
+        /**
+         * Converte a String em int
+         */
+        parseInt(value: String): number;
+    }
+
+    declare class Byte extends Object {}
 }

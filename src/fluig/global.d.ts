@@ -73,7 +73,6 @@ declare namespace globalVars {
  * - WKManagerMode: Identifica se o processo está sendo movimentado pela visão do gestor do processo ou não. Só funciona no Workflow
  * - WKReplacement: Código do usuário substituto
  * - WKIsTransfer: Permite verificar se o usuário está ou não transferindo uma tarefa
- * -
  */
 declare function getValue(nomePropriedade: string): string;
 
@@ -123,5 +122,56 @@ declare namespace ServiceManager {
      * var service = ServiceManager.getService("ems2_v10");
      * var serviceHelper = service.getBean();
      */
-    declare function getService(serviceId: string): object;
+    declare function getService(serviceId: string): ServiceInstantiate;
 };
+
+declare class ServiceInstantiate {
+    /**
+     * Pega o Helper para instanciar os objetos
+     */
+    getBean(): ServiceHelper;
+}
+
+/**
+ * Classe para instanciar objetos do WS SOAP
+ */
+declare class ServiceHelper {
+    /**
+     * Instancia um objeto da classe indicada
+     * 
+     * @param classPath Caminho da Classe
+     * 
+     * @example
+     * var serviceHelper = ServiceManager.getService("ECMCardService").getBean();
+     * var cardDto = serviceHelper.instantiate("com.totvs.technology.ecm.dm.ws.CardDto");
+     */
+    instantiate(classPath: string): object;
+
+    /**
+     * Instancia o serviço com autenticação Basic
+     * 
+     * @param service Instância do serviço que será autenticado
+     * @param classPath Caminho da Classe a ser instanciada
+     * @param user Usuário da Autenticação
+     * @param password Senha da Autenticação
+     * 
+     * @example
+     * var serviceHelper = ServiceManager
+     *     .getService("RM_CONSULTA_SQL")
+     *     .getBean()
+     * ;
+     * 
+     * var service = serviceHelper
+     *     .instantiate("com.totvs.WsConsultaSQL")
+     *     .getRMIwsConsultaSQL()
+     * ;
+     * 
+     * var serviceSqlAuthenticated = serviceHelper.getBasicAuthenticatedClient(
+     *     service,
+     *     "com.totvs.IwsConsultaSQL",
+     *     "meuUsuário",
+     *     "minhaSenha"
+     * );
+     */
+    getBasicAuthenticatedClient(service: object, classPath: string, user: string, password: string): object;
+}

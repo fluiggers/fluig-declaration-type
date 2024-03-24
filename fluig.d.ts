@@ -2199,7 +2199,6 @@ declare namespace globalVars {
  * - WKManagerMode: Identifica se o processo está sendo movimentado pela visão do gestor do processo ou não. Só funciona no Workflow
  * - WKReplacement: Código do usuário substituto
  * - WKIsTransfer: Permite verificar se o usuário está ou não transferindo uma tarefa
- * -
  */
 declare function getValue(nomePropriedade: string): string;
 
@@ -2249,8 +2248,59 @@ declare namespace ServiceManager {
      * var service = ServiceManager.getService("ems2_v10");
      * var serviceHelper = service.getBean();
      */
-    declare function getService(serviceId: string): object;
+    declare function getService(serviceId: string): ServiceInstantiate;
 };
+
+declare class ServiceInstantiate {
+    /**
+     * Pega o Helper para instanciar os objetos
+     */
+    getBean(): ServiceHelper;
+}
+
+/**
+ * Classe para instanciar objetos do WS SOAP
+ */
+declare class ServiceHelper {
+    /**
+     * Instancia um objeto da classe indicada
+     * 
+     * @param classPath Caminho da Classe
+     * 
+     * @example
+     * var serviceHelper = ServiceManager.getService("ECMCardService").getBean();
+     * var cardDto = serviceHelper.instantiate("com.totvs.technology.ecm.dm.ws.CardDto");
+     */
+    instantiate(classPath: string): object;
+
+    /**
+     * Instancia o serviço com autenticação Basic
+     * 
+     * @param service Instância do serviço que será autenticado
+     * @param classPath Caminho da Classe a ser instanciada
+     * @param user Usuário da Autenticação
+     * @param password Senha da Autenticação
+     * 
+     * @example
+     * var serviceHelper = ServiceManager
+     *     .getService("RM_CONSULTA_SQL")
+     *     .getBean()
+     * ;
+     * 
+     * var service = serviceHelper
+     *     .instantiate("com.totvs.WsConsultaSQL")
+     *     .getRMIwsConsultaSQL()
+     * ;
+     * 
+     * var serviceSqlAuthenticated = serviceHelper.getBasicAuthenticatedClient(
+     *     service,
+     *     "com.totvs.IwsConsultaSQL",
+     *     "meuUsuário",
+     *     "minhaSenha"
+     * );
+     */
+    getBasicAuthenticatedClient(service: object, classPath: string, user: string, password: string): object;
+}
 
 interface Task {
     name: string;
@@ -2574,6 +2624,11 @@ declare namespace log {
      * Log com "criticidade" FATAL
      */
     declare function fatal(message: string): void;
+
+    /**
+     * Log com "criticidade" INFO para objetos ao invés de texto
+     */
+    declare function dir(item: object): void;
 };
 
 interface WorkflowProcessPK {
@@ -2799,6 +2854,1516 @@ interface WidgetUpdatePreferences {
 
 declare namespace WCMSpaceAPI.PageService {
     declare function UPDATEPREFERENCES(settings: WidgetUpdatePreferences, instanceId: number, preferences: object): void;
+}
+
+declare namespace com.totvs.technology.ecm.dm.ws {
+
+    /**
+     * Serviço para tratar registros de formulários
+     */
+    declare class CardService {
+
+        /**
+         * Cria um registro de formulário
+         */
+        create(companyId: number, username: string, password: string, card: CardDtoArray): WebServiceMessageArray;
+
+        /**
+         * Atualiza o registro do formulário
+         */
+        updateCardData(companyId: number, username: string, password: string, cardId: number, cardData: CardFieldDtoArray): WebServiceMessageArray;
+
+        /**
+         * Apaga o registro do formulário
+         */
+        deleteCard(companyId: number, username: string, password: string, cardId: number): WebServiceMessageArray;
+    }
+
+    /**
+     * Representa um Documento/Formulário
+     */
+    declare class CardDto {
+        setUserNotify(notify: boolean): void;
+        setInheritSecurity(inherit: boolean): void;
+        setDocumentDescription(description: string): void;
+        setParentDocumentId(parentId: number): void;
+        getCardData(): java.util.List<CardFieldDto>;
+    }
+
+    /**
+     * Representa um campo do Documento/Formulário
+     */
+    declare class CardFieldDto {
+        setField(field: string): void;
+        setValue(value: string): void;
+    }
+
+    /**
+     * Representa um conjunto de Documentos/Formulários
+     *
+     * Utilizado ao criar um documento/formulário.
+     */
+    declare class CardDtoArray {
+        getItem(): java.util.List<CardDto>;
+    }
+
+    /**
+     * Representa um conjunto de campos do Documento/Formulário
+     *
+     * Utilizado ao editar um documento/formulário.
+     */
+    declare class CardFieldDtoArray {
+        getItem(): java.util.List<CardFieldDto>;
+    }
+}
+
+declare namespace com.totvs.technology.ecm.dm.ws {
+    /**
+     * Serviço para gerenciar os documentos via SOAP
+     *
+     * @example
+     * var serviceHelper = ServiceManager.getService("ECMDocumentService").getBean();
+     *
+     * // Instanciando o objeto da classe DocumentService
+     * var service = serviceHelper
+     *     .instantiate("com.totvs.technology.ecm.dm.ws.ECMDocumentServiceService")
+     *     .getDocumentServicePort()
+     * ;
+     */
+    declare class DocumentService {
+        /**
+         * Cria um documento do jeito simplificado
+         */
+        createSimpleDocument(
+            username: string,
+            password: string,
+            companyId: number,
+            folderId: number,
+            publisherCode: string,
+            fileName: string,
+            attachmentArray: AttachmentArray
+        ): WebServiceMessageArray;
+
+        /**
+         * Pega o conteúdo de um arquivo do GED
+         */
+        getDocumentContent(
+            username: string,
+            password: string,
+            companyId: number,
+            documentId: number,
+            userCode: string,
+            version: number,
+            documentDescription: string
+        ): java.lang.Byte[];
+    }
+
+    declare class Attachment {
+        setFileName(fileName: string): void;
+        setFileSize(fileSize: number): void;
+        setAttach(isAttach: boolean): void;
+        setEditing(isEditing: boolean): void;
+        setPrincipal(isPrincipal: boolean): void;
+
+        /**
+         * Configura o conteúdo do arquivo
+         *
+         * @param content Conteúdo em ByteArray
+         *
+         * @example
+         * var serviceHelper = ServiceManager
+         *     .getService("ECMDocumentService")
+         *     .getBean()
+         * ;
+         *
+         * var service = serviceHelper
+         *     .instantiate("com.totvs.technology.ecm.dm.ws.ECMDocumentServiceService")
+         *     .getDocumentServicePort()
+         * ;
+         *
+         * var attachment = serviceHelper
+         *     .instantiate("com.totvs.technology.ecm.dm.ws.Attachment")
+         * ;
+         *
+         * // Inserindo conteúdo em Base64
+         * attachment.setFileContent(java.util.Base64.getDecoder().decode(new java.lang.String("string em Base64").getBytes("UTF-8"))
+         */
+        setFilecontent(content: java.lang.Byte[]): void;
+    }
+
+    declare class AttachmentArray {
+        getItem(): java.util.List<Attachment>;
+    }
+}
+
+declare namespace com.totvs.technology.ecm.dm.ws {
+    /**
+     * Serviço para gerenciar as pastas via SOAP
+     *
+     * @example
+     * var serviceHelper = ServiceManager.getService("ECMFolderService").getBean();
+     *
+     * // Instanciando o objeto da classe FolderService
+     * var service = serviceHelper
+     *     .instantiate("com.totvs.technology.ecm.dm.ws.ECMFolderServiceService")
+     *     .getFolderServicePort()
+     * ;
+     */
+    declare class FolderService {
+        /**
+         * Cria uma pasta de forma simplificada
+         */
+        createSimpleFolder(
+            username: string,
+            password: string,
+            companyId: number,
+            parentId: number,
+            publisherCode: string,
+            folderName: string
+        ): com.totvs.technology.ecm.dm.ws.WebServiceMessageArray;
+
+        /**
+         * Pega todas as pastas filhas da pasta indicada em documentId
+         */
+        getSubFolders(
+            username: string,
+            password: string,
+            colleagueCode: string,
+            companyId: number,
+            documentId: number
+        ): DocumentDtoArray;
+    }
+
+    declare class DocumentDtoArray {
+        getItem(): java.util.List<DocumentDto>;
+    }
+
+    declare class DocumentDto {
+        getAccessCount(): java.lang.Integer;
+        setAccessCount(value: java.lang.Integer): void;
+
+        isActiveUserApprover(): boolean;
+        setActiveUserApprover(value: boolean): void;
+
+        isActiveVersion(): boolean;
+        setActiveVersion(value: boolean): void;
+
+        getAdditionalComments(): java.lang.String;
+        setAdditionalComments(value: java.lang.String): void;
+
+        isAllowMuiltiCardsPerUser(): boolean;
+        setAllowMuiltiCardsPerUser(value: boolean): void;
+
+        isApprovalAndOr(): boolean;
+        setApprovalAndOr(value: boolean): void;
+
+        isApproved(): boolean;
+        setApproved(value: boolean): void;
+
+        getApprovedDate(): java.util.Calendar;
+        setApprovedDate(value: java.util.Calendar): void;
+
+        getArticleContent(): java.lang.String;
+        setArticleContent(value: java.lang.String): void;
+
+        getAttachments(): java.util.List<Attachment>;
+
+        getAtualizationId(): java.lang.Integer;
+        setAtualizationId(value: java.lang.Integer): void;
+
+        getBackgroundColor(): java.lang.String;
+        setBackgroundColor(value: java.lang.String): void;
+
+        getBackgroundImage(): java.lang.String;
+        setBackgroundImage(value: java.lang.String): void;
+
+        getBannerImage(): java.lang.String;
+        setBannerImage(value: java.lang.String): void;
+
+        getCardDescription(): java.lang.String;
+        setCardDescription(value: java.lang.String): void;
+
+        getColleagueId(): java.lang.String;
+        setColleagueId(value: java.lang.String): void;
+
+        getColleagueName(): java.lang.String;
+        setColleagueName(value: java.lang.String): void;
+
+        getCompanyId(): number;
+        setCompanyId(value: number): void;
+
+        getConvertDocumentType(): java.lang.Integer;
+        setConvertDocumentType(value: java.lang.Integer): void;
+
+        getCrc(): number;
+        setCrc(value: number): void;
+
+        getCreateDate(): java.util.Calendar;
+        setCreateDate(value: java.util.Calendar): void;
+
+        getCreateDateInMilliseconds(): number;
+        setCreateDateInMilliseconds(value: number): void;
+
+        getDatasetName(): java.lang.String;
+        setDatasetName(value: java.lang.String): void;
+
+        isDateFormStarted(): boolean;
+        setDateFormStarted(value: boolean): void;
+
+        isDeleted(): boolean;
+        setDeleted(value: boolean): void;
+
+        getDocumentDescription(): java.lang.String;
+        setDocumentDescription(value: java.lang.String): void;
+
+        getDocumentId(): java.lang.Integer;
+        setDocumentId(value: java.lang.Integer): void;
+
+        getDocumentKeyWord(): java.lang.String;
+        setDocumentKeyWord(value: java.lang.String): void;
+
+        getDocumentPropertyNumber(): java.lang.Integer;
+        setDocumentPropertyNumber(value: java.lang.Integer): void;
+
+        getDocumentPropertyVersion(): java.lang.Integer;
+        setDocumentPropertyVersion(value: java.lang.Integer): void;
+
+        getDocumentType(): java.lang.String;
+        setDocumentType(value: java.lang.String): void;
+
+        getDocumentTypeId(): java.lang.String;
+        setDocumentTypeId(value: java.lang.String): void;
+
+        isDownloadEnabled(): boolean;
+        setDownloadEnabled(value: boolean): void;
+
+        isDraft(): boolean;
+        setDraft(value: boolean): void;
+
+        getExpirationDate(): java.util.Calendar;
+        setExpirationDate(value: java.util.Calendar): void;
+
+        isExpiredForm(): boolean;
+        setExpiredForm(value: boolean): void;
+
+        isExpires(): boolean;
+        setExpires(value: boolean): void;
+
+        getExternalDocumentId(): java.lang.String;
+        setExternalDocumentId(value: java.lang.String): void;
+
+        isFavorite(): boolean;
+        setFavorite(value: boolean): void;
+
+        getFileURL(): java.lang.String;
+        setFileURL(value: java.lang.String): void;
+
+        getFolderId(): java.lang.Integer;
+        setFolderId(value: java.lang.Integer): void;
+
+        isForAproval(): boolean;
+        setForAproval(value: boolean): void;
+
+        getHashAnnotations(): java.lang.String;
+        setHashAnnotations(value: java.lang.String): void;
+
+        getIconId(): java.lang.Integer;
+        setIconId(value: java.lang.Integer): void;
+
+        getIconPath(): java.lang.String;
+        setIconPath(value: java.lang.String): void;
+
+        isImutable(): boolean;
+        setImutable(value: boolean): void;
+
+        isIndexed(): boolean;
+        setIndexed(value: boolean): void;
+
+        isInheritApprovers(): boolean;
+        setInheritApprovers(value: boolean): void;
+
+        isInheritSecurity(): boolean;
+        setInheritSecurity(value: boolean): void;
+
+        isInternalVisualizer(): boolean;
+        setInternalVisualizer(value: boolean): void;
+
+        isIsEncrypted(): boolean;
+        setIsEncrypted(value: boolean): void;
+
+        getKeyWord(): java.lang.String;
+        setKeyWord(value: java.lang.String): void;
+
+        getLanguageId(): java.lang.String;
+        setLanguageId(value: java.lang.String): void;
+
+        getLanguageIndicator(): java.lang.String;
+        setLanguageIndicator(value: java.lang.String): void;
+
+        getLastModifiedDate(): java.util.Calendar;
+        setLastModifiedDate(value: java.util.Calendar): void;
+
+        getLastModifiedTime(): java.lang.String;
+        setLastModifiedTime(value: java.lang.String): void;
+
+        getMetaListId(): java.lang.Integer;
+        setMetaListId(value: java.lang.Integer): void;
+
+        getMetaListRecordId(): java.lang.Integer;
+        setMetaListRecordId(value: java.lang.Integer): void;
+
+        isNewStructure(): boolean;
+        setNewStructure(value: boolean): void;
+
+        getNotificationDays(): java.lang.Integer;
+        setNotificationDays(value: java.lang.Integer): void;
+
+        isOnCheckout(): boolean;
+        setOnCheckout(value: boolean): void;
+
+        getParentDocumentId(): java.lang.Integer;
+        setParentDocumentId(value: java.lang.Integer): void;
+
+        getPdfRenderEngine(): java.lang.String;
+        setPdfRenderEngine(value: java.lang.String): void;
+
+        getPermissionType(): java.lang.Integer;
+        setPermissionType(value: java.lang.Integer): void;
+
+        getPhisicalFile(): java.lang.String;
+        setPhisicalFile(value: java.lang.String): void;
+
+        getPhisicalFileSize(): number;
+        setPhisicalFileSize(value: number): void;
+
+        getPriority(): java.lang.Integer;
+        setPriority(value: java.lang.Integer): void;
+
+        getPrivateColleagueId(): java.lang.String;
+        setPrivateColleagueId(value: java.lang.String): void;
+
+        isPrivateDocument(): boolean;
+        setPrivateDocument(value: boolean): void;
+
+        isProtectedCopy(): boolean;
+        setProtectedCopy(value: boolean): void;
+
+        isPublicDocument(): boolean;
+        setPublicDocument(value: boolean): void;
+
+        getPublisherId(): java.lang.String;
+        setPublisherId(value: java.lang.String): void;
+
+        getPublisherName(): java.lang.String;
+        setPublisherName(value: java.lang.String): void;
+
+        getQuota(): java.lang.Integer;
+        setQuota(value: java.lang.Integer): void;
+
+        getRelatedFiles(): java.lang.String;
+        setRelatedFiles(value: java.lang.String): void;
+
+        getRestrictionType(): java.lang.Integer;
+        setRestrictionType(value: java.lang.Integer): void;
+
+        getRowId(): java.lang.Integer
+        setRowId(value: number): void;
+
+        getSearchNumber(): java.lang.Integer;
+        setSearchNumber(value: java.lang.Integer): void;
+
+        getSecurityLevel(): java.lang.Integer
+        setSecurityLevel(value: number): void;
+
+        getSiteCode(): java.lang.String;
+        setSiteCode(value: java.lang.String): void;
+
+        getSociableDocumentDto(): SociableDocumentDto;
+        setSociableDocumentDto(value: SociableDocumentDto): void;
+
+        getSocialDocument(): java.lang.String;
+        setSocialDocument(value: java.lang.String): void;
+
+        isTool(): boolean;
+        setTool(value: boolean): void;
+
+        getTopicId(): java.lang.Integer;
+        setTopicId(value: java.lang.Integer): void;
+
+        isTranslated(): boolean;
+        setTranslated(value: boolean): void;
+
+        getUUID(): java.lang.String;
+        setUUID(value: java.lang.String): void;
+
+        isUpdateIsoProperties(): boolean;
+        setUpdateIsoProperties(value: boolean): void;
+
+        isUserAnswerForm(): boolean;
+        setUserAnswerForm(value: boolean): void;
+
+        isUserNotify(): boolean;
+        setUserNotify(value: boolean): void;
+
+        getUserPermission(): java.lang.Integer;
+        setUserPermission(value: java.lang.Integer): void;
+
+        getValidationStartDate(): java.util.Calendar;
+        setValidationStartDate(value: java.util.Calendar): void;
+
+        getVersion(): java.lang.Integer
+        setVersion(value: number): void;
+
+        getVersionDescription(): java.lang.String;
+        setVersionDescription(value: java.lang.String): void;
+
+        getVersionOption(): java.lang.String;
+        setVersionOption(value: java.lang.String): void;
+
+        getVisualization(): java.lang.String;
+        setVisualization(value: java.lang.String): void;
+
+        getVolumeId(): java.lang.String;
+        setVolumeId(value: java.lang.String): void;
+
+        getWatermarkId(): java.lang.Integer;
+        setWatermarkId(value: java.lang.Integer): void;
+    }
+
+    declare class SociableDocumentDto {}
+}
+
+
+declare namespace com.totvs.technology.ecm.dm.ws {
+    declare class WebServiceMessage {
+        getCompanyId(): number;
+        getDocumentDescription(): java.lang.String;
+        getDocumentId(): java.lang.Integer;
+        getVersion(): number;
+        getWebServiceMessage(): java.lang.String;
+    }
+
+    declare class WebServiceMessageArray {
+        getItem(): java.util.List<WebServiceMessage>;
+    }
+}
+
+declare namespace java.lang {
+    declare class Object {
+        /**
+         * Retorna o valor do objeto como uma string
+         */
+        toString(): String;
+    }
+
+    declare class String {
+        constructor();
+        constructor(original: string);
+
+        /**
+         * Pega o char da posição indicada.
+         *
+         * Importante: embora o método deva devolver um char o Fluig
+         * trata como um número (provavelmente o código ASCII do char).
+         *
+         * Se precisar da letra utilize o método substring indicando índice
+         * inicial e final ou converta utilizando a classe Character.
+         *
+         * @example
+         * var str = new java.lang.String("texto");
+         * str.substring(1, 2); // Retornará "e"
+         *
+         * var str = new java.lang.String("012");
+         * Character.digit(str.charAt(2), 10); // Retornará número 2
+         * Character.toString(str.charAt(2)); // Retornará string 2
+         */
+        charAt(index: number): number;
+
+        /**
+         * Compara duas strings
+         *
+         * Retorna 0 se as strings forem iguais, menor que zero se essa string
+         * for menor do que a outra string ou maior que zero se essa string for
+         * maior do que a outra.
+         */
+        compareTo(anotherString: string): number;
+
+        /**
+         * Compara duas strings ignorando as diferenças de maiúscula e minúscula
+         *
+         * Retorna 0 se as strings forem iguais, menor que zero se essa string
+         * for menor do que a outra string ou maior que zero se essa string for
+         * maior do que a outra.
+         */
+        compareToIgnoreCase(anotherString: string): number;
+
+        /**
+         * Retorna verdadeiro se essa string contém a string informada
+         */
+        contains(substring: string): boolean;
+
+        /**
+         * Retorna verdadeiro se essa string termina com a string informada
+         */
+        endsWith(suffix: string): boolean;
+
+        /**
+         * Retorna verdadeiro se essa string começa com a string informada
+         */
+        startsWith(prefix: string): boolean;
+
+        /**
+         * Retorna verdadeiro se ambas strings forem iguais ignorando case
+         */
+        equalsIgnoreCase(anotherString: string): boolean;
+
+        /**
+         * Retorna o índice da primeira ocorrência da string informada
+         */
+        indexOf(str: string): number;
+
+        /**
+         * Retorna o índice da primeira ocorrência da string informada a partir do índice indicado
+         */
+        indexOf(str: string, fromIndex: number): number;
+
+        /**
+         * Retorna o índice da última ocorrência da string informada
+         */
+        lastIndexOf(str: string): number;
+
+        /**
+         * Retorna o índice da última ocorrência da string informada a partir do índice indicado
+         */
+        lastIndexOf(str: string, fromIndex: number): number;
+
+        /**
+         * Retorna a quantidade de caracteres da string
+         */
+        length(): number;
+
+        /**
+         * Retorna verdadeiro se a string satisfaz a Expressão Regular
+         */
+        matches(regex: string): boolean;
+
+        /**
+         * Substitui nessa string todos os trechos que satisfaçam a string target
+         *
+         * Importante: esse método não aceita Expressão Regular.
+         *
+         * @param target Texto a procurar
+         * @param replacement Texto a substituir
+         */
+        replace(target: string, replacement: string): String;
+
+        /**
+         * Substitui nessa string todos os trechos que satisfaçam a string de Expressão Regular
+         *
+         * @param regex String de Expressão Regular
+         * @param replacement Texto a substituir
+         */
+        replaceAll(regex: string, replacement: string): String
+
+        /**
+         * Divide a string em arrays satisfazendo a Expressão Regular fornecida
+         *
+         * @param regex String de Expressão Regular
+         */
+        split(regex: string): String[];
+
+        /**
+         * Divide a string em arrays satisfazendo a Expressão Regular fornecida
+         *
+         * @param regex String de Expressão Regular
+         * @param limit Número máximo de partes a dividir a string
+         */
+        split(regex: string, limit: number): String[];
+
+        /**
+         * Retorna uma substring iniciando no índice indicado até o final da string
+         *
+         * @param beginIndex Índice inicial, começando em 0
+         */
+        substring(beginIndex: number): String;
+
+        /**
+         * Retorna uma substring iniciando no índice indicado até o índice final
+         *
+         * @param beginIndex Índice inicial, começando em 0
+         * @param endIndex Índice final, começando em 0
+         */
+        substring(beginIndex: number, endIndex: number): String;
+
+        /**
+         * Converte a string para letras minúsculas
+         */
+        toLowerCase(): String;
+
+        /**
+         * Converte a string para letras maiúsculas
+         */
+        toUpperCase(): String;
+
+        /**
+         * Remove espaços em branco do início e fim da string
+         */
+        trim(): String;
+    }
+
+    declare class Character {
+        /**
+         * Retorna o caractere como uma String
+         *
+         * @param c Código do CHAR
+         */
+        toString(c: number): String;
+
+        /**
+         * Converte o caractere em um número
+         *
+         * @param c Código do CHAR
+         * @param radix Base a converter (normalmente 10 pra indicar que é decimal)
+         */
+        digit(c: number, radix: number): number;
+    }
+
+    declare class Integer extends Object {
+        /**
+         * Converte a String em Integer
+         */
+        valueOf(value: String): Integer;
+
+        /**
+         * Converte a String em int
+         */
+        parseInt(value: String): number;
+    }
+
+    declare class Byte extends Object {}
+}
+
+declare namespace javax.naming {
+    /**
+     * Inicia um Contexto
+     */
+    declare class InitialContext {
+
+        /**
+         * Recupera o DataSource do Banco de Dados
+         *
+         * @param {string} dataSource O nome do dataSource. Ex: /jdbc/PostgreSqlDS
+         * @throws Exception
+         */
+        lookup(dataSource: string): javax.sql.DataSource;
+
+        /**
+         * Fecha o contexto ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+}
+
+declare namespace javax.sql {
+    declare class DataSource {
+        /**
+         * Recupera a Conexão com o Banco de Dados
+         *
+         * @throws Exception
+         */
+        getConnection(): Connection;
+    }
+
+    /**
+     * Conexão com o Banco de Dados
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html
+     */
+    declare class Connection {
+        /**
+         * Cria o objeto que executará o SQL
+         *
+         * @throws Exception
+         */
+        createStatement(): Statement;
+
+        /**
+         * Encerra a conexão ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+
+    /**
+     * Objeto que executa uma instrução SQL
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html
+     */
+    declare class Statement {
+        /**
+         * Executa um SQL que deve ser uma consulta (SELECT)
+         *
+         * @throws Exception
+         */
+        executeQuery(sql: string): ResultSet;
+
+        /**
+         * Executa um SQL que modifica algo no banco (INSERT, UPDATE ou DELETE)
+         *
+         * @returns {number} Quantidade de registros afetados
+         * @throws Exception
+         */
+        executeUpdate(sql: string): number;
+
+        /**
+         * Executa um SQL árbitrário. Para pegar o resultado precisa utilizar
+         *
+         * Caso necessite do resultado deve-se utilizar os métodos getResultSet ou getUpdateCount para recuperar os valores,
+         * e o método getMoreResults para pegar os demais resultados em consultas que retornam múltiplos resultados.
+         *
+         * Este método não pode ser chamado em uma PreparedStatement ou CallableStatement.
+         *
+         * @returns {boolean} true se o primeiro resultado for um ResultSet; false se for um contador de update ou sem resultado
+         * @throws Exception
+         */
+        execute(sql: string): boolean;
+
+        /**
+         * Retorna o resultado atual
+         *
+         * @throws Exception
+         */
+        getResultSet(): ResultSet;
+
+        /**
+         * Retorna o contador de linhas atualizadas quando é um update
+         *
+         * @returns {number} Retornará -1 quando não há mais resultados
+         * @throws Exception
+         */
+        getUpdateCount(): number;
+
+        /**
+         * Move para o próximo resultado indicando se conseguiu mover para o próximo
+         *
+         * Este método é utlizado quando há um retorno de múltiplos resultados. A cada chamada deste método ele avança para
+         * o próximo resultado, que você poderá obter usando os métodos getResultSet e getUpdateCount.
+         *
+         * @example
+         * while (stmt.getMoreResults() != false) {
+         *     var result = stmt.getResultSet();
+         * }
+         *
+         * @returns {boolean}
+         * @throws Exception
+         */
+        getMoreResults(): boolean;
+
+        /**
+         * Libera os recursos da execução imediatamente ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+
+    /**
+     * Representa o resultado de uma consulta SQL
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
+     */
+    declare class ResultSet {
+
+        /**
+         * Move o cursor para o primeiro resultado da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        first(): boolean;
+
+        /**
+         * Move o cursor para o último resultado da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        last(): boolean;
+
+        /**
+         * Move o cursor para o próximo resultado da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        next(): boolean;
+
+        /**
+         * Move o cursor para o resultado anterior da consulta
+         *
+         * @returns {boolean} Retorna true se moveu o cursor
+         */
+        previous(): boolean;
+
+        /**
+         * Pega o número, tipos e propriedades das colunas retornadas na consulta
+         */
+        getMetaData(): ResultSetMetaData;
+
+        /**
+         * Retorna o valor da coluna como um Objeto Java
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
+         */
+        getObject(columnIndex: number): java.lang.Object;
+        getObject(columnLabel: string): java.lang.Object;
+
+        /**
+         * Retorna o valor da coluna como uma string
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
+         */
+        getString(columnIndex: number): java.lang.String;
+        getString(columnLabel: string): java.lang.String;
+
+        /**
+         * Retorna o valor da coluna como um boolean
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
+         */
+        getBoolean(columnIndex: number): boolean;
+        getBoolean(columnLabel: string): boolean;
+
+        /**
+         * Retorna o valor da coluna como objeto Date
+         *
+         * Esse método retorna um java.sql.Date que herda de java.util.Date.
+         * Para evitar retrabalho deixei como java.util.Date mesmo.
+         *
+         * Há vários métodos get para obter o valor da coluna como objetos específicos
+         * do Java, tais como byte, java.sql.Blob etc.
+         */
+        getDate(columnIndex: number): java.util.Date;
+        getDate(columnLabel: string): java.util.Date;
+
+        /**
+         * Libera o resultado da consulta imediatamente ao invés de aguardar o coletor de lixo
+         */
+        close(): void;
+    }
+
+    declare class ResultSetMetaData {
+        /**
+         * Pega o total de colunas da consulta
+         */
+        getColumnCount(): number;
+
+        /**
+         * Pega o Nome da Coluna (label)
+         */
+        getColumnName(column: number): java.lang.String;
+    }
+}
+
+declare namespace java.text {
+
+    /**
+     * Formatador de Datas
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+     */
+    declare class SimpleDateFormat {
+        /**
+         * Cria um novo formatador de datas com o padrão indicado
+         *
+         * Exemplos:
+         *
+         * - "dd/MM/yyyy" -> data no formato pt-BR
+         * - "yyyy-MM-dd" -> data no formato ISO
+         * - "HH:mm" -> Hora (24h) e minuto
+         * - "yyyy-MM-dd'T'HH:mm:ss.SSSZ" -> Data completa (Ex: 2021-07-04T12:08:56.235-0700)
+         *
+         * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
+         */
+        constructor(formato: string);
+
+        /**
+         * Aplica o padrão de data de forma similar ao construtor
+         */
+        applyPattern(formato: string): void;
+
+        /**
+         * Retorna a data formatada conforme o padrão da formatação
+         */
+        format(data: java.util.Date): java.lang.String;
+
+        /**
+         * Converte uma string, formatada como indicado no construtor, em um objeto Date
+         */
+        parse(dataFormatada: string): java.util.Date;
+    }
+}
+
+declare namespace java.util {
+    declare abstract class Iterator<T> {
+        /**
+         * Indica se ainda há elementos a percorrer
+         */
+        hasNext(): boolean;
+
+        /**
+         * Pega o próximo elemento
+         */
+        next(): T;
+    }
+
+    declare abstract class Set<T> {
+        /**
+         * Adiciona um elemento ao conjunto
+         */
+        add(value: T): boolean;
+
+        /**
+         * Indica se o conjunto está vazio
+         */
+        isEmpty(): boolean;
+
+        /**
+         * Pega a quantidade de elementos do conjunto
+         */
+        size(): number;
+
+        /**
+         * Remove todos os elementos
+         */
+        clear(): void;
+
+        /**
+        * Verifica se existe o elemento
+        */
+        contains(value: T): boolean;
+
+        /**
+         * Pega um iterator para percorrer o conjunto
+         */
+        iterator(): java.util.Iterator<T>;
+
+        /**
+         * Remove o elemento indicado
+         */
+        remove(value: T): boolean;
+
+        /**
+         * Retorna um array com todos os elementos
+         */
+        toArray(): T[];
+    }
+
+    declare abstract class List<T> {
+        /**
+         * Pega o elemento no índice indicado
+         */
+        get(index: number): T;
+
+        /**
+         * Adiciona um elemento à lista
+         */
+        add(value: T): void;
+
+        /**
+         * Adiciona todos os elementos da lista indicada para esta lista
+         */
+        addAll(l: java.util.List<T>): void;
+
+        /**
+         * Indica o tamanho da lista
+         */
+        size(): number;
+
+        /**
+         * Remove todos os elementos
+         */
+        clear(): void;
+
+        /**
+         * Verifica se existe o elemento
+         */
+        contains(value: T): boolean;
+
+        /**
+         * Indica se a lista está vazia
+         */
+        isEmpty(): boolean;
+
+        /**
+         * Pega um iterator para percorrer a lista
+         */
+        iterator(): java.util.Iterator<T>
+
+        /**
+         * Remove o elemento
+         */
+        remove(value: T): boolean;
+
+        /**
+         * Retorna um array com todos os elementos da lista
+         */
+        toArray(): T[];
+    }
+
+    declare class ArrayList<T> extends List<T> {
+    }
+
+    declare abstract class Map<K, V> {
+        /**
+         * Pega o elemento no índice indicado
+         */
+        get(name: K): V;
+
+        /**
+         * Adiciona um elemento
+         */
+        put(name: K, value: V): void;
+
+        /**
+         * Indica o tamanho da lista
+         */
+        size(): number;
+
+        /**
+         * Remove todos os elementos
+         */
+        clear(): void;
+
+        /**
+         * Copia todos os elementos do mapa indicado para este mapa
+         */
+        putAll(m: java.util.Map<K, V>): void;
+
+        /**
+         * Retorna um conjunto com as chaves do Mapa
+         */
+        keySet(): java.util.Set<K>;
+
+        /**
+         * Retorna verdadeiro se houver item para a chave indicada
+         */
+        containsKey(name: K): boolean;
+
+        /**
+         * Retorna verdadeiro se o mapa está vazio
+         */
+        isEmpty(): boolean;
+
+        /**
+         * Remove o elemento indicado pela chave
+         */
+        remove(name: K): V;
+    }
+
+    declare class HashMap<K, V> extends java.util.Map<K, V> {
+    }
+
+    declare class LinkedHashSet<T> extends java.util.Set<T> {
+    }
+
+    declare class LinkedHashMap<K, V> extends java.util.HashMap<K, V> {
+    }
+
+    declare class Date {
+
+        /**
+         * Inicializa com a data do momento que o objeto foi criado
+         */
+        constructor();
+
+        /**
+         * Inicializa com a data em milisegundos decorridos desde 1970-01-01 00:00:00 GMT
+         */
+        constructor(date: number);
+
+        /**
+         * Compara se essa data é posterior à data indicada
+         */
+        after(when: Date): boolean;
+
+        /**
+         * Compara se essa data é anterior à data indicada
+         */
+        before(when: Date): boolean;
+
+        /**
+         * Retorna o dia do mês
+         *
+         * @deprecated Usar Calendar.get(Calendar.DAY_OF_MONTH)
+         */
+        getDate(): number;
+
+        /**
+         * Retorna o dia da semana
+         *
+         * @deprecated Usar Calendar.get(Calendar.DAY_OF_WEEK)
+         */
+        getDay(): number;
+
+        /**
+         * Retorna a hora
+         *
+         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY)
+         */
+        getHours(): number;
+
+        /**
+         * Retorna os minutos
+         *
+         * @deprecated Usar Calendar.get(Calendar.MINUTE)
+         */
+        getMinutes(): number;
+
+        /**
+         * Retorna o mês
+         *
+         * @deprecated Usar Calendar.get(Calendar.MONTH)
+         */
+        getMonth(): number;
+
+        /**
+         * Retorna os segundos
+         *
+         * @deprecated Usar Calendar.get(Calendar.SECOND)
+         */
+        getSeconds(): number;
+
+        /**
+         * Retorna o ano
+         *
+         * @deprecated Usar Calendar.get(Calendar.YEAR) - 1900
+         */
+        getYear(): number;
+
+        /**
+         * Atribui o dia do mês
+         *
+         * @deprecated Usar Calendar.set(Calendar.DAY_OF_MONTH, dia)
+         */
+        setDate(): number;
+
+        /**
+         * Atribui a hora
+         *
+         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY, hora)
+         */
+        setHours(): number;
+
+        /**
+         * Atribui os minutos
+         *
+         * @deprecated Usar Calendar.set(Calendar.MINUTE, minutos)
+         */
+        setMinutes(): number;
+
+        /**
+         * Atribui o mês
+         *
+         * @deprecated Usar Calendar.set(Calendar.MONTH, mes)
+         */
+        setMonth(): number;
+
+        /**
+         * Atribui os segundos
+         *
+         * @deprecated Usar Calendar.set(Calendar.SECOND, segundos)
+         */
+        setSeconds(): number;
+
+        /**
+         * Atribui o ano
+         *
+         * @deprecated Usar Calendar.set(Calendar.YEAR, ano + 1900)
+         */
+        setYear(): number;
+    }
+
+    /**
+     * A Classe Calendar não deve ser instanciada com operador new. Use sempre o método getInstance().
+     *
+     * Essa classe á abstrata e o Java normalmente vai instanciar um GregorianCalendar quando chamada a getInstance().
+     */
+    declare abstract class Calendar {
+        /**
+         * Cria uma instância de Calendário
+         *
+         * Essa classe é abstrata, por isso não é possível instanciá-la diretamente.
+         */
+        static getInstance(): Calendar;
+
+        // Constantes indicando os valores dos meses
+
+        /**
+         * Indica o valor de Janeiro
+         */
+        static const JANUARY: number;
+
+        /**
+         * Indica o valor de Fevereiro
+         */
+        static const FEBRUARY: number;
+
+        /**
+         * Indica o valor de Março
+         */
+        static const MARCH: number;
+
+        /**
+         * Indica o valor de Abril
+         */
+        static const APRIL: number;
+
+        /**
+         * Indica o valor de Maio
+         */
+        static const MAY: number;
+
+        /**
+         * Indica o valor de Junho
+         */
+        static const JUNE: number;
+
+        /**
+         * Indica o valor de Julho
+         */
+        static const JULY: number;
+
+        /**
+         * Indica o valor de Agosto
+         */
+        static const AUGUST: number;
+
+        /**
+         * Indica o valor de Setembro
+         */
+        static const SEPTEMBER: number;
+
+        /**
+         * Indica o valor de Outubro
+         */
+        static const OCTOBER: number;
+
+        /**
+         * Indica o valor de Novembro
+         */
+        static const NOVEMBER: number;
+
+        /**
+         * Indica o valor de Dezembro
+         */
+        static const DECEMBER: number;
+
+        // Constantes de horário
+
+        /**
+         * Indica que a hora é antes de meio dia
+         */
+        static const AM: number;
+
+        /**
+         * Indica que a hora é após meio dia
+         */
+        static const PM: number;
+
+        // Constantes de dia da semana
+
+        /**
+         * Indica que é Domingo
+         */
+        static const SUNDAY: number;
+
+        /**
+         * Indica que é segunda-feira
+         */
+        static const MONDAY: number;
+
+        /**
+         * Indica que é terça-feira
+         */
+        static const TUESDAY: number;
+
+        /**
+         * Indica que é quarta-feira
+         */
+        static const WEDNESDAY: number;
+
+        /**
+         * Indica que é quinta-feira
+         */
+         static const THURSDAY: number;
+
+        /**
+         * Indica que é sexta-feira
+         */
+        static const FRIDAY: number;
+
+        /**
+         * Indica que é Sábado
+         */
+        static const SATURDAY: number;
+
+
+        // Constantes de campo
+
+        /**
+         * Campo que indica se horário é antes ou depois do meio dia
+         */
+        static const AM_PM: number;
+
+        /**
+         * Campo que indica o dia do mês
+         */
+        static const DATE: number;
+
+        /**
+         * Campo que indica o dia do mês
+         */
+        static const DAY_OF_MONTH: number;
+
+        /**
+         * Campo que indica o dia da semana
+         */
+        static const DAY_OF_WEEK: number;
+
+        /**
+         * Campo que indica o dia do ano
+         */
+        static const DAY_OF_YEAR: number;
+
+        /**
+         * Campo que indica a hora antes ou depois do meio dia (12h)
+         */
+        static const HOUR: number;
+
+        /**
+         * Campo que indica a hora do dia (24h)
+         */
+        static const HOUR_OF_DAY: number;
+
+        /**
+         * Campo que indica os milissegundos
+         */
+        static const MILLISECOND: number;
+
+        /**
+         * Campo que indica os minutos
+         */
+        static const MINUTE: number;
+
+        /**
+         * Campo que indica o mês
+         */
+        static const MONTH: number;
+
+        /**
+         * Campo que indica os segundos
+         */
+        static const SECOND: number;
+
+        /**
+         * Campo que indica a semana do mês
+         */
+        static const WEEK_OF_MONTH: number;
+
+        /**
+         * Campo que indica a semana do ano
+         */
+        static const WEEK_OF_YEAR: number;
+
+        /**
+         * Campo que indica o ano
+         */
+        static const YEAR: number;
+
+        /**
+         * Retorna o valor do campo indicado
+         *
+         * @param {number} campo Uma das constantes da classe indicando o campo
+         */
+        get(campo: number): number;
+
+        /**
+         * Atribui o valor ao campo indicado
+         *
+         * @param {number} campo Uma das constantes da classe indicando o campo
+         * @param {number} valor O valor que será atribuído ao campo
+         */
+        set(campo: number, valor: number): void;
+
+        /**
+         * Retorna o calendário como um objeto Date
+         */
+        getTime(): Date;
+
+        /**
+         * Configura o calendário usando um objeto Date
+         */
+        setTime(data: Date): void;
+
+        /**
+         * Compara se essa data é posterior à data indicada
+         */
+        after(data: Calendar): boolean;
+
+        /**
+         * Compara se essa data é anterior à data indicada
+         */
+        before(data: Calendar): boolean;
+
+        /**
+         * Configura o calendário com o Ano, Mês e Dia
+         */
+        set(ano: number, mes: number, dia: number): void;
+
+        /**
+         * Configura o calendário com o Ano, Mês, Dia, Hora e Minutos
+         */
+        set(ano: number, mes: number, dia: number, hora: number, minutos: number): void;
+
+        /**
+         * Configura o calendário com o Ano, Mês, Dia, Hora, Minutos e Segundos
+         */
+        set(ano: number, mes: number, dia: number, hora: number, minutos: number, segundos: number): void;
+
+        /**
+         * Adiciona ou Subtrai 1 unidade do campo indicado
+         *
+         * @param {number} campo Uma das constantes de campo
+         * @param {boolean} aumentaValor Se for true aumentará o campo, senão ele será diminuído
+         */
+        roll(campo: number, aumentaValor: boolean): void;
+
+        /**
+         * Adiciona ou Subtrai unidades do campo indicado
+         *
+         * @param {number} campo Uma das constantes de campo
+         * @param {boolean} valor Valor que será utilizado no cálculo. Se positivo aumentará, se negativo diminuirá
+         */
+        roll(campo: number, valor: number): void;
+
+        /**
+         * Adiciona ou subtrai a quantidade indicada do campo indicado
+         *
+         * @param campo Uma das constantes de campo
+         * @param valor Valor que será utilizado no cálculo. Se negativo vai subtrair
+         */
+        add(campo: number, valor: number): void;
+    }
+
+    declare class UUID {
+        /**
+         * Cria um UUID tipo 4 (geração pseudo aleatória)
+         */
+        static randomUUID(): UUID;
+
+        /**
+         * Retorna uma string representando o UUID
+         */
+        toString(): java.lang.String;
+    }
 }
 
 interface IwsConsultaSQL {
@@ -3900,1010 +5465,6 @@ declare namespace com.fluig.sdk.user {
          * Atribui o UUID
          */
         setUserUUID(userUUID: string): void;
-    }
-}
-
-declare namespace java.lang {
-    declare class Object {
-        /**
-         * Retorna o valor do objeto como uma string
-         */
-        toString(): String;
-    }
-
-    declare class String {
-        constructor();
-        constructor(original: string);
-
-        /**
-         * Pega o char da posição indicada.
-         *
-         * Importante: embora o método deva devolver um char o Fluig
-         * trata como um número (provavelmente o código ASCII do char).
-         *
-         * Se precisar da letra utilize o método substring indicando índice
-         * inicial e final ou converta utilizando a classe Character.
-         *
-         * @example
-         * var str = new java.lang.String("texto");
-         * str.substring(1, 2); // Retornará "e"
-         *
-         * var str = new java.lang.String("012");
-         * Character.digit(str.charAt(2), 10); // Retornará número 2
-         * Character.toString(str.charAt(2)); // Retornará string 2
-         */
-        charAt(index: number): number;
-
-        /**
-         * Compara duas strings
-         *
-         * Retorna 0 se as strings forem iguais, menor que zero se essa string
-         * for menor do que a outra string ou maior que zero se essa string for
-         * maior do que a outra.
-         */
-        compareTo(anotherString: string): number;
-
-        /**
-         * Compara duas strings ignorando as diferenças de maiúscula e minúscula
-         *
-         * Retorna 0 se as strings forem iguais, menor que zero se essa string
-         * for menor do que a outra string ou maior que zero se essa string for
-         * maior do que a outra.
-         */
-        compareToIgnoreCase(anotherString: string): number;
-
-        /**
-         * Retorna verdadeiro se essa string contém a string informada
-         */
-        contains(substring: string): boolean;
-
-        /**
-         * Retorna verdadeiro se essa string termina com a string informada
-         */
-        endsWith(suffix: string): boolean;
-
-        /**
-         * Retorna verdadeiro se essa string começa com a string informada
-         */
-        startsWith(prefix: string): boolean;
-
-        /**
-         * Retorna verdadeiro se ambas strings forem iguais ignorando case
-         */
-        equalsIgnoreCase(anotherString: string): boolean;
-
-        /**
-         * Retorna o índice da primeira ocorrência da string informada
-         */
-        indexOf(str: string): number;
-
-        /**
-         * Retorna o índice da primeira ocorrência da string informada a partir do índice indicado
-         */
-        indexOf(str: string, fromIndex: number): number;
-
-        /**
-         * Retorna o índice da última ocorrência da string informada
-         */
-        lastIndexOf(str: string): number;
-
-        /**
-         * Retorna o índice da última ocorrência da string informada a partir do índice indicado
-         */
-        lastIndexOf(str: string, fromIndex: number): number;
-
-        /**
-         * Retorna a quantidade de caracteres da string
-         */
-        length(): number;
-
-        /**
-         * Retorna verdadeiro se a string satisfaz a Expressão Regular
-         */
-        matches(regex: string): boolean;
-
-        /**
-         * Substitui nessa string todos os trechos que satisfaçam a string target
-         *
-         * Importante: esse método não aceita Expressão Regular.
-         *
-         * @param target Texto a procurar
-         * @param replacement Texto a substituir
-         */
-        replace(target: string, replacement: string): String;
-
-        /**
-         * Substitui nessa string todos os trechos que satisfaçam a string de Expressão Regular
-         *
-         * @param regex String de Expressão Regular
-         * @param replacement Texto a substituir
-         */
-        replaceAll(regex: string, replacement: string): String
-
-        /**
-         * Divide a string em arrays satisfazendo a Expressão Regular fornecida
-         *
-         * @param regex String de Expressão Regular
-         */
-        split(regex: string): String[];
-
-        /**
-         * Divide a string em arrays satisfazendo a Expressão Regular fornecida
-         *
-         * @param regex String de Expressão Regular
-         * @param limit Número máximo de partes a dividir a string
-         */
-        split(regex: string, limit: number): String[];
-
-        /**
-         * Retorna uma substring iniciando no índice indicado até o final da string
-         *
-         * @param beginIndex Índice inicial, começando em 0
-         */
-        substring(beginIndex: number): String;
-
-        /**
-         * Retorna uma substring iniciando no índice indicado até o índice final
-         *
-         * @param beginIndex Índice inicial, começando em 0
-         * @param endIndex Índice final, começando em 0
-         */
-        substring(beginIndex: number, endIndex: number): String;
-
-        /**
-         * Converte a string para letras minúsculas
-         */
-        toLowerCase(): String;
-
-        /**
-         * Converte a string para letras maiúsculas
-         */
-        toUpperCase(): String;
-
-        /**
-         * Remove espaços em branco do início e fim da string
-         */
-        trim(): String;
-    }
-
-    declare class Character {
-        /**
-         * Retorna o caractere como uma String
-         *
-         * @param c Código do CHAR
-         */
-        toString(c: number): String;
-
-        /**
-         * Converte o caractere em um número
-         *
-         * @param c Código do CHAR
-         * @param radix Base a converter (normalmente 10 pra indicar que é decimal)
-         */
-        digit(c: number, radix: number): number;
-    }
-}
-
-declare namespace javax.naming {
-    /**
-     * Inicia um Contexto
-     */
-    declare class InitialContext {
-
-        /**
-         * Recupera o DataSource do Banco de Dados
-         *
-         * @param {string} dataSource O nome do dataSource. Ex: /jdbc/PostgreSqlDS
-         * @throws Exception
-         */
-        lookup(dataSource: string): javax.sql.DataSource;
-
-        /**
-         * Fecha o contexto ao invés de aguardar o coletor de lixo
-         */
-        close(): void;
-    }
-}
-
-declare namespace javax.sql {
-    declare class DataSource {
-        /**
-         * Recupera a Conexão com o Banco de Dados
-         *
-         * @throws Exception
-         */
-        getConnection(): Connection;
-    }
-
-    /**
-     * Conexão com o Banco de Dados
-     *
-     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Connection.html
-     */
-    declare class Connection {
-        /**
-         * Cria o objeto que executará o SQL
-         *
-         * @throws Exception
-         */
-        createStatement(): Statement;
-
-        /**
-         * Encerra a conexão ao invés de aguardar o coletor de lixo
-         */
-        close(): void;
-    }
-
-    /**
-     * Objeto que executa uma instrução SQL
-     *
-     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html
-     */
-    declare class Statement {
-        /**
-         * Executa um SQL que deve ser uma consulta (SELECT)
-         *
-         * @throws Exception
-         */
-        executeQuery(sql: string): ResultSet;
-
-        /**
-         * Executa um SQL que modifica algo no banco (INSERT, UPDATE ou DELETE)
-         *
-         * @returns {number} Quantidade de registros afetados
-         * @throws Exception
-         */
-        executeUpdate(sql: string): number;
-
-        /**
-         * Executa um SQL árbitrário. Para pegar o resultado precisa utilizar
-         *
-         * Caso necessite do resultado deve-se utilizar os métodos getResultSet ou getUpdateCount para recuperar os valores,
-         * e o método getMoreResults para pegar os demais resultados em consultas que retornam múltiplos resultados.
-         *
-         * Este método não pode ser chamado em uma PreparedStatement ou CallableStatement.
-         *
-         * @returns {boolean} true se o primeiro resultado for um ResultSet; false se for um contador de update ou sem resultado
-         * @throws Exception
-         */
-        execute(sql: string): boolean;
-
-        /**
-         * Retorna o resultado atual
-         *
-         * @throws Exception
-         */
-        getResultSet(): ResultSet;
-
-        /**
-         * Retorna o contador de linhas atualizadas quando é um update
-         *
-         * @returns {number} Retornará -1 quando não há mais resultados
-         * @throws Exception
-         */
-        getUpdateCount(): number;
-
-        /**
-         * Move para o próximo resultado indicando se conseguiu mover para o próximo
-         *
-         * Este método é utlizado quando há um retorno de múltiplos resultados. A cada chamada deste método ele avança para
-         * o próximo resultado, que você poderá obter usando os métodos getResultSet e getUpdateCount.
-         *
-         * @example
-         * while (stmt.getMoreResults() != false) {
-         *     var result = stmt.getResultSet();
-         * }
-         *
-         * @returns {boolean}
-         * @throws Exception
-         */
-        getMoreResults(): boolean;
-
-        /**
-         * Libera os recursos da execução imediatamente ao invés de aguardar o coletor de lixo
-         */
-        close(): void;
-    }
-
-    /**
-     * Representa o resultado de uma consulta SQL
-     *
-     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
-     */
-    declare class ResultSet {
-
-        /**
-         * Move o cursor para o primeiro resultado da consulta
-         *
-         * @returns {boolean} Retorna true se moveu o cursor
-         */
-        first(): boolean;
-
-        /**
-         * Move o cursor para o último resultado da consulta
-         *
-         * @returns {boolean} Retorna true se moveu o cursor
-         */
-        last(): boolean;
-
-        /**
-         * Move o cursor para o próximo resultado da consulta
-         *
-         * @returns {boolean} Retorna true se moveu o cursor
-         */
-        next(): boolean;
-
-        /**
-         * Move o cursor para o resultado anterior da consulta
-         *
-         * @returns {boolean} Retorna true se moveu o cursor
-         */
-        previous(): boolean;
-
-        /**
-         * Pega o número, tipos e propriedades das colunas retornadas na consulta
-         */
-        getMetaData(): ResultSetMetaData;
-
-        /**
-         * Retorna o valor da coluna como um Objeto Java
-         *
-         * Há vários métodos get para obter o valor da coluna como objetos específicos
-         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
-         */
-        getObject(columnIndex: number): java.lang.Object;
-        getObject(columnLabel: string): java.lang.Object;
-
-        /**
-         * Retorna o valor da coluna como uma string
-         *
-         * Há vários métodos get para obter o valor da coluna como objetos específicos
-         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
-         */
-        getString(columnIndex: number): java.lang.String;
-        getString(columnLabel: string): java.lang.String;
-
-        /**
-         * Retorna o valor da coluna como um boolean
-         *
-         * Há vários métodos get para obter o valor da coluna como objetos específicos
-         * do Java, tais como java.sqlDate, byte, java.sql.Blob etc.
-         */
-        getBoolean(columnIndex: number): boolean;
-        getBoolean(columnLabel: string): boolean;
-
-        /**
-         * Retorna o valor da coluna como objeto Date
-         *
-         * Esse método retorna um java.sql.Date que herda de java.util.Date.
-         * Para evitar retrabalho deixei como java.util.Date mesmo.
-         *
-         * Há vários métodos get para obter o valor da coluna como objetos específicos
-         * do Java, tais como byte, java.sql.Blob etc.
-         */
-        getDate(columnIndex: number): java.util.Date;
-        getDate(columnLabel: string): java.util.Date;
-
-        /**
-         * Libera o resultado da consulta imediatamente ao invés de aguardar o coletor de lixo
-         */
-        close(): void;
-    }
-
-    declare class ResultSetMetaData {
-        /**
-         * Pega o total de colunas da consulta
-         */
-        getColumnCount(): number;
-
-        /**
-         * Pega o Nome da Coluna (label)
-         */
-        getColumnName(column: number): java.lang.String;
-    }
-}
-
-declare namespace java.text {
-
-    /**
-     * Formatador de Datas
-     *
-     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
-     */
-    declare class SimpleDateFormat {
-        /**
-         * Cria um novo formatador de datas com o padrão indicado
-         *
-         * Exemplos:
-         *
-         * - "dd/MM/yyyy" -> data no formato pt-BR
-         * - "yyyy-MM-dd" -> data no formato ISO
-         * - "HH:mm" -> Hora (24h) e minuto
-         * - "yyyy-MM-dd'T'HH:mm:ss.SSSZ" -> Data completa (Ex: 2021-07-04T12:08:56.235-0700)
-         *
-         * @tutorial https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
-         */
-        constructor(formato: string);
-
-        /**
-         * Aplica o padrão de data de forma similar ao construtor
-         */
-        applyPattern(formato: string): void;
-
-        /**
-         * Retorna a data formatada conforme o padrão da formatação
-         */
-        format(data: java.util.Date): java.lang.String;
-
-        /**
-         * Converte uma string, formatada como indicado no construtor, em um objeto Date
-         */
-        parse(dataFormatada: string): java.util.Date;
-    }
-}
-
-declare namespace java.util {
-    declare abstract class Iterator<T> {
-        /**
-         * Indica se ainda há elementos a percorrer
-         */
-        hasNext(): boolean;
-
-        /**
-         * Pega o próximo elemento
-         */
-        next(): T;
-    }
-
-    declare abstract class Set<T> {
-        /**
-         * Adiciona um elemento ao conjunto
-         */
-        add(value: T): boolean;
-
-        /**
-         * Indica se o conjunto está vazio
-         */
-        isEmpty(): boolean;
-
-        /**
-         * Pega a quantidade de elementos do conjunto
-         */
-        size(): number;
-
-        /**
-         * Remove todos os elementos
-         */
-        clear(): void;
-
-        /**
-        * Verifica se existe o elemento
-        */
-        contains(value: T): boolean;
-
-        /**
-         * Pega um iterator para percorrer o conjunto
-         */
-        iterator(): java.util.Iterator<T>;
-
-        /**
-         * Remove o elemento indicado
-         */
-        remove(value: T): boolean;
-
-        /**
-         * Retorna um array com todos os elementos
-         */
-        toArray(): T[];
-    }
-
-    declare abstract class List<T> {
-        /**
-         * Pega o elemento no índice indicado
-         */
-        get(index: number): T;
-
-        /**
-         * Adiciona um elemento à lista
-         */
-        add(value: T): void;
-
-        /**
-         * Adiciona todos os elementos da lista indicada para esta lista
-         */
-        addAll(l: java.util.List<T>): void;
-
-        /**
-         * Indica o tamanho da lista
-         */
-        size(): number;
-
-        /**
-         * Remove todos os elementos
-         */
-        clear(): void;
-
-        /**
-         * Verifica se existe o elemento
-         */
-        contains(value: T): boolean;
-
-        /**
-         * Indica se a lista está vazia
-         */
-        isEmpty(): boolean;
-
-        /**
-         * Pega um iterator para percorrer a lista
-         */
-        iterator(): java.util.Iterator<T>
-
-        /**
-         * Remove o elemento
-         */
-        remove(value: T): boolean;
-
-        /**
-         * Retorna um array com todos os elementos da lista
-         */
-        toArray(): T[];
-    }
-
-    declare class ArrayList<T> extends List<T> {
-    }
-
-    declare abstract class Map<K, V> {
-        /**
-         * Pega o elemento no índice indicado
-         */
-        get(name: K): V;
-
-        /**
-         * Adiciona um elemento
-         */
-        put(name: K, value: V): void;
-
-        /**
-         * Indica o tamanho da lista
-         */
-        size(): number;
-
-        /**
-         * Remove todos os elementos
-         */
-        clear(): void;
-
-        /**
-         * Copia todos os elementos do mapa indicado para este mapa
-         */
-        putAll(m: java.util.Map<K, V>): void;
-
-        /**
-         * Retorna um conjunto com as chaves do Mapa
-         */
-        keySet(): java.util.Set<K>;
-
-        /**
-         * Retorna verdadeiro se houver item para a chave indicada
-         */
-        containsKey(name: K): boolean;
-
-        /**
-         * Retorna verdadeiro se o mapa está vazio
-         */
-        isEmpty(): boolean;
-
-        /**
-         * Remove o elemento indicado pela chave
-         */
-        remove(name: K): V;
-    }
-
-    declare class HashMap<K, V> extends java.util.Map<K, V> {
-    }
-
-    declare class LinkedHashSet<T> extends java.util.Set<T> {
-    }
-
-    declare class LinkedHashMap<K, V> extends java.util.HashMap<K, V> {
-    }
-
-    declare class Date {
-
-        /**
-         * Inicializa com a data do momento que o objeto foi criado
-         */
-        constructor();
-
-        /**
-         * Inicializa com a data em milisegundos decorridos desde 1970-01-01 00:00:00 GMT
-         */
-        constructor(date: number);
-
-        /**
-         * Compara se essa data é posterior à data indicada
-         */
-        after(when: Date): boolean;
-
-        /**
-         * Compara se essa data é anterior à data indicada
-         */
-        before(when: Date): boolean;
-
-        /**
-         * Retorna o dia do mês
-         *
-         * @deprecated Usar Calendar.get(Calendar.DAY_OF_MONTH)
-         */
-        getDate(): number;
-
-        /**
-         * Retorna o dia da semana
-         *
-         * @deprecated Usar Calendar.get(Calendar.DAY_OF_WEEK)
-         */
-        getDay(): number;
-
-        /**
-         * Retorna a hora
-         *
-         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY)
-         */
-        getHours(): number;
-
-        /**
-         * Retorna os minutos
-         *
-         * @deprecated Usar Calendar.get(Calendar.MINUTE)
-         */
-        getMinutes(): number;
-
-        /**
-         * Retorna o mês
-         *
-         * @deprecated Usar Calendar.get(Calendar.MONTH)
-         */
-        getMonth(): number;
-
-        /**
-         * Retorna os segundos
-         *
-         * @deprecated Usar Calendar.get(Calendar.SECOND)
-         */
-        getSeconds(): number;
-
-        /**
-         * Retorna o ano
-         *
-         * @deprecated Usar Calendar.get(Calendar.YEAR) - 1900
-         */
-        getYear(): number;
-
-        /**
-         * Atribui o dia do mês
-         *
-         * @deprecated Usar Calendar.set(Calendar.DAY_OF_MONTH, dia)
-         */
-        setDate(): number;
-
-        /**
-         * Atribui a hora
-         *
-         * @deprecated Usar Calendar.get(Calendar.HOUR_OF_DAY, hora)
-         */
-        setHours(): number;
-
-        /**
-         * Atribui os minutos
-         *
-         * @deprecated Usar Calendar.set(Calendar.MINUTE, minutos)
-         */
-        setMinutes(): number;
-
-        /**
-         * Atribui o mês
-         *
-         * @deprecated Usar Calendar.set(Calendar.MONTH, mes)
-         */
-        setMonth(): number;
-
-        /**
-         * Atribui os segundos
-         *
-         * @deprecated Usar Calendar.set(Calendar.SECOND, segundos)
-         */
-        setSeconds(): number;
-
-        /**
-         * Atribui o ano
-         *
-         * @deprecated Usar Calendar.set(Calendar.YEAR, ano + 1900)
-         */
-        setYear(): number;
-    }
-
-    /**
-     * A Classe Calendar não deve ser instanciada com operador new. Use sempre o método getInstance().
-     *
-     * Essa classe á abstrata e o Java normalmente vai instanciar um GregorianCalendar quando chamada a getInstance().
-     */
-    declare abstract class Calendar {
-        /**
-         * Cria uma instância de Calendário
-         *
-         * Essa classe é abstrata, por isso não é possível instanciá-la diretamente.
-         */
-        static getInstance(): Calendar;
-
-        // Constantes indicando os valores dos meses
-
-        /**
-         * Indica o valor de Janeiro
-         */
-        static const JANUARY: number;
-
-        /**
-         * Indica o valor de Fevereiro
-         */
-        static const FEBRUARY: number;
-
-        /**
-         * Indica o valor de Março
-         */
-        static const MARCH: number;
-
-        /**
-         * Indica o valor de Abril
-         */
-        static const APRIL: number;
-
-        /**
-         * Indica o valor de Maio
-         */
-        static const MAY: number;
-
-        /**
-         * Indica o valor de Junho
-         */
-        static const JUNE: number;
-
-        /**
-         * Indica o valor de Julho
-         */
-        static const JULY: number;
-
-        /**
-         * Indica o valor de Agosto
-         */
-        static const AUGUST: number;
-
-        /**
-         * Indica o valor de Setembro
-         */
-        static const SEPTEMBER: number;
-
-        /**
-         * Indica o valor de Outubro
-         */
-        static const OCTOBER: number;
-
-        /**
-         * Indica o valor de Novembro
-         */
-        static const NOVEMBER: number;
-
-        /**
-         * Indica o valor de Dezembro
-         */
-        static const DECEMBER: number;
-
-        // Constantes de horário
-
-        /**
-         * Indica que a hora é antes de meio dia
-         */
-        static const AM: number;
-
-        /**
-         * Indica que a hora é após meio dia
-         */
-        static const PM: number;
-
-        // Constantes de dia da semana
-
-        /**
-         * Indica que é Domingo
-         */
-        static const SUNDAY: number;
-
-        /**
-         * Indica que é segunda-feira
-         */
-        static const MONDAY: number;
-
-        /**
-         * Indica que é terça-feira
-         */
-        static const TUESDAY: number;
-
-        /**
-         * Indica que é quarta-feira
-         */
-        static const WEDNESDAY: number;
-
-        /**
-         * Indica que é quinta-feira
-         */
-         static const THURSDAY: number;
-
-        /**
-         * Indica que é sexta-feira
-         */
-        static const FRIDAY: number;
-
-        /**
-         * Indica que é Sábado
-         */
-        static const SATURDAY: number;
-
-
-        // Constantes de campo
-
-        /**
-         * Campo que indica se horário é antes ou depois do meio dia
-         */
-        static const AM_PM: number;
-
-        /**
-         * Campo que indica o dia do mês
-         */
-        static const DATE: number;
-
-        /**
-         * Campo que indica o dia do mês
-         */
-        static const DAY_OF_MONTH: number;
-
-        /**
-         * Campo que indica o dia da semana
-         */
-        static const DAY_OF_WEEK: number;
-
-        /**
-         * Campo que indica o dia do ano
-         */
-        static const DAY_OF_YEAR: number;
-
-        /**
-         * Campo que indica a hora antes ou depois do meio dia (12h)
-         */
-        static const HOUR: number;
-
-        /**
-         * Campo que indica a hora do dia (24h)
-         */
-        static const HOUR_OF_DAY: number;
-
-        /**
-         * Campo que indica os milissegundos
-         */
-        static const MILLISECOND: number;
-
-        /**
-         * Campo que indica os minutos
-         */
-        static const MINUTE: number;
-
-        /**
-         * Campo que indica o mês
-         */
-        static const MONTH: number;
-
-        /**
-         * Campo que indica os segundos
-         */
-        static const SECOND: number;
-
-        /**
-         * Campo que indica a semana do mês
-         */
-        static const WEEK_OF_MONTH: number;
-
-        /**
-         * Campo que indica a semana do ano
-         */
-        static const WEEK_OF_YEAR: number;
-
-        /**
-         * Campo que indica o ano
-         */
-        static const YEAR: number;
-
-        /**
-         * Retorna o valor do campo indicado
-         *
-         * @param {number} campo Uma das constantes da classe indicando o campo
-         */
-        get(campo: number): number;
-
-        /**
-         * Atribui o valor ao campo indicado
-         *
-         * @param {number} campo Uma das constantes da classe indicando o campo
-         * @param {number} valor O valor que será atribuído ao campo
-         */
-        set(campo: number, valor: number): void;
-
-        /**
-         * Retorna o calendário como um objeto Date
-         */
-        getTime(): Date;
-
-        /**
-         * Configura o calendário usando um objeto Date
-         */
-        setTime(data: Date): void;
-
-        /**
-         * Compara se essa data é posterior à data indicada
-         */
-        after(data: Calendar): boolean;
-
-        /**
-         * Compara se essa data é anterior à data indicada
-         */
-        before(data: Calendar): boolean;
-
-        /**
-         * Configura o calendário com o Ano, Mês e Dia
-         */
-        set(ano: number, mes: number, dia: number): void;
-
-        /**
-         * Configura o calendário com o Ano, Mês, Dia, Hora e Minutos
-         */
-        set(ano: number, mes: number, dia: number, hora: number, minutos: number): void;
-
-        /**
-         * Configura o calendário com o Ano, Mês, Dia, Hora, Minutos e Segundos
-         */
-        set(ano: number, mes: number, dia: number, hora: number, minutos: number, segundos: number): void;
-
-        /**
-         * Adiciona ou Subtrai 1 unidade do campo indicado
-         *
-         * @param {number} campo Uma das constantes de campo
-         * @param {boolean} aumentaValor Se for true aumentará o campo, senão ele será diminuído
-         */
-        roll(campo: number, aumentaValor: boolean): void;
-
-        /**
-         * Adiciona ou Subtrai unidades do campo indicado
-         *
-         * @param {number} campo Uma das constantes de campo
-         * @param {boolean} valor Valor que será utilizado no cálculo. Se positivo aumentará, se negativo diminuirá
-         */
-        roll(campo: number, valor: number): void;
-
-        /**
-         * Adiciona ou subtrai a quantidade indicada do campo indicado
-         *
-         * @param campo Uma das constantes de campo
-         * @param valor Valor que será utilizado no cálculo. Se negativo vai subtrair
-         */
-        add(campo: number, valor: number): void;
-    }
-
-    declare class UUID {
-        /**
-         * Cria um UUID tipo 4 (geração pseudo aleatória)
-         */
-        static randomUUID(): UUID;
-
-        /**
-         * Retorna uma string representando o UUID
-         */
-        toString(): java.lang.String;
     }
 }
 
