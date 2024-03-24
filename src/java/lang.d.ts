@@ -189,4 +189,6 @@ declare namespace java.lang {
          */
         parseInt(value: String): number;
     }
+
+    declare class Byte extends Object {}
 }
