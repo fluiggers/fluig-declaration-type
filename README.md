@@ -25,6 +25,8 @@ Edite as declarações da pasta `src`, pois o arquivo `fluig.d.ts` será gerado 
 
 Os principais documentos utilizados para elaborar essas declarações de tipos vieram de:
 
-- [Documentação Oficial do Fluig](https://tdn.totvs.com/display/public/fluig/TOTVS+FLUIG+PLATAFORMA)
+- [Documentação Oficial do Fluig](https://tdn.totvs.com/display/public/fluig/TOTVS+FLUIG)
 - [Style Guide](https://style.fluig.com/)
-- [Javadoc for Fluig - SDK - API 1.8.0](https://fluig.totvs.com/api/sdk/index.html?overview-summary.html)
+- [Javadoc for Fluig - SDK - API 1.8.1](https://api.fluig.com/old/sdk/index.html)
+- [API REST](https://api.fluig.com/latest/index.html)
+- [API REST Antiga](https://api.fluig.com/old/)
