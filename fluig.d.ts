@@ -365,6 +365,10 @@ declare namespace docAPI {
  * Entidade Aprovador
  */
 declare class ApproverDto {
+    /**
+     * Retorna o número do documento
+     */
+    getDocumentId(): number;
 
     /**
      * Pega o número do aprovador
@@ -634,6 +638,33 @@ declare class DocumentDto {
      */
     getPhisicalFileSize(): number;
 };
+
+/**
+ * Representa as propriedades editáveis de um documento
+ */
+declare class DocumentEditDto {
+    /**
+     * Adiciona Palavras chaves no documento
+     *
+     * Cada palavra é separada por vírgula.
+     */
+    setKeyWord(keyWord: string): void;
+
+    /**
+     * Define se o documento deve expirar
+     */
+    setExpires(expires: boolean): void;
+
+    /**
+     * Define a data de expiração
+     */
+    setExpirationDate(expireAt: java.util.Date): void;
+
+    /**
+     * Define a data a partir da qual o documento poderá ser visualizado
+     */
+    setValidationStartDate(validatedAt: java.util.Date): void;
+}
 
 /**
  * Entidade Segurança do Documento
@@ -2174,6 +2205,48 @@ declare namespace globalVars {
 };
 
 
+type getValuePropertiesInteger =
+    "WKNumProces"
+    | "WKCompany"
+    | "WKVersDef"
+    | "WKNumState"
+    | "WKNextState"
+    | "WKCardId"
+    | "WKFormId"
+    | "maxResult"
+    | "page"
+;
+
+type getValuePropertiesString =
+    "WKDef"
+    | "WKUser"
+    | "WKUserComment"
+    | "WKIdentityCompany"
+    | "WKUserLocale"
+    | "WKReplacement"
+    | "taskUserId"
+    | "taskType"
+    | "order"
+;
+
+type getValuePropertiesBoolean =
+    "WKCompletTask"
+    | "WKMobile"
+    | "WKManagerMode"
+    | "WKIsTransfer"
+    | "WKPrivateDocument"
+    | "WKIsService"
+;
+
+type getValuePropertiesMapStringObject = "filter";
+
+type getValuePropertiesDocumentDto = "WKDocument";
+type getValuePropertiesDocumentEditDto = "WKDocumentEdit";
+type getValuePropertiesListApproverDto = "WKListApprover";
+type getValuePropertiesListDocumentSecurityConfigDto = "WKListSecurity";
+type getValuePropertiesListRelatedDocumentDto = "WKListRelatedDocument";
+
+
 /**
  * Pega o valor das propriedades do Processo.
  *
@@ -2199,8 +2272,25 @@ declare namespace globalVars {
  * - WKManagerMode: Identifica se o processo está sendo movimentado pela visão do gestor do processo ou não. Só funciona no Workflow
  * - WKReplacement: Código do usuário substituto
  * - WKIsTransfer: Permite verificar se o usuário está ou não transferindo uma tarefa
+ * - taskUserId: Código do usuário substituído, em caso de visualização da central como substituto. Nos demais casos retorna o usuário logado.
+ * - taskType: Indicador do tipo de tarefas que estão sendo exibidas, “open” tarefas a concluir e “requests” para minhas solicitações.
+ * - filter: Filtros utilizados
+ * - order: Ordenação aplicada
+ * - maxResult: Número de resultados por página
+ * - page: Número da página atual
+ * - WKListApprover: Lista dos Aprovadores do documento
+ * - WKListSecurity: Lista da Segurança do documento
  */
-declare function getValue(nomePropriedade: string): string;
+declare function getValue(nomePropriedade: getValuePropertiesInteger): java.lang.Integer;
+declare function getValue(nomePropriedade: getValuePropertiesString): java.lang.String;
+declare function getValue(nomePropriedade: getValuePropertiesBoolean): boolean;
+declare function getValue(nomePropriedade: getValuePropertiesMapStringObject): java.util.Map<java.lang.String, java.lang.Object>;
+declare function getValue(nomePropriedade: getValuePropertiesDocumentDto): DocumentDto;
+declare function getValue(nomePropriedade: getValuePropertiesDocumentEditDto): WKDocumentEdit;
+declare function getValue(nomePropriedade: getValuePropertiesListApproverDto): java.util.List<ApproverDto>;
+declare function getValue(nomePropriedade: getValuePropertiesListDocumentSecurityConfigDto): java.util.List<DocumentSecurityConfigDto>;
+declare function getValue(nomePropriedade: getValuePropertiesListRelatedDocumentDto): java.util.List<RelatedDocumentDto>;
+
 
 /**
  * Funções para o envio de e-mail
@@ -2264,9 +2354,9 @@ declare class ServiceInstantiate {
 declare class ServiceHelper {
     /**
      * Instancia um objeto da classe indicada
-     * 
+     *
      * @param classPath Caminho da Classe
-     * 
+     *
      * @example
      * var serviceHelper = ServiceManager.getService("ECMCardService").getBean();
      * var cardDto = serviceHelper.instantiate("com.totvs.technology.ecm.dm.ws.CardDto");
@@ -2275,23 +2365,23 @@ declare class ServiceHelper {
 
     /**
      * Instancia o serviço com autenticação Basic
-     * 
+     *
      * @param service Instância do serviço que será autenticado
      * @param classPath Caminho da Classe a ser instanciada
      * @param user Usuário da Autenticação
      * @param password Senha da Autenticação
-     * 
+     *
      * @example
      * var serviceHelper = ServiceManager
      *     .getService("RM_CONSULTA_SQL")
      *     .getBean()
      * ;
-     * 
+     *
      * var service = serviceHelper
      *     .instantiate("com.totvs.WsConsultaSQL")
      *     .getRMIwsConsultaSQL()
      * ;
-     * 
+     *
      * var serviceSqlAuthenticated = serviceHelper.getBasicAuthenticatedClient(
      *     service,
      *     "com.totvs.IwsConsultaSQL",
