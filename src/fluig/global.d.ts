@@ -50,7 +50,7 @@ declare namespace globalVars {
 // Tipos disponíveis na função global getValue
 
 type getValuePropertiesInteger =
-    | "WKNumState"
+    "WKNumState"
     | "WKNextState"
     | "WKNumProces"
     | "WKVersDef"
@@ -59,7 +59,7 @@ type getValuePropertiesInteger =
     | "page"
 ;
 type getValuePropertiesString =
-    | "WKUser"
+    "WKUser"
     | "WKCompletTask"
     | "WKDef"
     | "WKFormId"
@@ -72,7 +72,7 @@ type getValuePropertiesString =
     | "taskUserId"
 ;
 type getValuePropertiesBoolean =
-    | "WKIsTransfer"
+    "WKIsTransfer"
     | "WKMobile"
     | "WKIsService"
     | "WKManagerMode"
