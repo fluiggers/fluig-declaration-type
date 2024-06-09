@@ -179,15 +179,52 @@ declare namespace java.lang {
     }
 
     declare class Integer extends Object {
+        constructor(value: number);
+        constructor(value: string);
+
         /**
          * Converte a String em Integer
          */
-        valueOf(value: String): Integer;
+        static valueOf(value: String): Integer;
 
         /**
-         * Converte a String em int
+         * Converte a String em number
          */
-        parseInt(value: String): number;
+        static parseInt(value: String): number;
+    }
+
+    declare class Long extends Object {
+        constructor(value: number);
+        constructor(value: string);
+
+        /**
+         * Converte a String em Integer
+         */
+        static valueOf(value: String): Long;
+
+        /**
+         * Converte a String em number
+         */
+        static parseLong(value: String): number;
+    }
+
+    declare class Boolean extends Object {
+        /**
+         * Cria um Boolean com valor true se a string não for vazia e for igual a "true" (case insensitive)
+         */
+        constructor(value: string);
+
+        constructor(value: boolean);
+
+        /**
+         * Converte a String em boolean
+         */
+        static parseBoolean(value: string): boolean;
+
+        /**
+         * Converte a String em Boolean
+         */
+        static valueOf(value: string): Boolean;
     }
 
     declare class Byte extends Object {}

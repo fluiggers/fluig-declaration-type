@@ -365,6 +365,10 @@ declare namespace docAPI {
  * Entidade Aprovador
  */
 declare class ApproverDto {
+    /**
+     * Retorna o número do documento
+     */
+    getDocumentId(): number;
 
     /**
      * Pega o número do aprovador
@@ -634,6 +638,33 @@ declare class DocumentDto {
      */
     getPhisicalFileSize(): number;
 };
+
+/**
+ * Representa as propriedades editáveis de um documento
+ */
+declare class DocumentEditDto {
+    /**
+     * Adiciona Palavras chaves no documento
+     *
+     * Cada palavra é separada por vírgula.
+     */
+    setKeyWord(keyWord: string): void;
+
+    /**
+     * Define se o documento deve expirar
+     */
+    setExpires(expires: boolean): void;
+
+    /**
+     * Define a data de expiração
+     */
+    setExpirationDate(expireAt: java.util.Date): void;
+
+    /**
+     * Define a data a partir da qual o documento poderá ser visualizado
+     */
+    setValidationStartDate(validatedAt: java.util.Date): void;
+}
 
 /**
  * Entidade Segurança do Documento
@@ -2173,34 +2204,95 @@ declare namespace globalVars {
     declare function get(name: string): object
 };
 
+// Tipos disponíveis na função global getValue
+
+type getValuePropertiesInteger =
+    "WKNumState"
+    | "WKNextState"
+    | "WKNumProces"
+    | "WKVersDef"
+    | "WKCardId"
+    | "maxResult"
+    | "page"
+;
+type getValuePropertiesString =
+    "WKUser"
+    | "WKCompletTask"
+    | "WKDef"
+    | "WKFormId"
+    | "WKIdentityCompany"
+    | "WKReplacement"
+    | "WKUserComment"
+    | "WKUserLocale"
+    | "order"
+    | "taskType"
+    | "taskUserId"
+;
+type getValuePropertiesBoolean =
+    "WKIsTransfer"
+    | "WKMobile"
+    | "WKIsService"
+    | "WKManagerMode"
+    | "WKPrivateDocument"
+;
+type getValuePropertiesLong = "WKCompany";
+type getValuePropertiesMapStringObject = "filter";
+type getValuePropertiesDocumentDto = "WKDocument";
+type getValuePropertiesDocumentEditDto = "WKDocumentEdit";
+type getValuePropertiesListApproverDto = "WKListApprover";
+type getValuePropertiesListDocumentSecurityConfigDto = "WKListSecurity";
+type getValuePropertiesListRelatedDocumentDto = "WKListRelatedDocument";
+
 
 /**
  * Pega o valor das propriedades do Processo.
+ *
+ * <strong>IMPORTANTE</strong>
+ * Em eventos de formulários todos os valores de getValue são string,
+ * então ao invés de comparar com true ou false deve-se comparar com "true" ou "false".
  *
  * Usar em eventos do processo e eventos de formulários de processo.
  * @see https://tdn.totvs.com/pages/releaseview.action?pageId=270919174
  *
  * Propriedades:
- * - WKDef: Código do processo
- * - WKVersDef: Versão do processo
- * - WKNumProces: Número do processo
- * - WKNumState: Número da atividade
  * - WKCompany: Número da Empresa
  * - WKUser: Usuário Corrente
- * - WKUserComment: Texto com as observações feitas pelos usuários na atividade corrente
- * - WKCompletTask: Indica se a tarefa foi completada ("true" / "false")
+ * - WKNumState: Número da atividade
  * - WKNextState: Número da próxima atividade (destino)
+ * - WKNumProces: Número do processo
  * - WKCardId: Código do registro de formulário do processo
+ * - WKCompletTask: Indica se a tarefa foi completada (string "true" / "false")
+ * - WKDef: Código do processo
  * - WKFormId: Código do formulário do processo
  * - WKIdentityCompany: Identificador da empresa selecionada para Experiências de uso TOTVS
- * - WKMobile: Identifica se a ação foi realizada através de um dispositivo mobile
  * - WKIsService: Identifica se a solicitação de cancelamento foi realizada através de um serviço. Esta variável só pode ser consultada nos eventos beforeCancelProcess e afterCancelProcess
- * - WKUserLocale: Identifica o idioma corrente do usuário
- * - WKManagerMode: Identifica se o processo está sendo movimentado pela visão do gestor do processo ou não. Só funciona no Workflow
- * - WKReplacement: Código do usuário substituto
  * - WKIsTransfer: Permite verificar se o usuário está ou não transferindo uma tarefa
+ * - WKListApprover: Lista dos Aprovadores do documento
+ * - WKListSecurity: Lista da Segurança do documento
+ * - WKManagerMode: Identifica se o processo está sendo movimentado pela visão do gestor do processo ou não. Só funciona no Workflow
+ * - WKMobile: Identifica se a ação foi realizada através de um dispositivo mobile
+ * - WKPrivateDocument: Documento privado
+ * - WKReplacement: Código do usuário substituto
+ * - WKUserComment: Texto com as observações feitas pelos usuários na atividade corrente
+ * - WKUserLocale: Identifica o idioma corrente do usuário
+ * - WKVersDef: Versão do processo
+ * - taskType: Indicador do tipo de tarefas que estão sendo exibidas, “open” tarefas a concluir e “requests” para minhas solicitações.
+ * - taskUserId: Código do usuário substituído, em caso de visualização da central como substituto. Nos demais casos retorna o usuário logado.
+ * - filter: Filtros utilizados
+ * - maxResult: Número de resultados por página
+ * - order: Ordenação aplicada
+ * - page: Número da página atual
  */
-declare function getValue(nomePropriedade: string): string;
+declare function getValue(nomePropriedade: getValuePropertiesInteger): java.lang.Integer;
+declare function getValue(nomePropriedade: getValuePropertiesLong): java.lang.Long;
+declare function getValue(nomePropriedade: getValuePropertiesString): java.lang.String;
+declare function getValue(nomePropriedade: getValuePropertiesBoolean): boolean;
+declare function getValue(nomePropriedade: getValuePropertiesMapStringObject): java.util.Map<java.lang.String, java.lang.Object>;
+declare function getValue(nomePropriedade: getValuePropertiesDocumentDto): DocumentDto;
+declare function getValue(nomePropriedade: getValuePropertiesDocumentEditDto): WKDocumentEdit;
+declare function getValue(nomePropriedade: getValuePropertiesListApproverDto): java.util.List<ApproverDto>;
+declare function getValue(nomePropriedade: getValuePropertiesListDocumentSecurityConfigDto): java.util.List<DocumentSecurityConfigDto>;
+declare function getValue(nomePropriedade: getValuePropertiesListRelatedDocumentDto): java.util.List<RelatedDocumentDto>;
 
 /**
  * Funções para o envio de e-mail
@@ -2264,9 +2356,9 @@ declare class ServiceInstantiate {
 declare class ServiceHelper {
     /**
      * Instancia um objeto da classe indicada
-     * 
+     *
      * @param classPath Caminho da Classe
-     * 
+     *
      * @example
      * var serviceHelper = ServiceManager.getService("ECMCardService").getBean();
      * var cardDto = serviceHelper.instantiate("com.totvs.technology.ecm.dm.ws.CardDto");
@@ -2275,23 +2367,23 @@ declare class ServiceHelper {
 
     /**
      * Instancia o serviço com autenticação Basic
-     * 
+     *
      * @param service Instância do serviço que será autenticado
      * @param classPath Caminho da Classe a ser instanciada
      * @param user Usuário da Autenticação
      * @param password Senha da Autenticação
-     * 
+     *
      * @example
      * var serviceHelper = ServiceManager
      *     .getService("RM_CONSULTA_SQL")
      *     .getBean()
      * ;
-     * 
+     *
      * var service = serviceHelper
      *     .instantiate("com.totvs.WsConsultaSQL")
      *     .getRMIwsConsultaSQL()
      * ;
-     * 
+     *
      * var serviceSqlAuthenticated = serviceHelper.getBasicAuthenticatedClient(
      *     service,
      *     "com.totvs.IwsConsultaSQL",
@@ -3529,15 +3621,52 @@ declare namespace java.lang {
     }
 
     declare class Integer extends Object {
+        constructor(value: number);
+        constructor(value: string);
+
         /**
          * Converte a String em Integer
          */
-        valueOf(value: String): Integer;
+        static valueOf(value: String): Integer;
 
         /**
-         * Converte a String em int
+         * Converte a String em number
          */
-        parseInt(value: String): number;
+        static parseInt(value: String): number;
+    }
+
+    declare class Long extends Object {
+        constructor(value: number);
+        constructor(value: string);
+
+        /**
+         * Converte a String em Integer
+         */
+        static valueOf(value: String): Long;
+
+        /**
+         * Converte a String em number
+         */
+        static parseLong(value: String): number;
+    }
+
+    declare class Boolean extends Object {
+        /**
+         * Cria um Boolean com valor true se a string não for vazia e for igual a "true" (case insensitive)
+         */
+        constructor(value: string);
+
+        constructor(value: boolean);
+
+        /**
+         * Converte a String em boolean
+         */
+        static parseBoolean(value: string): boolean;
+
+        /**
+         * Converte a String em Boolean
+         */
+        static valueOf(value: string): Boolean;
     }
 
     declare class Byte extends Object {}

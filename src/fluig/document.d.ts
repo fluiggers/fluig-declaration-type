@@ -73,6 +73,10 @@ declare namespace docAPI {
  * Entidade Aprovador
  */
 declare class ApproverDto {
+    /**
+     * Retorna o número do documento
+     */
+    getDocumentId(): number;
 
     /**
      * Pega o número do aprovador
@@ -342,6 +346,33 @@ declare class DocumentDto {
      */
     getPhisicalFileSize(): number;
 };
+
+/**
+ * Representa as propriedades editáveis de um documento
+ */
+declare class DocumentEditDto {
+    /**
+     * Adiciona Palavras chaves no documento
+     *
+     * Cada palavra é separada por vírgula.
+     */
+    setKeyWord(keyWord: string): void;
+
+    /**
+     * Define se o documento deve expirar
+     */
+    setExpires(expires: boolean): void;
+
+    /**
+     * Define a data de expiração
+     */
+    setExpirationDate(expireAt: java.util.Date): void;
+
+    /**
+     * Define a data a partir da qual o documento poderá ser visualizado
+     */
+    setValidationStartDate(validatedAt: java.util.Date): void;
+}
 
 /**
  * Entidade Segurança do Documento
