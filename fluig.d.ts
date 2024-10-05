@@ -2394,6 +2394,40 @@ declare class ServiceHelper {
     getBasicAuthenticatedClient(service: object, classPath: string, user: string, password: string): object;
 }
 
+/**
+ * Métodos para aplicar internacionalização
+ *
+ * Páginas (Widgets e Layouts)
+ * @see https://tdn.totvs.com/pages/releaseview.action?pageId=185738869
+ *
+ * Formulários
+ * @see https://tdn.totvs.com/pages/releaseview.action?pageId=668197293
+ *
+ * Processos
+ * @see https://tdn.totvs.com/pages/releaseview.action?pageId=160105353
+ */
+declare namespace i18n {
+    /**
+     * Pega a string correspondente para Formulário e Processos
+     *
+     * @param stringKey Chave da String no arquivo .properties com as traduções
+     */
+    declare function translate(stringKey: string): string;
+
+    /**
+     * Pega a string correspondente para Widgets e Layouts
+     *
+     * Ao utilizar no arquivo template (.ftl) é necessário aplicar o escape
+     * para que o objeto de internacionalização seja chamado corretamente.
+     *
+     * @example
+     * ${i18n.getTranslation("codigo_da_string")}
+     *
+     * @param stringKey Chave da String no arquivo .properties com as traduções
+     */
+    declare function getTranslation(stringKey: string): string;
+}
+
 interface Task {
     name: string;
 
