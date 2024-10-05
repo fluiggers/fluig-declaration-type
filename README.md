@@ -17,7 +17,7 @@ Baixe a [Última Release](https://github.com/fluiggers/fluig-declaration-type/re
 arquivos `fluig.d.ts` e `jsconfig.json` para o diretório principal do seu projeto Fluig.
 
 A extensão [Fluig - Extensão para Desenvolvimento no VSCode](https://marketplace.visualstudio.com/items?itemName=Fluiggers.fluiggers-fluig-vscode-extension)
-ela possuí um comando simplificado para realizar a instalação dessa biblioteca de tipos.
+possuí um comando simplificado para realizar a instalação dessa biblioteca de tipos.
 
 ## Contribuição
 
