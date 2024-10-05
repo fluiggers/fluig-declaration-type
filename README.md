@@ -16,11 +16,15 @@ Sinta-se à vontade para ajudar a complementar o projeto com PR.
 Baixe a [Última Release](https://github.com/fluiggers/fluig-declaration-type/releases/latest) e descompacte os
 arquivos `fluig.d.ts` e `jsconfig.json` para o diretório principal do seu projeto Fluig.
 
+A extensão [Fluig - Extensão para Desenvolvimento no VSCode](https://marketplace.visualstudio.com/items?itemName=Fluiggers.fluiggers-fluig-vscode-extension)
+ela possuí um comando simplificado para realizar a instalação dessa biblioteca de tipos.
+
 ## Contribuição
 
 Sinta-se livre para fazer PRs para inserir novas descrições.
 
 Edite as declarações da pasta `src`, pois o arquivo `fluig.d.ts` será gerado concatenando todas as declarações desta pasta.
+
 ## Fontes de Documentação do Fluig
 
 Os principais documentos utilizados para elaborar essas declarações de tipos vieram de:
