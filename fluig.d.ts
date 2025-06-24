@@ -1997,6 +1997,15 @@ declare namespace FLUIGC.calendar {
     declare function formatDate(date: Date, format: string, language?: string): string;
 }
 
+declare namespace FLUIGC.utilities {
+    /**
+     * Retorna um UUID v4 aleatório
+     */
+    declare function randomUUID(): string;
+
+    declare function checkDevice(): { "browser/os": string, device: string, isMobile: boolean }
+}
+
 /**
  * Adiciona um Filho ao Pai
  *
