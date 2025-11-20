@@ -22,6 +22,13 @@ declare namespace javax.sql {
         createStatement(): Statement;
 
         /**
+         * Cria o objeto para preparar e executar o SQL
+         *
+         * @throws Exception
+         */
+        prepareStatement(sql: string): PreparedStatement;
+
+        /**
          * Encerra a conexão ao invés de aguardar o coletor de lixo
          */
         close(): void;
@@ -96,6 +103,50 @@ declare namespace javax.sql {
          * Libera os recursos da execução imediatamente ao invés de aguardar o coletor de lixo
          */
         close(): void;
+    }
+
+    /**
+     * Objeto que executa uma instrução SQL Preparada
+     *
+     * @tutorial https://docs.oracle.com/javase/8/docs/api/java/sql/PreparedStatement.html
+     */
+    declare class PreparedStatement extends Statement {
+        /**
+         * Executa um SQL Preparado que deve ser uma consulta (SELECT)
+         *
+         * @throws Exception
+         */
+        executeQuery(): ResultSet;
+
+        /**
+         * Executa um SQL Preparado que modifica algo no banco (INSERT, UPDATE ou DELETE)
+         *
+         * @returns {number} Quantidade de registros afetados
+         * @throws Exception
+         */
+        executeUpdate(): number;
+
+        setBoolean(parameterIndex: java.lang.Integer, x: boolean): void;
+        setByte(parameterIndex: java.lang.Integer, x: java.lang.Byte): void;
+        setBytes(parameterIndex: java.lang.Integer, x: java.lang.Byte[]): void;
+        setDate(parameterIndex: java.lang.Integer, x: java.Sql.Date, cal: java.util.Calendar): void;
+        setDouble(parameterIndex: java.lang.Integer, x: java.lang.Double): void;
+        setFloat(parameterIndex: java.lang.Integer, x: java.lang.Float): void;
+        setInt(parameterIndex: java.lang.Integer, x: java.lang.Integer): void;
+        setLong(parameterIndex: java.lang.Integer, x: java.lang.Long): void;
+        setShort(parameterIndex: java.lang.Integer, x: number): void;
+        setString(parameterIndex: java.lang.Integer, x: string): void;
+        setTime(parameterIndex: java.lang.Integer, x: java.sql.Time): void;
+        setTime(parameterIndex: java.lang.Integer, x: java.sql.Time, cal: java.util.Calendar): void;
+        setTimestamp(parameterIndex: java.lang.Integer, x: java.sql.Timestamp): void;
+        setTimestamp(parameterIndex: java.lang.Integer, x: java.sql.Timestamp, cal: java.util.Calendar): void;
+
+        /**
+         * Seta o campo como nulo.
+         *
+         * O valor repassado a sqlType deve ser uma constante da classe java.sql.Types
+         */
+        setNull(parameterIndex: java.lang.Integer, sqlType: number);
     }
 
     /**
@@ -193,5 +244,56 @@ declare namespace javax.sql {
          * Pega o Nome da Coluna (label)
          */
         getColumnName(column: number): java.lang.String;
+    }
+}
+
+declare namespace java.sql {
+    declare class Date extends java.util.Date {}
+    declare class Time extends java.util.Date {}
+    declare class Timestamp extends java.util.Date {}
+
+    /**
+     * Indica os possíveis tipos do SQL
+     */
+    declare abstract class Types {
+        static const ARRAY: number;
+        static const BIGINT: number;
+        static const BINARY: number;
+        static const BIT: number;
+        static const BLOB: number;
+        static const BOOLEAN: number;
+        static const CHAR: number;
+        static const CLOB: number;
+        static const DATALINK: number;
+        static const DATE: number;
+        static const DECIMAL: number;
+        static const DISTINCT: number;
+        static const DOUBLE: number;
+        static const FLOAT: number;
+        static const INTEGER: number;
+        static const JAVA_OBJECT: number;
+        static const LONGNVARCHAR: number;
+        static const LONGVARBINARY: number;
+        static const LONGVARCHAR: number;
+        static const NCHAR: number;
+        static const NCLOB: number;
+        static const NULL: number;
+        static const NUMERIC: number;
+        static const NVARCHAR: number;
+        static const OTHER: number;
+        static const REAL: number;
+        static const REF: number;
+        static const REF_CURSOR: number;
+        static const ROWID: number;
+        static const SMALLINT: number;
+        static const SQLXML: number;
+        static const STRUCT: number;
+        static const TIME: number;
+        static const TIME_WITH_TIMEZONE: number;
+        static const TIMESTAMP: number;
+        static const TIMESTAMP_WITH_TIMEZONE: number;
+        static const TINYINT: number;
+        static const VARBINARY: number;
+        static const VARCHAR: number;
     }
 }

@@ -228,4 +228,34 @@ declare namespace java.lang {
     }
 
     declare class Byte extends Object {}
+
+    declare class Double extends Object {
+        constructor(value: number);
+        constructor(value: string);
+
+        /**
+         * Converte a String em Double
+         */
+        static valueOf(value: String): Double;
+
+        /**
+         * Converte o número em Double
+         */
+        static valueOf(value: number): Double;
+    }
+
+    declare class Float extends Object {
+        constructor(value: number);
+        constructor(value: string);
+
+        /**
+         * Converte a String em Float
+         */
+        static valueOf(value: String): Float;
+
+        /**
+         * Converte o número em Float
+         */
+        static valueOf(value: number): Float;
+    }
 }
