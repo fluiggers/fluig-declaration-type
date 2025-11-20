@@ -2221,6 +2221,7 @@ type getValuePropertiesInteger =
     | "WKNumProces"
     | "WKVersDef"
     | "WKCardId"
+    | "WKActualThread"
     | "maxResult"
     | "page"
 ;
@@ -2285,6 +2286,7 @@ type getValuePropertiesListRelatedDocumentDto = "WKListRelatedDocument";
  * - WKUserComment: Texto com as observações feitas pelos usuários na atividade corrente
  * - WKUserLocale: Identifica o idioma corrente do usuário
  * - WKVersDef: Versão do processo
+ * - WKActualThread: Thread atual do processo
  * - taskType: Indicador do tipo de tarefas que estão sendo exibidas, “open” tarefas a concluir e “requests” para minhas solicitações.
  * - taskUserId: Código do usuário substituído, em caso de visualização da central como substituto. Nos demais casos retorna o usuário logado.
  * - filter: Filtros utilizados
@@ -2680,6 +2682,9 @@ declare namespace hAPI {
 
     /**
      * Pega o ID da Thread atual
+     *
+     * <strong>ATENÇÃO</strong>
+     * Método removido a partir da versão 1.8.0. Utilize getValue("WKActualThread").
      */
     declare function getActualThread(companyNumber, processNumber, activityNumber): number;
 
