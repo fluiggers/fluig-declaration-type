@@ -241,6 +241,9 @@ declare namespace hAPI {
 
     /**
      * Pega o ID da Thread atual
+     *
+     * <strong>ATENÇÃO</strong>
+     * Método removido a partir da versão 1.8.0. Utilize getValue("WKActualThread").
      */
     declare function getActualThread(companyNumber, processNumber, activityNumber): number;
 
